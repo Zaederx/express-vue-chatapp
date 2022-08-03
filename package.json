@@ -11,6 +11,9 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "bootstrap": "^5.2.0",
+    "bootstrap-vue": "^2.22.0",
+    "node": "^18.7.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {

@@ -9,7 +9,6 @@
    <HeadScripts></HeadScripts>
    <Banner heading1="Chat" heading2="Home View"></Banner>
    <SiteFooter></SiteFooter>
-
 </template>
 
 <!-- CSS -->

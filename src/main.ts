@@ -3,6 +3,7 @@
 
 // import './assets/main.css'
 //home view
+import App from './pages/App.vue'
 import Home from './pages/Home.vue'
 import HeadScripts from './components/HeadScripts.vue'
 import Banner from './components/Banner.vue'
@@ -17,30 +18,30 @@ import AboutSection from './components/AboutSection.vue'
 //chat app
 import ChatApp from './pages/user/ChatApp.vue'
 import UserBanner from './components/UserBanner.vue'
-
 //router
 import Router from './components/Router.vue'
 import { createApp } from 'vue'
-// import VueRouter from 'vue-router'
-//create routes
-// const routes = [
-//     { path: '/', component:Home},
-//     { path: '/home', component:Home},
-//     { path: '/about', component:About},
-//     { path:'/login',component:Login},
-//     { path:'/chat-app',component:ChatApp}
-// ]
-// //add routes to Vue Router
+import * as VueRouter from 'vue-router'
 
-// const router = VueRouter.createRouter({
-//     history: VueRouter.createWebHistory(),
-//     routes: routes
-// })
+// create routes
+const routes = [
+    { path: '/', name:'Home', component:Home},
+    { path: '/home', name:'Home', component:Home},
+    { path: '/about', name:'About', component:About},
+    { path: '/login', name:'Login', component:Login},
+    { path: '/chat-app', name:'ChatApp', component:ChatApp}
+]
+//add routes to Vue Router
+const router = VueRouter.createRouter({
+    history: VueRouter.createWebHistory(),
+    routes: routes
+})
 
 //set up app for fronend SPA (Single Page Application)
-const app = createApp(Home)
+const app = createApp(App)
 
 //add main components globally
+.component('Home', Home)
 .component('HeadScripts', HeadScripts)
 .component('Banner', Banner)
 .component('HomeMain', HomeMain)
@@ -50,9 +51,8 @@ const app = createApp(Home)
 .component('UserBanner', UserBanner)
 .component('Router', Router)
 
-
 //add router to App
-// .use(router)
+.use(router)
 
 //load app
 .mount('#app')

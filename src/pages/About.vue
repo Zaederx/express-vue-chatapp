@@ -8,7 +8,7 @@ import AboutSection from "../components/AboutSection.vue";
 <template>
    <HeadScripts></HeadScripts>
    <Router></Router>
-   <Banner heading1="Chat" heading2="About View"></Banner>
+   <Banner heading1="Chat"></Banner>
    <HomeMain>
     <!-- <AboutSection></AboutSection> -->
    </HomeMain>

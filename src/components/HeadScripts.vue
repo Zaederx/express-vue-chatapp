@@ -41,7 +41,7 @@ export default {
 
 
         //add popperjs, bootstrapJS and bootstrapCSS to head tag
-        document.head.append(viewRouter, popperjs, bootstrapJS, bootstrapCSS, fa)
+        document.head.append( popperjs, bootstrapJS, bootstrapCSS, fa)
     }
 }
 

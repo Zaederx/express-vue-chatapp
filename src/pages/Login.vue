@@ -5,7 +5,8 @@
 <!-- HTML -->
 <template>
    <HeadScripts></HeadScripts>
-   <Banner heading1="Chat" heading2="Login"></Banner>
+   <Router></Router>
+   <Banner heading1="Chat" heading2="Login View"></Banner>
    <HomeMain>
     <!-- <LoginForm></LoginForm> -->
    </HomeMain>

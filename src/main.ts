@@ -18,9 +18,11 @@ import AboutSection from './components/AboutSection.vue'
 import ChatApp from './pages/user/ChatApp.vue'
 import UserBanner from './components/UserBanner.vue'
 
+//router
+import Router from './components/Router.vue'
 import { createApp } from 'vue'
 // import VueRouter from 'vue-router'
-// //create routes
+//create routes
 // const routes = [
 //     { path: '/', component:Home},
 //     { path: '/home', component:Home},
@@ -29,6 +31,7 @@ import { createApp } from 'vue'
 //     { path:'/chat-app',component:ChatApp}
 // ]
 // //add routes to Vue Router
+
 // const router = VueRouter.createRouter({
 //     history: VueRouter.createWebHistory(),
 //     routes: routes
@@ -45,6 +48,7 @@ const app = createApp(Home)
 .component('LoginForm', LoginForm)
 .component('AboutSection', AboutSection)
 .component('UserBanner', UserBanner)
+.component('Router', Router)
 
 
 //add router to App

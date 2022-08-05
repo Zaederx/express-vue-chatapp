@@ -1,5 +1,30 @@
 
 <script setup lang="ts">
+
+import { ref, computed } from 'vue'
+import Home from '../pages/Home.vue'
+import Login from '../pages/Login.vue'
+import About from '../pages/About.vue'
+import ChatApp from '../pages/user/ChatApp.vue'
+
+const routes:any = {
+    '/': Home,
+    '/home':Home,
+    '/login': Login,
+    '/about': About,
+    '/chat-app': ChatApp,
+}
+
+const currentPath = ref(window.location.hash)//#hash just takes the hash vaule as the end of the path
+console.log(`currentPath: ${currentPath}`)
+console.log(`currentPath.value:${currentPath.value}`)
+window.addEventListener('hashchange', ()=> {
+    currentPath.value = window.location.hash
+})
+
+const currentView = computed(()=> {
+    return routes[currentPath.value.slice(1) || '/' || 'NotFound']
+})
 //props - short for properties of html elements
 //these are properties that we set out the elements we create
 const props = defineProps({
@@ -24,7 +49,7 @@ const props = defineProps({
         </li>
         <li class="nav-item">
           <!-- <a class="nav-link" href=""> -->
-            <router-link class="nav-link" to="/">Link</router-link>
+            <component :is="currentView" class="nav-link" href="#/">Link</component>
           <!-- </a> -->
         </li>
         <li class="nav-item dropdown">
@@ -32,8 +57,8 @@ const props = defineProps({
             Links
           </a>
           <ul class="dropdown-menu">
-            <li><router-link to="/sign-up" class="dropdown-item" >Sign Up</router-link></li>
-            <li><router-link to="/login" class="dropdown-item" href="#">Another action</router-link></li>
+            <li><a to="/sign-up" class="dropdown-item" href="#/sign-up">Sign Up</a></li>
+            <li><a  class="dropdown-item" href="#/login">Another action</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>

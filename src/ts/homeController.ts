@@ -4,7 +4,8 @@ import Banner from '../components/Banner.vue'
 import SiteFooter from '../components/SiteFooter.vue'
 
 import { createSSRApp } from "vue"
-import {renderToString } from "vue/server-renderer"
+import { renderToString } from '@vue/server-renderer'
+
 
 export function home(req:any, res:any) {
     //PREPARE VIEW

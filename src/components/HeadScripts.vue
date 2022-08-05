@@ -3,6 +3,12 @@
 export default {
     // inheritAttrs: true //true is default
     mounted() {
+
+        //view router
+        const viewRouter = document.createElement('script') as HTMLScriptElement
+        viewRouter.type = 'text/javascript'
+        viewRouter.src = 'https://unpkg.com/vue-router@4'
+
         //create popperjs script element
         const popperjs = document.createElement('script') as HTMLScriptElement;
         popperjs.type = 'text/javascript';
@@ -25,9 +31,17 @@ export default {
         bootstrapCSS.integrity = 'sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx'
         bootstrapCSS.crossOrigin = 'anonymous'
         
+        //font awesome icons
+        const fa = document.createElement('link') as HTMLLinkElement
+        fa.type = 'text/css'
+        fa.rel = 'stylesheet'
+        fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
+
+        
+
 
         //add popperjs, bootstrapJS and bootstrapCSS to head tag
-        document.head.append(popperjs, bootstrapJS, bootstrapCSS)
+        document.head.append(viewRouter, popperjs, bootstrapJS, bootstrapCSS, fa)
     }
 }
 

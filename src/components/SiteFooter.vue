@@ -29,7 +29,10 @@
         </div>
     </div>
     <div class="social-media">
-        
+        <i class="fa fa-lg fa-facebook"></i>
+        <i class="fa fa-lg fa-twitter"></i>
+        <i class="fa fa-lg fa-google-plus"></i>
+        <i class="fa fa-lg fa-instagram"></i>
     </div>
     <div class="copyright">example copyright ChatApp Company</div>
  </div>
@@ -41,11 +44,14 @@
     color: white;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 70% 20% 10%;
+    grid-template-rows: [section-links] 5fr [social-media] 3fr [copyright] 2fr;
+    max-height: 400px;
+    min-height: 300px;
     /* section 1-links,2-social,3-copyright notice */
 }
 
 .section-links {
+    grid-row: 1;
     display: grid;
     grid-template-columns: 20% repeat(4,18%);
     grid-template-rows: auto;
@@ -65,12 +71,24 @@
 }
 
 .social-media {
+    grid-row: 2;
     background-color: rgb(26, 26, 32);
     color:white;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: [facebook] auto [twitter] auto [google] auto [instagram] auto;
+    grid-template-rows: [single-row] auto;
 }
-
+.social-media > i {
+    margin-left: 100px;
+    font-size: 60px;
+    cursor: pointer;
+}
 .copyright {
+    grid-row: 3;
     background-color: rgb(4, 4, 5);
     color:white;
+    display: grid;
+    justify-content: center;
 }
 </style>

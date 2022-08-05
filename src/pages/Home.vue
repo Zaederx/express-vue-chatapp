@@ -8,6 +8,7 @@
 <template>
    <HeadScripts></HeadScripts>
    <Banner heading1="Chat" heading2="Home View"></Banner>
+   <HomeMain></HomeMain>
    <SiteFooter></SiteFooter>
 </template>
 

@@ -23,15 +23,17 @@ const props = defineProps({
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
+          <!-- <a class="nav-link" href=""> -->
+            <router-link class="nav-link" to="/">Link</router-link>
+          <!-- </a> -->
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Link
+            Links
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><router-link to="/sign-up" class="dropdown-item" >Sign Up</router-link></li>
+            <li><router-link to="/login" class="dropdown-item" href="#">Another action</router-link></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
@@ -52,8 +54,14 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.heading2 {
+.heading2 
+{
   display: inline;
   justify-content: left;
+}
+
+.nav-link
+{
+  cursor: pointer;
 }
 </style>

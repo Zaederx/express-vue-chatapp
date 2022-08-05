@@ -49,7 +49,7 @@ const props = defineProps({
         </li>
         <li class="nav-item">
           <!-- <a class="nav-link" href=""> -->
-            <component :is="currentView" class="nav-link" href="#/">Link</component>
+            <a :is="currentView" class="nav-link" href="#/">Link</a>
           <!-- </a> -->
         </li>
         <li class="nav-item dropdown">

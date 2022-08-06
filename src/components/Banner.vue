@@ -45,11 +45,11 @@ const props = defineProps({
     <div class="collapse navbar-collapse" id="navbarScroll">
       <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="/home">Home</a>
         </li>
         <li class="nav-item">
           <!-- <a class="nav-link" href=""> -->
-            <a class="nav-link" href="#/">Link</a>
+            <a class="nav-link" href="/">Link</a>
           <!-- </a> -->
         </li>
         <li class="nav-item dropdown">
@@ -57,8 +57,8 @@ const props = defineProps({
             Links
           </a>
           <ul class="dropdown-menu">
-            <li><a to="/sign-up" class="dropdown-item" href="#/sign-up">Sign Up</a></li>
-            <li><a  class="dropdown-item" href="#/login">Another action</a></li>
+            <li><a to="/sign-up" class="dropdown-item" href="/sign-up">Sign Up</a></li>
+            <li><a  class="dropdown-item" href="/login">Login</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
@@ -67,7 +67,7 @@ const props = defineProps({
           <a class="nav-link disabled">Link</a>
         </li>
       </ul>
-      <!-- <h1 class="heading2">{{heading2}}</h1> -->
+      <h1 class="heading2">{{heading2}}</h1>
       <!-- <component :is="currentView"/> -->
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

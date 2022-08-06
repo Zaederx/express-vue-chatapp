@@ -8,7 +8,7 @@
    <Router></Router>
    <Banner heading1="Chat" heading2="Login View"></Banner>
    <HomeMain>
-    <!-- <LoginForm></LoginForm> -->
+    <LoginForm></LoginForm>
    </HomeMain>
    <SiteFooter></SiteFooter>
 </template>

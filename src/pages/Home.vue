@@ -7,8 +7,7 @@
 <!-- HTML -->
 <template>
    <HeadScripts></HeadScripts>
-   <!-- <Router></Router> -->
-   <Banner heading1="Chat"></Banner>
+   <Banner heading1="Chat" heading2="Home"></Banner>
    <HomeMain></HomeMain>
    <SiteFooter></SiteFooter>
 </template>

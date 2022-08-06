@@ -12,14 +12,17 @@ import SiteFooter from './components/SiteFooter.vue'
 //login view
 import Login from './pages/Login.vue'
 import LoginForm from './components/LoginForm.vue'
+
+//sign up view
+import SignUp from './pages/SignUp.vue'
+import SignUpForm from './components/SignUpForm.vue'
 //about view
 import About from './pages/About.vue'
 import AboutSection from './components/AboutSection.vue'
 //chat app
 import ChatApp from './pages/user/ChatApp.vue'
 import UserBanner from './components/UserBanner.vue'
-//router
-import Router from './components/Router.vue'
+
 import { createApp } from 'vue'
 import * as VueRouter from 'vue-router'
 
@@ -29,6 +32,7 @@ const routes = [
     { path: '/home', name:'Home', component:Home},
     { path: '/about', name:'About', component:About},
     { path: '/login', name:'Login', component:Login},
+    { path: '/sign-up', name:'Sign Up', component:SignUp},
     { path: '/chat-app', name:'ChatApp', component:ChatApp}
 ]
 //add routes to Vue Router
@@ -47,9 +51,9 @@ const app = createApp(App)
 .component('HomeMain', HomeMain)
 .component('SiteFooter', SiteFooter)
 .component('LoginForm', LoginForm)
+.component('SignUpForm', SignUpForm)
 .component('AboutSection', AboutSection)
 .component('UserBanner', UserBanner)
-.component('Router', Router)
 
 //add router to App
 .use(router)

@@ -67,12 +67,17 @@ const props = defineProps({
           <a class="nav-link disabled">Link</a>
         </li>
       </ul>
-      <h1 class="heading2">{{heading2}}</h1>
+      <div class="nav-center">
+        <h1 class="heading2">{{heading2}}</h1>
+      </div>
       <!-- <component :is="currentView"/> -->
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      <div class="nav-right">
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+      
     </div>
   </div>
 </nav>
@@ -82,12 +87,28 @@ const props = defineProps({
 <style scoped>
 .heading2 
 {
-  display: inline;
-  justify-content: left;
+  text-align:center;
 }
 
+.nav-center
+{
+  display:gird;
+  justify-content:center;
+}
+
+.nav-right
+{
+  margin-left: auto;
+}
 .nav-link
 {
   cursor: pointer;
+}
+
+/* SECTION Override Bootstrap */
+/* banner ul was too wide */
+.me-auto {
+  /* margin-right: auto !important; */
+  margin-right: 300px;
 }
 </style>

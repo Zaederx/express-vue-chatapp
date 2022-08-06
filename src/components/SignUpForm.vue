@@ -16,29 +16,5 @@
 </template>
 
 <style scoped>
-label.form-control, input.form-control, button.form-control
-{
-    margin-top: 20px;
-
-}
-
-.center
-{
-    display:grid;
-    justify-content:center;
-}
-.top-spacing
-{
-    margin-top:100px
-}
-form
-{
-    width: 100%;
-}
-
-#form-container
-{
-    margin-top: 100px;
-    max-height: 400px;
-}
+@import url("../assets/form.css")
 </style>

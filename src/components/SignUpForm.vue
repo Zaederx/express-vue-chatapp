@@ -8,20 +8,18 @@
                 <label for="password">Password</label>
                 <input id="password" type="password" name="password" class="form-control"/>
 
-                <button id="btn-sign-up" class="btn btn-primary">Sign Up</button>
-                <button id="btn-login" class="btn btn-warning">Login</button>
+                <button id="btn-sign-up" class="btn btn-primary form-control">Sign Up</button>
+                <button id="btn-login" class="btn btn-warning form-control">Login</button>
             </form>
         
     </div>
 </template>
 
 <style scoped>
-.form-control>label, .form-control>input
+label.form-control, input.form-control, button.form-control
 {
-    width: 100%;
-    display:block;
+    margin-top: 20px;
 
-    justify-content:center;
 }
 
 .center

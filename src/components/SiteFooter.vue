@@ -40,13 +40,12 @@
 
 <style scoped>
 .footer {
+    height:300px;
     background-color: rgb(43, 44, 54);
     color: white;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: [section-links] 5fr [social-media] 3fr [copyright] 2fr;
-    max-height: 400px;
-    min-height: 300px;
+    grid-template-rows: [section-links] 4fr [social-media] 4fr [copyright] 2fr;
     /* section 1-links,2-social,3-copyright notice */
 }
 
@@ -60,14 +59,14 @@
 
 /* grid items */
 .blurb {
-    padding: 5px;
-    margin: 10px;
+    /* padding: 5px; */ /** it leaves an option white border line */ 
     margin-right: 50px;
 }
 .grid-item {
     display: grid;
     grid-template-columns: auto;
     margin:20px;
+    height: 100px;
 }
 
 .social-media {

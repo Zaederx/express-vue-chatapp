@@ -1,10 +1,10 @@
 import path from "path";
 import { Low, JSONFile } from 'lowdb';
-import { Data } from "./classes/Data";
-import { User } from "./classes/User";
+import { Data } from "./classes/Data.js";
+import { User } from "./classes/User.js";
 import bcrypt from 'bcrypt'
 //use json file for storage
-const file = path.join(__dirname, 'db.json')
+const file = path.join('db.json')
 
 const adapter = new JSONFile<Data>(file);
 var db = new Low(adapter)
@@ -42,4 +42,4 @@ db.data.users.push(u2)
 db.data.users.push(u3)
 db.write()
 
-export = db
+export default db

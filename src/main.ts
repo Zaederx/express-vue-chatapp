@@ -41,6 +41,7 @@ const router = VueRouter.createRouter({
     routes: routes
 })
 
+
 //set up app for fronend SPA (Single Page Application)
 const app = createApp(App)
 
@@ -68,3 +69,7 @@ const app = createApp(App)
 // .component('HomeMain', HomeMain)
 // .component('SiteFooter', SiteFooter)
 // .mount('#app')
+
+
+
+// **********************

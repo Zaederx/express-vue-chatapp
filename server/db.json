@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "id": 0,
+      "email": "email@email.com",
+      "name": "name",
+      "username": "username1",
+      "passwordHash": "$2b$10$gJHb.fvrE3lzT.Y8w329BeVAj.ThSXTVZ.G2cwzn4vKuJG6aUy7JS",
+      "friends": [],
+      "chats": []
+    },
+    {
+      "id": 2,
+      "email": "email@email.com",
+      "name": "name",
+      "username": "username1",
+      "passwordHash": "$2b$10$gJHb.fvrE3lzT.Y8w329BeVAj.ThSXTVZ.G2cwzn4vKuJG6aUy7JS",
+      "friends": [],
+      "chats": []
+    },
+    {
+      "id": 3,
+      "email": "email@email.com",
+      "name": "name",
+      "username": "username1",
+      "passwordHash": "$2b$10$gJHb.fvrE3lzT.Y8w329BeVAj.ThSXTVZ.G2cwzn4vKuJG6aUy7JS",
+      "friends": [],
+      "chats": []
+    }
+  ]
+}

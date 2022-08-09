@@ -2,6 +2,8 @@
   "name": "express-vue-chatapp",
   "version": "0.0.0",
   "scripts": {
+    "start": "vite && tsc ./server/server.ts && node ./server/server.js",
+    "server": "tsc ./server/server.ts && node ./server/server.js",
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port 4173",
@@ -11,9 +13,15 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "bootstrap": "^5.2.0",
     "bootstrap-vue": "^2.22.0",
+    "cookie-parser": "^1.4.6",
+    "csurf": "^1.11.0",
     "express": "^4.18.1",
+    "jQuery": "^1.7.4",
+    "lowdb": "^3.0.0",
+    "multer": "^1.4.5-lts.1",
     "node": "^18.7.0",
     "ts-node": "^10.9.1",
     "vue": "^3.2.37",
@@ -21,7 +29,11 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/csurf": "^1.11.2",
     "@types/express": "^4.17.13",
+    "@types/jquery": "^3.5.14",
     "@types/jsdom": "^16.2.14",
     "@types/node": "^16.11.47",
     "@vitejs/plugin-vue": "^3.0.1",

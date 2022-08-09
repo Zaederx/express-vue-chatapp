@@ -10,10 +10,13 @@
     {
       "path": "./tsconfig.vitest.json"
     }
-  ],
-  "compilerOptions": {
-    "rootDir": "./src/ts",
-    "outDir": "./src/js"
-  }
+  ]
+  //added
+  // "compilerOptions": {
+  //   "rootDir": "./src/ts",
+  //   "outDir": "./src/js",
+  //   "target":"ES2020",
+  //   "module": "ES2022"
+  // }
   
 }

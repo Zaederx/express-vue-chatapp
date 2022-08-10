@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.app.json",
-  "exclude": [],
+  "exclude": ["mock-aws-s3"],
   "compilerOptions": {
     "composite": true,
     "lib": [],

@@ -10,7 +10,7 @@ import AboutSection from "../components/AboutSection.vue";
    <Router></Router>
    <Banner heading1="Chat" heading2="About"></Banner>
    <HomeMain>
-    <!-- <AboutSection></AboutSection> -->
+    <AboutSection></AboutSection>
    </HomeMain>
    <SiteFooter></SiteFooter>
 </template>

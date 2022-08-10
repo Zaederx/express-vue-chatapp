@@ -2,7 +2,7 @@ import path from "path";
 import { Low, JSONFile } from 'lowdb';
 import { Data } from "./classes/Data.js";
 import { User } from "./classes/User.js";
-import bcrypt from 'bcrypt'
+import bcryptjs from 'bcryptjs'
 //use json file for storage
 const file = path.join('db.json')
 
@@ -17,7 +17,7 @@ await db.read();
 //Set data to default
 db.data ||= {users: []}
 const password = 'password'
-const passwordHash = bcrypt.hashSync(password, 10)
+const passwordHash = bcryptjs.hashSync(password, 10)
 
 var u1:User = new User({id:0 ,email:'email@email.com',
                         name:'name' ,

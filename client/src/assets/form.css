@@ -22,4 +22,5 @@ form
 {
     margin-top: 100px;
     max-height: 400px;
+    /* TODO: change max height to 500px - design branch */
 }

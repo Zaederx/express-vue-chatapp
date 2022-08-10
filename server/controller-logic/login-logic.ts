@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import bcryptjs from 'bcryptjs'
 import { User } from "../db/classes/User.js"
 import db from "../db/db-setup.js"
 import { LoginResponse } from "../helpers/response/login-response.js"
@@ -20,7 +20,7 @@ export function loginLogic(req:any, res:any) {
         //check if email exists in db
         const u:User|undefined = db.data!.users.find((u:User)=> u.email == email)
         //fetch password from db
-        const passwordHash:string = bcrypt.hashSync(password, 10)
+        const passwordHash:string = bcryptjs.hashSync(password, 10)
         if (u?.passwordHash == passwordHash) 
         {
             var response = true//true when there is other data to return

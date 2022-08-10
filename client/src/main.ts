@@ -28,8 +28,11 @@ import * as VueRouter from 'vue-router'
 
 // create routes
 const routes = [
-    { path: '/', name:'Home', component:Home},
-    { path: '/home', name:'Home', component:Home},
+    { path: '/', name:'Home', component:Home,
+    children: [
+                {path: '/home', name: 'Home', component:Home}
+            ]
+    },
     { path: '/about', name:'About', component:About},
     { path: '/login', name:'Login', component:Login},
     { path: '/sign-up', name:'Sign Up', component:SignUp},
@@ -51,7 +54,7 @@ const app = createApp(App)
 .component('Banner', Banner)
 .component('HomeMain', HomeMain)
 .component('SiteFooter', SiteFooter)
-.component('LoginForm', LoginForm)
+// .component('LoginForm', LoginForm)
 .component('SignUpForm', SignUpForm)
 .component('AboutSection', AboutSection)
 .component('UserBanner', UserBanner)

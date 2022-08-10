@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 import db from "../db/db-setup.js";
 import { LoginResponse } from "../helpers/response/login-response.js";
 /**
@@ -16,7 +16,7 @@ export function loginLogic(req, res) {
         //check if email exists in db
         const u = db.data.users.find((u) => u.email == email);
         //fetch password from db
-        const passwordHash = bcrypt.hashSync(password, 10);
+        const passwordHash = bcryptjs.hashSync(password, 10);
         if (u?.passwordHash == passwordHash) {
             var response = true; //true when there is other data to return
             var message = 'Successfully logged in.';

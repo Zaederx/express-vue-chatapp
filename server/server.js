@@ -17,7 +17,7 @@ var csrfProtection = csrf({ cookie: true });
 //Provide CSRF token for session
 //should be available without authentication
 server.get('/csrf-token', csrfProtection, (req, res) => {
-    return res.json({ csrfToken: res.csrfToken() });
+    return res.json({ csrfToken: req.csrfToken() });
 });
 // var csrfToken = $("meta[name='_csrf']").attr("content");
 //set header as default for ajax - csrf
@@ -33,7 +33,8 @@ server.get('/', (req, res) => {
 });
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`server listening on port:${PORT}`);
+    console.log(`server listening on http://localhost:${PORT}`);
+    console.log(`csrf token at http://localhost:${PORT}/csrf-token`);
 });
 //TODO - ADD CONTROLLER FOR CSURF
 //TODO - add login controller

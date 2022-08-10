@@ -23,8 +23,9 @@ var token = {csrfToken:''}
     }
     
  };
-  xhttp.open("GET", url, true);
-  xhttp.send();
+    
+    xhttp.open("GET", url, true);
+    xhttp.send();
 export default {
     // inheritAttrs: true //true is default
     mounted() {

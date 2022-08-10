@@ -3,12 +3,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 //@ts-ignore
 import multer from 'multer';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 //project imports
 import { loginLogic } from './controller-logic/login-logic.js';
 const server = express(); //create a server instance
 const upload = multer({ dest: 'uploads/' }); //see- //TODO //IMPORTANT https://expressjs.com/en/resources/middleware/multer.html
+server.use(cors());
 server.use(bodyParser.json()); //for parsing application json
 server.use(bodyParser.urlencoded({ extended: true })); //for parsing application/x-www-form-urlencoded
 // server.use(multer.array());//for parsing multipart form data
@@ -17,6 +19,9 @@ var csrfProtection = csrf({ cookie: true });
 //Provide CSRF token for session
 //should be available without authentication
 server.get('/csrf-token', csrfProtection, (req, res) => {
+    const name = 'Access-Control-Allow-Origin';
+    const value = 'http://localhost:5173';
+    res.setHeader(name, value);
     return res.json({ csrfToken: req.csrfToken() });
 });
 // var csrfToken = $("meta[name='_csrf']").attr("content");

@@ -134,6 +134,60 @@
       "passwordHash": "$2a$10$16vDs5G0sVIp0eYbY4u2uuYn948vyjuyClS1jVen86jI6.s64JXQe",
       "friends": [],
       "chats": []
+    },
+    {
+      "id": 0,
+      "email": "email@email.com",
+      "name": "name",
+      "username": "username1",
+      "passwordHash": "$2a$10$q4RzXu2yP5yG8l28Wb53ye/9r6wgM7weGqsczET8If6crcZkCvAmS",
+      "friends": [],
+      "chats": []
+    },
+    {
+      "id": 2,
+      "email": "email@email.com",
+      "name": "name",
+      "username": "username1",
+      "passwordHash": "$2a$10$q4RzXu2yP5yG8l28Wb53ye/9r6wgM7weGqsczET8If6crcZkCvAmS",
+      "friends": [],
+      "chats": []
+    },
+    {
+      "id": 3,
+      "email": "email@email.com",
+      "name": "name",
+      "username": "username1",
+      "passwordHash": "$2a$10$q4RzXu2yP5yG8l28Wb53ye/9r6wgM7weGqsczET8If6crcZkCvAmS",
+      "friends": [],
+      "chats": []
+    },
+    {
+      "id": 0,
+      "email": "email@email.com",
+      "name": "name",
+      "username": "username1",
+      "passwordHash": "$2a$10$Zkr43vi7YWFCjlKlw.yo/OcTbj7AD6RR22Tb9n3A8yY0oWTlrDi8a",
+      "friends": [],
+      "chats": []
+    },
+    {
+      "id": 2,
+      "email": "email@email.com",
+      "name": "name",
+      "username": "username1",
+      "passwordHash": "$2a$10$Zkr43vi7YWFCjlKlw.yo/OcTbj7AD6RR22Tb9n3A8yY0oWTlrDi8a",
+      "friends": [],
+      "chats": []
+    },
+    {
+      "id": 3,
+      "email": "email@email.com",
+      "name": "name",
+      "username": "username1",
+      "passwordHash": "$2a$10$Zkr43vi7YWFCjlKlw.yo/OcTbj7AD6RR22Tb9n3A8yY0oWTlrDi8a",
+      "friends": [],
+      "chats": []
     }
   ]
 }

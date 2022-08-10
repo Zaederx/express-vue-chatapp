@@ -1,12 +1,10 @@
-<script setup lang="ts">
+<script setup lang="ts" defer>
 import $ from 'jquery'
 import bcryptjs from 'bcryptjs';
 import { messageToHTML } from '@/helpers/message-to-html.js';
 import type { LoginResponse } from '@/helpers/response/login-response.js'
 var csrfToken = $("meta[name='_csrf']").attr("content");
-var btnLogin = document.querySelector('#btn-login') as HTMLScriptElement
 
-btnLogin.onclick = () => login
 //TODO - COMPLETE AJAX LOGIN REQUEST
 
 
@@ -14,7 +12,7 @@ btnLogin.onclick = () => login
  * Function ensure that user credentials are authenticated.
  * If successful and credentials are valid, returns cookie to user session
  */
-function login()
+function login(event:Event)
 {
     console.log('Attempting to login')
     var email = $("#email").val()
@@ -58,9 +56,11 @@ function login()
             <label for="password">Password</label>
             <input id="password" type="password" name="password" class="form-control"/>
 
-            <button id="btn-login" class="btn btn-primary form-control">Login</button>
-            <button id="btn-sign-up" class="btn btn-warning form-control" href="/sign-up">Sign Up</button>
+            
         </form>
+        <button id="btn-login" class="btn btn-primary form-control" v-on:click="login">Login</button>
+        <button id="btn-sign-up" class="btn btn-warning form-control" href="/sign-up">Sign Up</button>
+        
     </div>
 </template>
 

@@ -19,7 +19,7 @@ var token = {csrfToken:''}
         metaCSRF.name = 'csrf-token'
         metaCSRF.content = csrfToken
         //append to the html document head
-       document.getElementsByTagName('head')[0].appendChild(metaCSRF);
+       document.head.appendChild(metaCSRF);
     }
     
  };

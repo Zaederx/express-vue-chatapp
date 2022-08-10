@@ -3,7 +3,13 @@ import $ from 'jquery'
 import bcryptjs from 'bcryptjs';
 import { messageToHTML } from '@/helpers/message-to-html.js';
 import type { LoginResponse } from '@/helpers/response/login-response.js'
-var csrfToken = $("meta[name='_csrf']").attr("content");
+
+var token = {csrfToken:''}
+window.onload = () => {
+token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
+console.log(`Login Form setup script - csrfToken: ${token.csrfToken}`);
+
+}
 
 //TODO - COMPLETE AJAX LOGIN REQUEST
 
@@ -21,8 +27,8 @@ function login(event:Event)
     var data = {email:email, password:passwordHash}
     $.ajax({
         type:'POST',
-        url: 'https://localhost:3000/login',
-        headers: {'X-CSRF-TOKEN':csrfToken},
+        url: 'http://localhost:3000/login',
+        headers: {'X-CSRF-TOKEN':token.csrfToken},
 		contentType: 'application/json;charset=utf-8;',
 		dataType: 'json',
 		data: data,
@@ -49,7 +55,7 @@ function login(event:Event)
 
 <template>
     <div id="form-container" class="container form-control center">
-        <form id="sign-up-form" class="form">
+        <form id="sign-up-form" class="form" action="#">
             <label for="email">Email</label>
             <input id="email" type="email" name="email" class="form-control"/>
             
@@ -58,9 +64,8 @@ function login(event:Event)
 
             
         </form>
-        <button id="btn-login" class="btn btn-primary form-control" v-on:click="login">Login</button>
+        <button id="btn-login" class="btn btn-primary form-control" @click="login">Login</button>
         <button id="btn-sign-up" class="btn btn-warning form-control" href="/sign-up">Sign Up</button>
-        
     </div>
 </template>
 

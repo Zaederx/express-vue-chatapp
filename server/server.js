@@ -13,7 +13,7 @@ import { loginLogic } from './controller-logic/login-logic.js';
 const PORT = process.env.PORT || 3000;
 const keylist = ['ETwA@S!72', '83HWUW', 'ygT6tT9jNbCr'];
 const keys = new KeyGrip(keylist);
-var sessionCookie = cookieSession({
+var sessionCookieFunction = cookieSession({
     name: 'ChatAppSession',
     keys: keys,
     maxAge: 1000 * 60 * 60 * 24,
@@ -25,9 +25,10 @@ var sessionCookie = cookieSession({
     signed: true,
     overwrite: true
 });
-console.log(sessionCookie);
+console.log(sessionCookieFunction);
 const server = express(); //create a server instance
 const upload = multer({ dest: 'uploads/' }); //see- //TODO //IMPORTANT https://expressjs.com/en/resources/middleware/multer.html
+server.use(sessionCookieFunction);
 server.use(cors());
 server.use(bodyParser.json()); //for parsing application json
 server.use(bodyParser.urlencoded({ extended: true })); //for parsing application/x-www-form-urlencoded

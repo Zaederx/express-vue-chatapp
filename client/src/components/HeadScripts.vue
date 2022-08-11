@@ -1,68 +1,58 @@
-<script setup lang="ts">
-import $ from 'jquery'
-//request the csrf token
-$.ajax({
-            url: 'http://localhost:3000/csrf-token',
-            success: (res)=> {
-                var data = JSON.parse(res)
-                var csrfToken = data.csrfToken 
-                const metaCSRF = document.createElement('meta') as HTMLMetaElement
-                metaCSRF.name = 'csrf-token'
-                metaCSRF.content = csrfToken
-                document.head.append(metaCSRF)
-            }
-        })
-</script>
 <script lang="ts">
 // a place for dependencies to be added to the html head
-var url = 'http://localhost:3000'
+var url = 'http://localhost:3000/csrf-token'
 var xhttp;
   xhttp=new XMLHttpRequest();
   xhttp.onreadystatechange = fetchCSRFToken;
-
+var token = {csrfToken:''}
   function fetchCSRFToken(this:XMLHttpRequest, ev:Event) {
+    console.log('fecthing csrf')
     if (this.readyState == 4 && this.status == 200) {
         //parse response from JSON to JS Object
         var data = JSON.parse(this.response)
         //get the csrf token
         var csrfToken = data.csrfToken 
+        token = data.csrfToken
+        console.log(`csrfToken:${csrfToken}`)
         //create a meta tag and add the token
         const metaCSRF = document.createElement('meta') as HTMLMetaElement
         metaCSRF.name = 'csrf-token'
         metaCSRF.content = csrfToken
         //append to the html document head
-        document.head.append(metaCSRF)
+       document.head.appendChild(metaCSRF);
     }
+    
  };
-  xhttp.open("GET", url, true);
-  xhttp.send();
+    
+    xhttp.open("GET", url, true);
+    xhttp.send();
 export default {
     // inheritAttrs: true //true is default
     mounted() {
 
-        //ajax request for CSRF Token - to put in head as meta tag content
-        var url = 'http://localhost:3000'
-        var xhttp;
-        xhttp=new XMLHttpRequest();
-        xhttp.onreadystatechange = fetchCSRFToken;
+        // //ajax request for CSRF Token - to put in head as meta tag content
+        // var url = 'https://localhost:3000/csrf-token'
+        // var xhttp;
+        // xhttp=new XMLHttpRequest();
+        // xhttp.onreadystatechange = fetchCSRFToken;
 
-        function fetchCSRFToken(this:XMLHttpRequest, ev:Event) {
-            console.log('fetching CSRF Token')
-            if (this.readyState == 4 && this.status == 200) {
-                //parse response from JSON to JS Object
-                var data = JSON.parse(this.response)
-                //get the csrf token
-                var csrfToken = data.csrfToken 
-                //create a meta tag and add the token
-                const metaCSRF = document.createElement('meta') as HTMLMetaElement
-                metaCSRF.name = 'csrf-token'
-                metaCSRF.content = csrfToken
-                //append to the html document head
-                document.head.append(metaCSRF)
-            }
-        };
-        xhttp.open("GET", url, true);
-        xhttp.send();
+        // function fetchCSRFToken(this:XMLHttpRequest, ev:Event) {
+        //     console.log('fetching CSRF Token')
+        //     if (this.readyState == 4 && this.status == 200) {
+        //         //parse response from JSON to JS Object
+        //         var data = JSON.parse(this.response)
+        //         //get the csrf token
+        //         var csrfToken = data.csrfToken 
+        //         //create a meta tag and add the token
+        //         const metaCSRF = document.createElement('meta') as HTMLMetaElement
+        //         metaCSRF.name = 'csrf-token'
+        //         metaCSRF.content = csrfToken
+        //         //append to the html document head
+        //         document.head.append(metaCSRF)
+        //     }
+        // };
+        // xhttp.open("GET", url, true);
+        // xhttp.send();
         
         //view router
         const viewRouter = document.createElement('script') as HTMLScriptElement

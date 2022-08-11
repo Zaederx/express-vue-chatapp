@@ -1,12 +1,16 @@
-<script setup lang="ts">
+<script setup lang="ts" defer>
 import $ from 'jquery'
 import bcryptjs from 'bcryptjs';
 import { messageToHTML } from '@/helpers/message-to-html.js';
 import type { LoginResponse } from '@/helpers/response/login-response.js'
-var csrfToken = $("meta[name='_csrf']").attr("content");
-var btnLogin = document.querySelector('#btn-login') as HTMLScriptElement
 
-btnLogin.onclick = () => login
+var token = {csrfToken:''}
+window.onload = () => {
+token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
+console.log(`Login Form setup script - csrfToken: ${token.csrfToken}`);
+
+}
+
 //TODO - COMPLETE AJAX LOGIN REQUEST
 
 
@@ -14,7 +18,7 @@ btnLogin.onclick = () => login
  * Function ensure that user credentials are authenticated.
  * If successful and credentials are valid, returns cookie to user session
  */
-function login()
+function login(event:Event)
 {
     console.log('Attempting to login')
     var email = $("#email").val()
@@ -23,8 +27,8 @@ function login()
     var data = {email:email, password:passwordHash}
     $.ajax({
         type:'POST',
-        url: 'https://localhost:3000/login',
-        headers: {'X-CSRF-TOKEN':csrfToken},
+        url: 'http://localhost:3000/login',
+        headers: {'X-CSRF-TOKEN':token.csrfToken},
 		contentType: 'application/json;charset=utf-8;',
 		dataType: 'json',
 		data: data,
@@ -51,16 +55,17 @@ function login()
 
 <template>
     <div id="form-container" class="container form-control center">
-        <form id="sign-up-form" class="form">
+        <form id="sign-up-form" class="form" action="#">
             <label for="email">Email</label>
             <input id="email" type="email" name="email" class="form-control"/>
             
             <label for="password">Password</label>
             <input id="password" type="password" name="password" class="form-control"/>
 
-            <button id="btn-login" class="btn btn-primary form-control">Login</button>
-            <button id="btn-sign-up" class="btn btn-warning form-control" href="/sign-up">Sign Up</button>
+            
         </form>
+        <button id="btn-login" class="btn btn-primary form-control" @click="login">Login</button>
+        <button id="btn-sign-up" class="btn btn-warning form-control" href="/sign-up">Sign Up</button>
     </div>
 </template>
 

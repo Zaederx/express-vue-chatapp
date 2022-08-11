@@ -4,9 +4,27 @@ import bodyParser from 'body-parser';
 //@ts-ignore
 import multer from 'multer';
 import cookieParser from 'cookie-parser';
+import cookieSession from 'cookie-session';
 import csrf from 'csurf';
+import KeyGrip from 'keygrip';
 //project imports
 import { loginLogic } from './controller-logic/login-logic.js';
+const PORT = process.env.PORT || 3000;
+const keylist = ['ETwA@S!72', '83HWUW', 'ygT6tT9jNbCr'];
+const keys = new KeyGrip(keylist);
+var sessionCookie = cookieSession({
+    name: 'ChatAppSession',
+    keys: keys,
+    maxAge: 1000 * 60 * 60 * 24,
+    path: '/e-v-chat-app',
+    domain: `http://localhost:${PORT}`,
+    sameSite: 'lax',
+    secure: false,
+    httpOnly: true,
+    signed: true,
+    overwrite: true
+});
+console.log(sessionCookie);
 const server = express(); //create a server instance
 const upload = multer({ dest: 'uploads/' }); //see- //TODO //IMPORTANT https://expressjs.com/en/resources/middleware/multer.html
 server.use(bodyParser.json()); //for parsing application json
@@ -31,7 +49,6 @@ server.get('/csrf-token', csrfProtection, (req, res) => {
 server.get('/', (req, res) => {
     res.send('Hello World');
 });
-const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`server listening on http://localhost:${PORT}`);
     console.log(`csrf token at http://localhost:${PORT}/csrf-token`);

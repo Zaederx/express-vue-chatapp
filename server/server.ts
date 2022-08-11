@@ -3,16 +3,41 @@ import express from 'express';
 import bodyParser from 'body-parser';
 //@ts-ignore
 import multer from 'multer';
-
 import cookieParser from 'cookie-parser';
+import cookieSession from 'cookie-session';
 import csrf from 'csurf'
 import $ from 'jquery'
+
+import KeyGrip from 'keygrip'
 
 //project imports
 import { loginLogic } from './controller-logic/login-logic.js';
 
+const PORT = process.env.PORT || 3000
+
+
+const keylist = ['ETwA@S!72', '83HWUW', 'ygT6tT9jNbCr']
+const keys = new KeyGrip(keylist)
+var sessionCookieFunction = cookieSession({
+    name: 'ChatAppSession',
+    keys: keys,
+    maxAge: 1000 * 60 * 60 * 24,//1000ms * 60 gives minute * 60 gives an hour * 24 gives a day
+    path: '/e-v-chat-app',
+    domain: `http://localhost:${PORT}`,
+    sameSite: 'lax',
+    secure: false,
+    httpOnly: true, //so client javascript cannot access it
+    signed: true,
+    overwrite: true
+})
+
+
+console.log(sessionCookieFunction)
 const server = express();//create a server instance
 const upload = multer({dest: 'uploads/'});//see- //TODO //IMPORTANT https://expressjs.com/en/resources/middleware/multer.html
+
+
+server.use(sessionCookieFunction)
 server.use(bodyParser.json());//for parsing application json
 server.use(bodyParser.urlencoded({ extended:true }))//for parsing application/x-www-form-urlencoded
 // server.use(multer.array());//for parsing multipart form data
@@ -45,7 +70,7 @@ server.get('/', (req, res) =>
     res.send('Hello World')
 })
 
-const PORT = process.env.PORT || 3000
+
 server.listen(PORT, () => 
 {
     console.log(`server listening on http://localhost:${PORT}`)

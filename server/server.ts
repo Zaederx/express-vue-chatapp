@@ -5,56 +5,57 @@ import bodyParser from 'body-parser';
 import multer from 'multer';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import cookieSession from 'cookie-session';
 import csrf from 'csurf'
 import $ from 'jquery'
 import KeyGrip from 'keygrip'
 
 //project imports
 import { loginLogic } from './controller-logic/login-logic.js';
+import { Cookie } from './helpers/cookie.js';
 
-const PORT = process.env.PORT || 3000
-
+export const PORT = process.env.PORT || 3000
+export const serverDOMAIN = `http://localhost:${PORT}`
+export const clientDOMAIN = 'http://localhost:5173'
 
 const keylist = ['ETwA@S!72', '83HWUW', 'ygT6tT9jNbCr']
 const keys = new KeyGrip(keylist)
-var sessionCookieFunction = cookieSession({
-    name: 'ChatAppSession',
-    keys: keys,
-    maxAge: 1000 * 60 * 60 * 24,//1000ms * 60 gives minute * 60 gives an hour * 24 gives a day
-    path: '/e-v-chat-app',
-    domain: `http://localhost:${PORT}`,
-    sameSite: 'lax',
-    secure: false,
-    httpOnly: true, //so client javascript cannot access it
-    signed: true,
-    overwrite: true
-})
-
-
-console.log(sessionCookieFunction)
 const server = express();//create a server instance
 const upload = multer({dest: 'uploads/'});//see- //TODO //IMPORTANT https://expressjs.com/en/resources/middleware/multer.html
 
-
-server.use(sessionCookieFunction)
 server.use(cors())
 server.use(bodyParser.json());//for parsing application json
 server.use(bodyParser.urlencoded({ extended:true }))//for parsing application/x-www-form-urlencoded
 // server.use(multer.array());//for parsing multipart form data
 server.use(cookieParser())//for parsing cookies
 
+//run server
+server.listen(PORT, () => 
+{
+    console.log(`server listening on http://localhost:${PORT}`)
+    console.log(`csrf token at http://localhost:${PORT}/csrf-token`)
+})
+
+
 
 var csrfProtection = csrf({cookie:true})
 
 //Provide CSRF token for session
 //should be available without authentication
+/**
+ * NOTE FROM MDN WEBDOCS: The Access-Control-Allow-Origin response header 
+ * indicates whether the response can be shared with 
+ * requesting code from the given origin.
+ */
 server.get('/csrf-token', csrfProtection, (req,res) => {
-    const name = 'Access-Control-Allow-Origin'
-    const value = 'http://localhost:5173'
+    //set access control
+    const name = 'Access-Control-Allow-Origin'//
+    const value = clientDOMAIN
     res.setHeader(name,value)
     return res.json({csrfToken:req.csrfToken()})
 })
+
+
+
 
 // var csrfToken = $("meta[name='_csrf']").attr("content");
 //set header as default for ajax - csrf
@@ -75,11 +76,7 @@ server.get('/', (req, res) =>
 })
 
 
-server.listen(PORT, () => 
-{
-    console.log(`server listening on http://localhost:${PORT}`)
-    console.log(`csrf token at http://localhost:${PORT}/csrf-token`)
-})
+
 
 //TODO - ADD CONTROLLER FOR CSURF
 
@@ -89,3 +86,43 @@ server.post('/login', csrfProtection ,(req, res) => loginLogic(req,res))
 server.post('/login')
 
 //TODO
+
+/**
+ * Returns a cookie that's had its 
+ * fields set for this app. 
+ * @param usernameHash a hashed version of the user's username
+ * The inner workings are:
+ * 
+ * ```````````
+ *  function getAppCookie()
+{
+    var cname = 'Express-Vue-ChatApp'
+    var cvalue = ''
+    var domain:string = `http://localhost:${PORT}`
+    var path = '/'
+    var expires:string|Date = new Date()
+    var secure:boolean = false
+    var httpOnly = true
+    var sameSite:'strict'|'lax'|'none' = 'lax'
+    var cookie = new Cookie(cname,cvalue,domain,path,expires,secure,httpOnly,sameSite)
+    var cookieStr = cookie.getCookieStr()
+
+    return cookieStr
+}
+ * `````````````
+ */
+export function getAppCookie(usernameHash:string)
+{
+    var cname = 'Express-Vue-ChatApp'
+    var cvalue = usernameHash
+    var domain:string = `http://localhost:${PORT}`
+    var path = '/'
+    var expires:string|Date = new Date()
+    var secure:boolean = false
+    var httpOnly = true
+    var sameSite:'strict'|'lax'|'none' = 'lax'
+    var cookie = new Cookie(cname,cvalue,domain,path,expires,secure,httpOnly,sameSite)
+    var cookieStr = cookie.getCookieStr()
+
+    return cookieStr
+}

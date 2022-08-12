@@ -2,6 +2,7 @@ import bcryptjs from 'bcryptjs'
 import { User } from "../db/classes/User.js"
 import db from "../db/db-setup.js"
 import { LoginResponse } from "../helpers/response/login-response.js"
+import { serverDOMAIN, getAppCookie, clientDOMAIN } from '../server.js'
 
 /**
  * Logic for the login controller method
@@ -27,6 +28,15 @@ export function loginLogic(req:any, res:any) {
             var message = 'Successfully logged in.'
             var link = ''//(Optional)a link for http requesting data from node server
             var serverRes = new LoginResponse(response, message, u?.id, link)
+            //set app cookie
+            var emailHash:string = bcryptjs.hashSync(email, 10)
+            var cookieStr = getAppCookie(emailHash)
+            res.setHeader('Set-Cookie', cookieStr)
+            //set domain access control
+            const name = 'Access-Control-Allow-Origin'
+            const value = clientDOMAIN
+            res.setHeader(name, value)
+            //set 
             res.send(serverRes)
         }
     }

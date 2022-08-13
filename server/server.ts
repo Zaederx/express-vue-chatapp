@@ -21,12 +21,18 @@ const keylist = ['ETwA@S!72', '83HWUW', 'ygT6tT9jNbCr']
 const keys = new KeyGrip(keylist)
 const server = express();//create a server instance
 const upload = multer({dest: 'uploads/'});//see- //TODO //IMPORTANT https://expressjs.com/en/resources/middleware/multer.html
-
+const csrfProtection = csrf({
+                            cookie:true,
+                            value:
+                        })
+function 
 server.use(cors())
 server.use(bodyParser.json());//for parsing application json
 server.use(bodyParser.urlencoded({ extended:true }))//for parsing application/x-www-form-urlencoded
 // server.use(multer.array());//for parsing multipart form data
 server.use(cookieParser())//for parsing cookies
+server.use(csrfProtection)
+
 
 //run server
 server.listen(PORT, () => 
@@ -37,7 +43,7 @@ server.listen(PORT, () =>
 
 
 
-var csrfProtection = csrf({cookie:true})
+
 
 //Provide CSRF token for session
 //should be available without authentication
@@ -46,11 +52,18 @@ var csrfProtection = csrf({cookie:true})
  * indicates whether the response can be shared with 
  * requesting code from the given origin.
  */
-server.get('/csrf-token', csrfProtection, (req,res) => {
+server.get('/csrf-token', (req,res) => {
     //set access control
     const name = 'Access-Control-Allow-Origin'//
     const value = clientDOMAIN
     res.setHeader(name,value)
+    //default way to pass csrf in Express
+    const cookieName = '_csrf'
+    const cookieValue = req.csrfToken()
+    var cookie = getAppCookie(cookieName,cookieValue)
+    res.setHeader('Set-Cookie', cookie.getCookieStr())
+    res.setHeader('test_csrf',req.csrfToken())
+    //also add it in in the json for retrieval in js - needed to insert into meta tag
     return res.json({csrfToken:req.csrfToken()})
 })
 
@@ -82,19 +95,23 @@ server.get('/', (req, res) =>
 
 
 //TODO - add login controller
-server.post('/login', csrfProtection ,(req, res) => loginLogic(req,res))
-server.post('/login')
+server.post('/login', csrfProtection ,(req, res) => 
+{
+    loginLogic(req,res)
+})
+// server.post('/login')
 
 //TODO
 
 /**
  * Returns a cookie that's had its 
  * fields set for this app. 
- * @param usernameHash a hashed version of the user's username
+ * @param name name of the cookie
+ * @param value value to be passed with cookie name
  * The inner workings are:
  * 
  * ```````````
- *  function getAppCookie()
+ *  function getAppCookie(name:string, value:string)
 {
     var cname = 'Express-Vue-ChatApp'
     var cvalue = ''
@@ -111,18 +128,18 @@ server.post('/login')
 }
  * `````````````
  */
-export function getAppCookie(usernameHash:string)
+export function getAppCookie(name:string, value:string):Cookie
 {
-    var cname = 'Express-Vue-ChatApp'
-    var cvalue = usernameHash
+    var cname = name
+    var cvalue = value
     var domain:string = `http://localhost:${PORT}`
     var path = '/'
-    var expires:string|Date = new Date()
+    var expires:string|Date|null = null
     var secure:boolean = false
     var httpOnly = true
     var sameSite:'strict'|'lax'|'none' = 'lax'
     var cookie = new Cookie(cname,cvalue,domain,path,expires,secure,httpOnly,sameSite)
-    var cookieStr = cookie.getCookieStr()
+    // var cookieStr = cookie.getCookieStr()
 
-    return cookieStr
+    return cookie
 }

@@ -1,14 +1,16 @@
+import { Cookie } from './helpers/cookie.js';
 export declare const PORT: string | number;
 export declare const serverDOMAIN: string;
 export declare const clientDOMAIN = "http://localhost:5173";
 /**
  * Returns a cookie that's had its
  * fields set for this app.
- * @param usernameHash a hashed version of the user's username
+ * @param name name of the cookie
+ * @param value value to be passed with cookie name
  * The inner workings are:
  *
  * ```````````
- *  function getAppCookie()
+ *  function getAppCookie(name:string, value:string)
 {
     var cname = 'Express-Vue-ChatApp'
     var cvalue = ''
@@ -25,4 +27,4 @@ export declare const clientDOMAIN = "http://localhost:5173";
 }
  * `````````````
  */
-export declare function getAppCookie(usernameHash: string): string;
+export declare function getAppCookie(name: string, value: string): Cookie;

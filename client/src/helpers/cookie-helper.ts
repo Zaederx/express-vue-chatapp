@@ -11,7 +11,7 @@
  * 
  * 
  */
-export class Cookie {
+ export class Cookie {
     name:string
     value:string
     domain:string
@@ -71,4 +71,49 @@ export class Cookie {
         cookie += `SameSite=${this.sameSite};`
         return cookie;
     }
+}
+
+
+export const PORT = 3000
+export const serverDOMAIN = `http://localhost:${PORT}`
+export const clientDOMAIN = 'http://localhost:5173'
+/**
+ * Returns a cookie that's had its 
+ * fields set for this app. 
+ * @param name name of the cookie
+ * @param value value to be passed with cookie name
+ * The inner workings are:
+ * 
+ * ```````````
+ *  function getAppCookie(name:string, value:string)
+{
+    var cname = 'Express-Vue-ChatApp'
+    var cvalue = ''
+    var domain:string = `http://localhost:${PORT}`
+    var path = '/'
+    var expires:string|Date = new Date()
+    var secure:boolean = false
+    var httpOnly = true
+    var sameSite:'strict'|'lax'|'none' = 'lax'
+    var cookie = new Cookie(cname,cvalue,domain,path,expires,secure,httpOnly,sameSite)
+    var cookieStr = cookie.getCookieStr()
+
+    return cookieStr
+}
+ * `````````````
+ */
+export function getAppCookie(name:string, value:string):Cookie
+{
+    var cname = name
+    var cvalue = value
+    var domain:string = `http://localhost:${PORT}`
+    var path = '/'
+    var expires:string|Date|null = null
+    var secure:boolean = false
+    var httpOnly = true
+    var sameSite:'strict'|'lax'|'none' = 'lax'
+    var cookie = new Cookie(cname,cvalue,domain,path,expires,secure,httpOnly,sameSite)
+    // var cookieStr = cookie.getCookieStr()
+
+    return cookie
 }

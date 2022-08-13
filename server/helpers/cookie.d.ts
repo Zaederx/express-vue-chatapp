@@ -5,7 +5,7 @@
  *
  * This call just help work as an API for creating those strings.
  * see
- *  and [Cookies -runestone academy](https://runestone.academy/ns/books/published/webfundamentals/CGI/cookies.html) and [Link about testing cookie attributes](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/06-Session_Management_Testing/02-Testing_for_Cookies_Attributes)
+ *  and [Cookies - runestone academy](https://runestone.academy/ns/books/published/webfundamentals/CGI/cookies.html) and [Link about testing cookie attributes](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/06-Session_Management_Testing/02-Testing_for_Cookies_Attributes)
  * and [Cookies - MZD](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) and [Set-Cookie Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie)
  * for information about cookies
  *
@@ -16,7 +16,7 @@ export declare class Cookie {
     value: string;
     domain: string;
     path: string;
-    expires: string | Date;
+    expires: string | Date | null;
     secure: boolean;
     httpOnly: boolean;
     sameSite: string;
@@ -32,6 +32,6 @@ export declare class Cookie {
      * @param httpOnly whether the cookie should be inaccessible to javascript
      * @param sameSite whether the cookies can be sent with cross site requests
      */
-    constructor(name: string, value: string, domain: string, path?: string, expires?: string | Date, secure?: boolean, httpOnly?: boolean, sameSite?: 'strict' | 'lax' | 'none');
+    constructor(name: string, value: string, domain: string, path?: string, expires?: string | Date | null, secure?: boolean, httpOnly?: boolean, sameSite?: 'strict' | 'lax' | 'none' | null);
     getCookieStr(): string;
 }

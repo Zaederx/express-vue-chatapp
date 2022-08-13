@@ -3,12 +3,15 @@ import $ from 'jquery'
 import bcryptjs from 'bcryptjs';
 import { messageToHTML } from '@/helpers/message-to-html.js';
 import type { LoginResponse } from '@/helpers/response/login-response.js'
+import { getAppCookie } from '@/helpers/cookie-helper';
 
+
+
+const clientDOMAIN = `http://localhost:5173`
 var token = {csrfToken:''}
 window.onload = () => {
-token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
-console.log(`Login Form setup script - csrfToken: ${token.csrfToken}`);
-
+    token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
+    console.log(`Login Form setup script - csrfToken: ${token.csrfToken}`);
 }
 
 //TODO - COMPLETE AJAX LOGIN REQUEST
@@ -21,17 +24,25 @@ console.log(`Login Form setup script - csrfToken: ${token.csrfToken}`);
 function login(event:Event)
 {
     console.log('Attempting to login')
-    var email = $("#email").val()
+    var email = $("#email").val() as string
     var password = $("#password").val() as string
     var passwordHash = bcryptjs.hashSync(password,10)
-    var data = {email:email, password:passwordHash}
+    var data = {email:email, password:passwordHash, _csrf:token.csrfToken}
+    const cookieName = '_csrf'
+    const cookieValue = token.csrfToken
+    var cookie = getAppCookie(cookieName,cookieValue)
     $.ajax({
         type:'POST',
         url: 'http://localhost:3000/login',
-        headers: {'X-CSRF-TOKEN':token.csrfToken},
+        headers: {
+            'Cookie':`_csrf=${token.csrfToken}`,//maybe express expects it as a cookie?
+            // 'CSRF-Token':token.csrfToken,//NOT SURE SO SEND IT BOTH WAYS
+            // 'XSRF-Token':token.csrfToken,//default header name used in Express
+            'Access-Control-Allow-Origin':clientDOMAIN
+            },
 		contentType: 'application/json;charset=utf-8;',
 		dataType: 'json',
-		data: data,
+		data: JSON.stringify(data),
 		success: (res:LoginResponse) => {
             const present = true
             if(res.res == present)

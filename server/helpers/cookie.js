@@ -5,7 +5,7 @@
  *
  * This call just help work as an API for creating those strings.
  * see
- *  and [Cookies -runestone academy](https://runestone.academy/ns/books/published/webfundamentals/CGI/cookies.html) and [Link about testing cookie attributes](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/06-Session_Management_Testing/02-Testing_for_Cookies_Attributes)
+ *  and [Cookies - runestone academy](https://runestone.academy/ns/books/published/webfundamentals/CGI/cookies.html) and [Link about testing cookie attributes](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/06-Session_Management_Testing/02-Testing_for_Cookies_Attributes)
  * and [Cookies - MZD](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) and [Set-Cookie Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie)
  * for information about cookies
  *
@@ -29,25 +29,30 @@ export class Cookie {
         this.value = value;
         this.domain = domain;
         this.path = path ? path : '/';
-        this.expires = expires ? expires.toString() : new Date().toDateString();
+        //set expiry date
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = d.getMonth();
+        const day = d.getDate();
+        const twoDaysTime = day + 2;
+        this.expires = expires != null ? expires.toString() : new Date(year, month, twoDaysTime);
         // this.size = size ? size : 
         this.secure = secure ? secure : false;
         this.httpOnly = httpOnly ? httpOnly : false;
-        this.sameSite = sameSite ? sameSite : 'lax';
+        this.sameSite = sameSite != null ? sameSite : 'lax';
     }
     getCookieStr() {
-        var cookie = '';
-        cookie.concat(`${this.name}=${this.value};`);
-        cookie.concat(`Domain=${this.domain};`);
-        cookie.concat(`Path=${this.path};`);
-        cookie.concat(`Expires=${this.expires};`);
+        var cookie = `${this.name}=${this.value};`;
+        cookie += `Domain=${this.domain};`;
+        cookie += `Path=${this.path};`;
+        cookie += `Expires=${this.expires};`;
         if (this.secure == true) {
             cookie.concat('Secure;');
         }
         if (this.httpOnly = true) {
             cookie.concat('HttpOnly;');
         }
-        cookie.concat(`SameSite=${this.sameSite}`);
+        cookie += `SameSite=${this.sameSite};`;
         return cookie;
     }
 }

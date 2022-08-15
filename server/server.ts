@@ -60,7 +60,6 @@ server.listen(PORT, () =>
 
 
 //TODO - add login controller
-server.post('/login', csrfProtection ,(req, res) => loginLogic(req,res))
-server.post('/login')
+server.post('/login' ,(req, res) => loginLogic(req,res))
 
 //TODO

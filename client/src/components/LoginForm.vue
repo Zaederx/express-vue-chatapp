@@ -7,11 +7,7 @@ import type { LoginResponse } from '@/helpers/response/login-response.js';
 
 const serverDOMAIN = 'http://localhost:3000'
 const clientDOMAIN = 'http://localhost:5173'
-var token = {csrfToken:''}
-window.onload = () => {
-    token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
-    console.log(`Login Form setup script - csrfToken: ${token.csrfToken}`);
-}
+
 
 //TODO - COMPLETE AJAX LOGIN REQUEST
 
@@ -26,8 +22,13 @@ window.onload = () => {
  */
 function login(event:Event)
 {
+    var token = {csrfToken:''}
+    
+    token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
+    console.log(`Login Form setup script - csrfToken: ${token.csrfToken}`);
     console.log('Attempting to login')
-    console.log(`cookies: ${document.cookie}`)
+    console.log(`document.cookie: ${document.cookie}`)
+    console.log(`token.csrfToken: ${token.csrfToken}`)
     var email = $("#email").val() as string
     var password = $("#password").val() as string
     var passwordHash = bcryptjs.hashSync(password,10)
@@ -37,9 +38,9 @@ function login(event:Event)
         type:'POST',
         url: 'http://localhost:3000/login',
         //accidentally sets Access-Control-Allow-Origins twice - setting it to *
-        // xhrFields:{
-        //     withCredentials: true//ignore cookies when false
-        // },
+        xhrFields:{
+            withCredentials: true//ignore cookies when false
+        },
         headers: {
             // 'Cookie':document.cookie,//maybe express expects it as a cookie?
             'CSRF-Token':token.csrfToken,//NOT SURE SO SEND IT BOTH WAYS

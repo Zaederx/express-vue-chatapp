@@ -1,43 +1,26 @@
 <script lang="ts">
 // a place for dependencies to be added to the html head
+//IMPORTANT try to log in with authentication cookie
 
-//makine a request for a CSRF token
+
+//IMPORTANT check if there is a csrfToken present, if no - make a request
+
+//making a request for a CSRF token
 console.warn('************* HeadScript.vue script **************')
 var url = 'http://localhost:3000/csrf-token'
 var response:Response = await fetch(url,{
                             method: 'GET',//IMPORTANT CONSIDER CHANGING IT TO POST
-                            credentials: 'include'
-                          })
+                            credentials: 'include' //whether user agent should send and recieve cookies - see [link](https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials) and [link](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+                        })
 var data = await response.json()
-document.cookie = response.headers.get('Set-Cookie') as string
+// document.cookie = response.headers.get('Set-Cookie') as string
 console.log(`document.cookie:${document.cookie}`)
 console.warn('************* End of script HeadSciprt.vue **************')
-// var xhttp;
-//   xhttp=new XMLHttpRequest();
-//   xhttp.onreadystatechange = fetchCSRFToken;
-// var token = {csrfToken:''}
-//   function fetchCSRFToken(this:XMLHttpRequest, ev:Event) {
-//     console.log('fetching csrf')
-//     if (this.readyState == 4 && this.status == 200) {
-//         //parse response from JSON to JS Object
-//         console.log(`cookie from response:${this.response}`)
-//         var data = JSON.parse(this.response)
-//         //get the csrf token
-//         var csrfToken = data.csrfToken 
-//         token = data.csrfToken
-//         console.log(`csrfToken:${csrfToken}`)
-//         //create a meta tag and add the token
-//         const metaCSRF = document.createElement('meta') as HTMLMetaElement
-//         metaCSRF.name = 'csrf-token'
-//         metaCSRF.content = csrfToken
-//         //append to the html document head
-//        document.head.appendChild(metaCSRF);
-//     }
-//  };
-//     //set async to false - so runs at start with the head before i.e. Login Form is called
-//     //caused issues sometimes when set to true - would sometimes be fetched too late
-//     xhttp.open("GET", url, true);
-//     xhttp.send();
+//create meta tag with csrf token
+const csrfToken = document.createElement('meta') as HTMLMetaElement
+csrfToken.name = 'csrf-token'
+csrfToken.content= data.csrfToken
+document.head.append(csrfToken)
 export default {
     // inheritAttrs: true //true is default
     mounted() {
@@ -77,8 +60,8 @@ export default {
 
         // // <meta th:name="_csrf" th:content="${_csrf.token}"/>
         // const csrfToken = document.createElement('meta') as HTMLMetaElement
-        // csrfToken.name = '_csrf'
-        // csrfToken.content="${_csrf.token}"
+        // csrfToken.name = 'csrf-token'
+        // csrfToken.content="${csrf-token.token}"
 
         //add popperjs, bootstrapJS and bootstrapCSS to head tag
         document.head.append( popperjs, bootstrapJS, bootstrapCSS, fa)

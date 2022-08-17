@@ -92,7 +92,7 @@ const props = defineProps({
 
 .nav-center
 {
-  display:gird;
+  display: grid;
   justify-content:center;
 }
 

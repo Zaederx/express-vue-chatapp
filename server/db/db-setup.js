@@ -13,19 +13,19 @@ await db.read();
 db.data || (db.data = { users: [] });
 const password = 'password';
 const passwordHash = bcryptjs.hashSync(password, 10);
-var u1 = new User({ id: 0, email: 'email@email.com',
+var u1 = new User({ id: 0, email: 'email0@email.com',
+    name: 'name',
+    username: 'username0',
+    password: passwordHash
+});
+var u2 = new User({ id: 1, email: 'email1@email.com',
     name: 'name',
     username: 'username1',
     password: passwordHash
 });
-var u2 = new User({ id: 2, email: 'email@email.com',
+var u3 = new User({ id: 2, email: 'email2@email.com',
     name: 'name',
-    username: 'username1',
-    password: passwordHash
-});
-var u3 = new User({ id: 3, email: 'email@email.com',
-    name: 'name',
-    username: 'username1',
+    username: 'username2',
     password: passwordHash
 });
 db.data.users.push(u1);

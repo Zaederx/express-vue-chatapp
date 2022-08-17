@@ -35,17 +35,17 @@ export class Cookie {
         const month = d.getMonth();
         const day = d.getDate();
         const twoDaysTime = day + 2;
-        this.expires = expires != null ? expires.toString() : new Date(year, month, twoDaysTime);
+        this.expires = expires != null ? expires : new Date(year, month, twoDaysTime);
         // this.size = size ? size : 
         this.secure = secure ? secure : false;
         this.httpOnly = httpOnly ? httpOnly : false;
-        this.sameSite = sameSite != null ? sameSite : 'lax';
+        this.sameSite = sameSite != null ? sameSite : 'Lax';
     }
     getCookieStr() {
         var cookie = `${this.name}=${this.value};`;
         cookie += `Domain=${this.domain};`;
         cookie += `Path=${this.path};`;
-        cookie += `Expires=${this.expires};`;
+        cookie += `Expires=${this.expires.toUTCString()};`;
         if (this.secure == true) {
             cookie.concat('Secure;');
         }
@@ -54,5 +54,8 @@ export class Cookie {
         }
         cookie += `SameSite=${this.sameSite};`;
         return cookie;
+    }
+    print() {
+        console.log('\n' + `printing cookie:${this.getCookieStr()}`);
     }
 }

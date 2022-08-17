@@ -34,7 +34,7 @@ export class Cookie {
      * @param httpOnly whether the cookie should be inaccessible to javascript
      * @param sameSite whether the cookies can be sent with cross site requests
      */
-    constructor(name:string, value:string, domain:string, path?:string, expires?:string|Date|null, secure?:boolean, httpOnly?:boolean, sameSite?:'strict'|'lax'|'none'|null) {
+    constructor(name:string, value:string, domain:string, path?:string, expires?:string|Date|null, secure?:boolean, httpOnly?:boolean, sameSite?:'Strict'|'Lax'|'None'|null) {
         this.name = name
         this.value = value
         this.domain = domain 
@@ -45,11 +45,11 @@ export class Cookie {
         const month = d.getMonth()
         const day = d.getDate()
         const twoDaysTime = day + 2
-        this.expires = expires != null ? expires.toString() : new Date(year,month,twoDaysTime)
+        this.expires = expires != null ? expires : new Date(year,month,twoDaysTime)
         // this.size = size ? size : 
         this.secure = secure ? secure : false
         this.httpOnly = httpOnly ? httpOnly : false
-        this.sameSite = sameSite != null ? sameSite : 'lax'
+        this.sameSite = sameSite != null ? sameSite : 'Lax'
     }
 
 
@@ -57,9 +57,10 @@ export class Cookie {
 
     getCookieStr() {
         var cookie:string = `${this.name}=${this.value};`
+
         cookie += `Domain=${this.domain};`
         cookie += `Path=${this.path};`
-        cookie += `Expires=${this.expires};`
+        cookie += `Expires=${(this.expires as Date).toUTCString()};`
         if (this.secure == true)
         {
             cookie.concat('Secure;')
@@ -70,5 +71,9 @@ export class Cookie {
         }
         cookie += `SameSite=${this.sameSite};`
         return cookie;
+    }
+
+    print() {
+        console.log('\n'+`printing cookie:${this.getCookieStr()}`)
     }
 }

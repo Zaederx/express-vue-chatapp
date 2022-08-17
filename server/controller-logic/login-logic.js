@@ -31,8 +31,8 @@ export function loginLogic(req, res) {
             //set app cookie
             var cookieName = 'Express-Vue-ChatApp'; //name
             var emailHash = bcryptjs.hashSync(email, 10); //value
-            var cookie = getAppCookie(cookieName, emailHash);
-            res.setHeader('Set-Cookie', cookie.getCookieStr());
+            var cookie = getAppCookie(cookieName, emailHash, clientDOMAIN);
+            res.setHeader('Set-Cookie', [cookie.getCookieStr()]);
             //set domain access control
             const name = 'Access-Control-Allow-Origin';
             const value = clientDOMAIN;

@@ -32,6 +32,7 @@ export declare class Cookie {
      * @param httpOnly whether the cookie should be inaccessible to javascript
      * @param sameSite whether the cookies can be sent with cross site requests
      */
-    constructor(name: string, value: string, domain: string, path?: string, expires?: string | Date | null, secure?: boolean, httpOnly?: boolean, sameSite?: 'strict' | 'lax' | 'none' | null);
+    constructor(name: string, value: string, domain: string, path?: string, expires?: string | Date | null, secure?: boolean, httpOnly?: boolean, sameSite?: 'Strict' | 'Lax' | 'None' | null);
     getCookieStr(): string;
+    print(): void;
 }

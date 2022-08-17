@@ -1,7 +1,7 @@
 import { Cookie } from './helpers/cookie.js';
 export declare const PORT: string | number;
 export declare const serverDOMAIN: string;
-export declare const clientDOMAIN = "http://localhost:5173";
+export declare const clientDOMAIN = "https://localhost:5173";
 /**
  * Returns a cookie that's had its
  * fields set for this app.

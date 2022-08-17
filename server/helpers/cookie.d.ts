@@ -28,7 +28,7 @@ export declare class Cookie {
      * @param path which path at the chosen domain should the cookie be sent to - '/' by default
      * @param expires when the cookie should expire / be deleted from browser
      * @param size size of the cookie
-     * @param secure whether to use https or http
+     * @param secure whether to use https or not (not being http instead)
      * @param httpOnly whether the cookie should be inaccessible to javascript
      * @param sameSite whether the cookies can be sent with cross site requests
      */

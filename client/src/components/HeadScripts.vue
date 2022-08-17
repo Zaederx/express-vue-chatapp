@@ -2,18 +2,13 @@
 // a place for dependencies to be added to the html head
 
 //makine a request for a CSRF token
-console.warn('************* HeadSciprt.vue script **************')
+console.warn('************* HeadScript.vue script **************')
 var url = 'http://localhost:3000/csrf-token'
 var response:Response = await fetch(url,{
                             method: 'GET',//IMPORTANT CONSIDER CHANGING IT TO POST
                             credentials: 'include'
                           })
 var data = await response.json()
-console.log(`data:${JSON.stringify(data)}`)
-console.log(`response: ${data.csrfToken}`)
-var token = {csrfToken:data.csrfToken}
-console.log(`data.setCookie:${data.setCookie}`)
-console.log(`response.headers:${response.headers.get('Set-Cookie')}`)
 document.cookie = response.headers.get('Set-Cookie') as string
 console.log(`document.cookie:${document.cookie}`)
 console.warn('************* End of script HeadSciprt.vue **************')

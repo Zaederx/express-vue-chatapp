@@ -18,7 +18,7 @@ import { Cookie } from './helpers/cookie.js';
 
 export const PORT = process.env.PORT || 3000
 export const serverDOMAIN = `http://localhost:${PORT}`
-export const clientDOMAIN = 'http://localhost:5173'
+export const clientDOMAIN = 'https://localhost:5173'
 
 const keylist = ['ETwA@S!72', '83HWUW', 'ygT6tT9jNbCr']
 const keys = new KeyGrip(keylist)
@@ -77,15 +77,14 @@ server.listen(PORT, () =>
 server.get('/csrf-token', (req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => {
     //set access control origin
     const name = 'Access-Control-Allow-Origin'//
-    const value:string[] = []
-    value[0] = clientDOMAIN//clientDOMAIN
+    const value:string = clientDOMAIN//clientDOMAIN
     res.setHeader(name,value)
     //set access control credentials
     res.setHeader('Access-Control-Allow-Credentials','true')
     //set csrf cookie and test cookie
     const cookieName = 'csrfToken'
     const cookieValue = req.csrfToken()
-    var cookie = getAppCookie(cookieName,cookieValue,clientDOMAIN)
+    var cookie = getAppCookie(cookieName,cookieValue,'localhost')
     res.setHeader('Set-Cookie', [cookie.getCookieStr()])
     cookie.print()
     //also add it in in the json for retrieval in js - needed to insert into meta tag
@@ -162,8 +161,8 @@ export function getAppCookie(name:string, value:string, domain:string):Cookie
     var cdomain = domain//which hosts can recieve a cookies
     var path = '/'
     var expires:string|Date|null = null
-    var secure:boolean = false
-    var httpOnly = false
+    var secure:boolean = true//i.e. use https
+    var httpOnly = true
     var sameSite:'Strict'|'Lax'|'None' = 'None'
     var cookie = new Cookie(cname,cvalue,cdomain,path,expires,secure,httpOnly,sameSite)
     // var cookieStr = cookie.getCookieStr()

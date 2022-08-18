@@ -32,4 +32,18 @@ export class User {
         this.chats = obj.chats ? obj.chats : [];
         this.sessionId = sessionId ? sessionId : ''
     }
+
+    toString(): string {
+        var str = `User: {
+            id: ${this.id},
+            email: ${this.email},
+            name: ${this.name},
+            username: ${this.username},
+            passwordHash: ${this.passwordHash},
+            friends: ${this.friends.length},
+            chats: ${this.chats.length},
+            sessionId: ${this.sessionId}
+        }`
+        return str
+    }
 }

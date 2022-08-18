@@ -1,3 +1,4 @@
+import bcryptjs from 'bcryptjs';
 import db from "../db/db-setup.js";
 import { getAppCookie } from '../helpers/cookie-defaults.js';
 import { LoginResponse } from "../helpers/response/login-response.js";
@@ -15,20 +16,20 @@ export async function loginLogic(req, res) {
     var body = JSON.stringify(req.body);
     var bodyJSON = JSON.parse(body);
     const email = bodyJSON.email;
-    const passwordHash = bodyJSON.password; //already hashed at client vue
-    console.log(`body:${body}`);
+    const password = bodyJSON.password; //already hashed at client vue
     console.log(`bodyJSON:${bodyJSON}`);
     console.log(`email:${email}`);
-    console.log(`passwordHash:${passwordHash}`);
+    console.log(`passwordHash:${password}`);
     //if variables are present / not undefined / empty
-    if (email && passwordHash) {
+    if (email && password) {
         //check if email exists in db
         await db.read();
         const u = db.data.users.find((u) => u.email == email);
         console.log('\n email matches');
+        console.log(u);
         //fetch password from db
-        // const passwordHash:string = bcryptjs.hashSync(password, 10)
-        if (u?.passwordHash == passwordHash) {
+        const matching = bcryptjs.compareSync(password, u?.passwordHash);
+        if (matching) {
             console.log('\n passwordHashes match');
             var response = true; //true when there is other data to return
             var message = 'Successfully logged in.';
@@ -42,9 +43,12 @@ export async function loginLogic(req, res) {
             //store session id with user
             u.sessionId = sessionId;
             db.write();
+            
             const userCheck = db.data.users.find((u) => u.email == email);
+            
             if (userCheck?.sessionId) {
                 console.log(`sessionId:${userCheck?.sessionId}, was properly stored`);
+                //TODO - CREATE SESSION COOKIE
             }
             //set domain access control
             const name = 'Access-Control-Allow-Origin';
@@ -53,6 +57,9 @@ export async function loginLogic(req, res) {
             //set 
             res.send(serverRes);
         }
+        else {
+            res.send(new LoginResponse(false));
+        }
     }
-    res.send(new LoginResponse(false));
+    
 }

@@ -34,8 +34,7 @@ function login(event:Event)
     console.log(`token.csrfToken: ${token.csrfToken}`)
     var email = $("#email").val() as string
     var password = $("#password").val() as string
-    var passwordHash = bcryptjs.hashSync(password,10)
-    var data = {email:email, password:passwordHash}
+    var data = {email:email, password:password}
     // var cookie = getAppCookie(cookieName,cookieValue)
     $.ajax({
         type:'POST',

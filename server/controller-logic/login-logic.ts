@@ -19,22 +19,22 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
     var body = JSON.stringify(req.body)
     var bodyJSON = JSON.parse(body)
     const email = bodyJSON.email
-    const passwordHash = bodyJSON.password//already hashed at client vue
+    const password = bodyJSON.password//already hashed at client vue
 
-    console.log(`body:${body}`)
     console.log(`bodyJSON:${bodyJSON}`)
     console.log(`email:${email}`)
-    console.log(`passwordHash:${passwordHash}`)
+    console.log(`passwordHash:${password}`)
     //if variables are present / not undefined / empty
-    if (email && passwordHash) 
+    if (email && password) 
     {
         //check if email exists in db
         await db.read()
         const u:User|undefined = db.data!.users.find((u:User)=> u.email == email)
         console.log('\n email matches')
+        console.log(u)
         //fetch password from db
-        // const passwordHash:string = bcryptjs.hashSync(password, 10)
-        if (u?.passwordHash == passwordHash) 
+        const matching:boolean = bcryptjs.compareSync(password, u?.passwordHash as string)
+        if (matching) 
         {
             console.log('\n passwordHashes match')
             var response = true//true when there is other data to return
@@ -44,18 +44,21 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
             //set app cookie
             var cookieName = 'session'//name
             var sessionId:string = uuidv4()//the cookie value
-            var cookie = getAppCookie(cookieName, sessionId, clientDOMAIN)
+            var cookie = getAppCookie(cookieName, sessionId, 'localhost')
             res.setHeader('Set-Cookie', [cookie.getCookieStr()])
 
             //store session id with user
             u!.sessionId = sessionId
-            db.write()
+            
 
 
+            
             const userCheck:User|undefined = db.data!.users.find((u:User)=> u.email == email)
+            db.write()
             if (userCheck?.sessionId)
             {
                 console.log(`sessionId:${userCheck?.sessionId}, was properly stored`)
+                //TODO - CREATE SESSION COOKIE
             }
             
             //set domain access control

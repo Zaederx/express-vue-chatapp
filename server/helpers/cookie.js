@@ -58,4 +58,7 @@ export class Cookie {
     print() {
         console.log('\n' + `printing cookie:${this.getCookieStr()}`);
     }
+    toString() {
+        return print();
+    }
 }

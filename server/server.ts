@@ -34,6 +34,8 @@ const csrfProtection = csrf({
  * A function desiged to read the token from req object.
  * (because it potentially could be anywhere on the 
  * request object or under any heading)
+ * Default function reads from several default location on req
+ * This function specifies the one chosen location
  * @param req 
  */
 function readTokenFromReq(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) 

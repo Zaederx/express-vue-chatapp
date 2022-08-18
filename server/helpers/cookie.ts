@@ -65,7 +65,7 @@ export class Cookie {
         {
             cookie +='Secure;'
         }
-        if (this.httpOnly = true)
+        if (this.httpOnly == true)
         {
             cookie += 'HttpOnly;'
         }

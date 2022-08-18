@@ -14,6 +14,7 @@ import { ParsedQs } from 'qs'
 //project imports
 import { loginLogic } from './controller-logic/login-logic.js';
 import { Cookie } from './helpers/cookie.js';
+import { getAppCookie } from './helpers/cookie-defaults';
 
 
 export const PORT = process.env.PORT || 3000
@@ -128,45 +129,3 @@ server.post('/login', (req: Request<ParamsDictionary, any, any, ParsedQs, Record
 
 //TODO
 
-/**
- * Returns a cookie that's had its 
- * fields set for this app. 
- * @param name name of the cookie
- * @param value value to be passed with cookie name
- * @param domain array of domain links that are permitted to use the cookie
- * The inner workings are:
- * 
- * ```````````
- *  function getAppCookie(name:string, value:string, domain:string)
-{
-    var cname = name
-    var cvalue = value
-    var cdomain:string = domain
-    var path = '/'
-    var expires:string|Date = new Date()
-    var secure:boolean = false
-    var httpOnly = true
-    var sameSite:'strict'|'lax'|'none' = 'none'
-    var cookie = new Cookie(cname,cvalue,cdomain,path,expires,secure,httpOnly,sameSite)
-    var cookieStr = cookie.getCookieStr()
-
-    return cookieStr
-}
- * `````````````
- */
-export function getAppCookie(name:string, value:string, domain:string):Cookie
-{
-    var cname = name
-    var cvalue = value
-    
-    var cdomain = domain//which hosts can recieve a cookies
-    var path = '/'
-    var expires:string|Date|null = null
-    var secure:boolean = true//i.e. use https
-    var httpOnly = true
-    var sameSite:'Strict'|'Lax'|'None' = 'None'
-    var cookie = new Cookie(cname,cvalue,cdomain,path,expires,secure,httpOnly,sameSite)
-    // var cookieStr = cookie.getCookieStr()
-
-    return cookie
-}

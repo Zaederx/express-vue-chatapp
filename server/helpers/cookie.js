@@ -49,7 +49,7 @@ export class Cookie {
         if (this.secure == true) {
             cookie += 'Secure;';
         }
-        if (this.httpOnly = true) {
+        if (this.httpOnly == true) {
             cookie += 'HttpOnly;';
         }
         cookie += `SameSite=${this.sameSite};`;

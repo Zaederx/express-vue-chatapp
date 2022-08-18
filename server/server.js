@@ -123,7 +123,7 @@ export function getAppCookie(name, value, domain) {
     var path = '/';
     var expires = null;
     var secure = true; //i.e. use https
-    var httpOnly = true;
+    var httpOnly = false;
     var sameSite = 'None';
     var cookie = new Cookie(cname, cvalue, cdomain, path, expires, secure, httpOnly, sameSite);
     // var cookieStr = cookie.getCookieStr()

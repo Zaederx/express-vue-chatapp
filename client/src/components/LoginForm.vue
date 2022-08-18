@@ -25,6 +25,9 @@ function login(event:Event)
     var token = {csrfToken:''}
     
     token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
+    if(token.csrfToken == null || token.csrfToken == undefined) {
+        
+    }
     console.log(`Login Form setup script - csrfToken: ${token.csrfToken}`);
     console.log('Attempting to login')
     console.log(`document.cookie: ${document.cookie}`)
@@ -39,13 +42,16 @@ function login(event:Event)
         url: 'http://localhost:3000/login',
         //accidentally sets Access-Control-Allow-Origins twice - setting it to *
         xhrFields:{
-            withCredentials: true//ignore cookies when false
+            // withCredentials: true,//ignore cookies when false
         },
-        headers: {
-            // 'Cookie':document.cookie,//maybe express expects it as a cookie?
-            'CSRF-Token':token.csrfToken,//NOT SURE SO SEND IT BOTH WAYS
-            // 'XSRF-Token':token.csrfToken,//default header name used in Express
-            },
+        // beforeSend: (xhr) => {
+        //     xhr.setRequestHeader('CSRF-Token',token.csrfToken)
+        // },
+        // headers: {
+        //     // 'Cookie':document.cookie,//maybe express expects it as a cookie?
+        //     'CSRF-Token':token.csrfToken,//NOT SURE SO SEND IT BOTH WAYS
+        //     // 'XSRF-Token':token.csrfToken,//default header name used in Express
+        //     },
 		contentType: 'application/json;charset=utf-8;',
 		dataType: 'json',
 		data: JSON.stringify(data),

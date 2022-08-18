@@ -9,7 +9,6 @@ import csrf from 'csurf';
 import KeyGrip from 'keygrip';
 //project imports
 import { loginLogic } from './controller-logic/login-logic.js';
-import { getAppCookie } from './helpers/cookie-defaults.js';
 export const PORT = process.env.PORT || 3000;
 export const serverDOMAIN = `http://localhost:${PORT}`;
 export const clientDOMAIN = 'https://localhost:5173';
@@ -25,6 +24,8 @@ const csrfProtection = csrf({
  * A function desiged to read the token from req object.
  * (because it potentially could be anywhere on the
  * request object or under any heading)
+ * Default function reads from several default location on req
+ * This function specifies the one chosen location
  * @param req
  */
 function readTokenFromReq(req) {
@@ -63,24 +64,15 @@ server.get('/csrf-token', (req, res) => {
     res.setHeader(name, value);
     //set access control credentials
     res.setHeader('Access-Control-Allow-Credentials', 'true');
-    //set csrf cookie and test cookie
+    //set csrf cookie
     const cookieName = 'csrfToken';
     const cookieValue = req.csrfToken();
-    var cookie = getAppCookie(cookieName, cookieValue, clientDOMAIN);
-    res.setHeader('Set-Cookie', [cookie.getCookieStr()]);
-    cookie.print();
+    // var cookie = getAppCookie(cookieName,cookieValue,'localhost')
+    // res.setHeader('Set-Cookie', [cookie.getCookieStr()])
+    // cookie.print()
     //also add it in in the json for retrieval in js - needed to insert into meta tag
-    return res.json({ csrfToken: req.csrfToken() });
+    return res.json({ csrfToken: cookieValue });
 });
-// var csrfToken = $("meta[name='_csrf']").attr("content");
-//set header as default for ajax - csrf
-// $.ajaxSetup({
-//     headers: {'X-CSRF-TOKEN':csrfToken}
-// })
-//Secure POST request by validate CSRF token
-// server.post('/example', csrfProtection, () => {
-// compare csrf tokens
-// })
 server.get('/', (req, res) => {
     res.send('Hello World');
 });

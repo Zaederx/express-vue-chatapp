@@ -32,8 +32,8 @@ export function getAppCookie(name, value, domain) {
     var path = '/';
     var expires = null;
     var secure = true; //i.e. use https
-    var httpOnly = false;
-    var sameSite = 'None';
+    var httpOnly = false; //don't give javascript access to cookie
+    var sameSite = 'None'; //whether the cookies can be sent with cross site requests
     var cookie = new Cookie(cname, cvalue, cdomain, path, expires, secure, httpOnly, sameSite);
     return cookie;
 }

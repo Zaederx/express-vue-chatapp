@@ -85,31 +85,16 @@ server.get('/csrf-token', (req:Request<ParamsDictionary, any, any, ParsedQs, Rec
     res.setHeader(name,value)
     //set access control credentials
     res.setHeader('Access-Control-Allow-Credentials','true')
-    //set csrf cookie and test cookie
+    //set csrf cookie
     const cookieName = 'csrfToken'
     const cookieValue = req.csrfToken()
-    var cookie = getAppCookie(cookieName,cookieValue,clientDOMAIN)
-    res.setHeader('Set-Cookie', [cookie.getCookieStr()])
-    cookie.print()
+    // var cookie = getAppCookie(cookieName,cookieValue,'localhost')
+    // res.setHeader('Set-Cookie', [cookie.getCookieStr()])
+    // cookie.print()
     //also add it in in the json for retrieval in js - needed to insert into meta tag
-    return res.json({csrfToken:req.csrfToken()})
+    return res.json({csrfToken:cookieValue})
 })
 
-
-
-
-// var csrfToken = $("meta[name='_csrf']").attr("content");
-//set header as default for ajax - csrf
-// $.ajaxSetup({
-//     headers: {'X-CSRF-TOKEN':csrfToken}
-// })
-
-
-
-//Secure POST request by validate CSRF token
-// server.post('/example', csrfProtection, () => {
-    // compare csrf tokens
-// })
 
 server.get('/', (req, res) => 
 {

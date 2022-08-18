@@ -9,7 +9,7 @@ import csrf from 'csurf';
 import KeyGrip from 'keygrip';
 //project imports
 import { loginLogic } from './controller-logic/login-logic.js';
-import { Cookie } from './helpers/cookie.js';
+import { getAppCookie } from './helpers/cookie-defaults.js';
 export const PORT = process.env.PORT || 3000;
 export const serverDOMAIN = `http://localhost:${PORT}`;
 export const clientDOMAIN = 'https://localhost:5173';
@@ -32,7 +32,8 @@ function readTokenFromReq(req) {
 }
 // server.set('trust proxy',1)
 server.use(cors({
-    credentials: true
+    credentials: true,
+    origin: clientDOMAIN
 }));
 server.use(bodyParser.json()); //for parsing application json
 server.use(bodyParser.urlencoded({ extended: true })); //for parsing application/x-www-form-urlencoded
@@ -65,7 +66,7 @@ server.get('/csrf-token', (req, res) => {
     //set csrf cookie and test cookie
     const cookieName = 'csrfToken';
     const cookieValue = req.csrfToken();
-    var cookie = getAppCookie(cookieName, cookieValue, 'localhost');
+    var cookie = getAppCookie(cookieName, cookieValue, clientDOMAIN);
     res.setHeader('Set-Cookie', [cookie.getCookieStr()]);
     cookie.print();
     //also add it in in the json for retrieval in js - needed to insert into meta tag
@@ -90,42 +91,3 @@ server.post('/login', (req, res) => {
 });
 // server.post('/login')
 //TODO
-/**
- * Returns a cookie that's had its
- * fields set for this app.
- * @param name name of the cookie
- * @param value value to be passed with cookie name
- * @param domain array of domain links that are permitted to use the cookie
- * The inner workings are:
- *
- * ```````````
- *  function getAppCookie(name:string, value:string, domain:string)
-{
-    var cname = name
-    var cvalue = value
-    var cdomain:string = domain
-    var path = '/'
-    var expires:string|Date = new Date()
-    var secure:boolean = false
-    var httpOnly = true
-    var sameSite:'strict'|'lax'|'none' = 'none'
-    var cookie = new Cookie(cname,cvalue,cdomain,path,expires,secure,httpOnly,sameSite)
-    var cookieStr = cookie.getCookieStr()
-
-    return cookieStr
-}
- * `````````````
- */
-export function getAppCookie(name, value, domain) {
-    var cname = name;
-    var cvalue = value;
-    var cdomain = domain; //which hosts can recieve a cookies
-    var path = '/';
-    var expires = null;
-    var secure = true; //i.e. use https
-    var httpOnly = false;
-    var sameSite = 'None';
-    var cookie = new Cookie(cname, cvalue, cdomain, path, expires, secure, httpOnly, sameSite);
-    // var cookieStr = cookie.getCookieStr()
-    return cookie;
-}

@@ -3,8 +3,9 @@ import { Request, ParamsDictionary, Response } from 'express-serve-static-core'
 import { ParsedQs } from 'qs'
 import { User } from "../db/classes/User.js"
 import db from "../db/db-setup.js"
+import { getAppCookie } from '../helpers/cookie-defaults.js'
 import { LoginResponse } from "../helpers/response/login-response.js"
-import { serverDOMAIN, getAppCookie, clientDOMAIN } from '../server.js'
+import { serverDOMAIN, clientDOMAIN } from '../server.js'
 
 /**
  * Logic for the login controller method

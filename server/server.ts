@@ -14,7 +14,7 @@ import { ParsedQs } from 'qs'
 //project imports
 import { loginLogic } from './controller-logic/login-logic.js';
 import { Cookie } from './helpers/cookie.js';
-import { getAppCookie } from './helpers/cookie-defaults';
+import { getAppCookie } from './helpers/cookie-defaults.js';
 
 
 export const PORT = process.env.PORT || 3000
@@ -43,7 +43,8 @@ function readTokenFromReq(req: Request<ParamsDictionary, any, any, ParsedQs, Rec
 // server.set('trust proxy',1)
 server.use(cors(
     {
-        credentials:true
+        credentials:true,
+        origin: clientDOMAIN
     }
 ))
 server.use(bodyParser.json());//for parsing application json
@@ -85,7 +86,7 @@ server.get('/csrf-token', (req:Request<ParamsDictionary, any, any, ParsedQs, Rec
     //set csrf cookie and test cookie
     const cookieName = 'csrfToken'
     const cookieValue = req.csrfToken()
-    var cookie = getAppCookie(cookieName,cookieValue,'localhost')
+    var cookie = getAppCookie(cookieName,cookieValue,clientDOMAIN)
     res.setHeader('Set-Cookie', [cookie.getCookieStr()])
     cookie.print()
     //also add it in in the json for retrieval in js - needed to insert into meta tag

@@ -1,7 +1,8 @@
 import bcryptjs from 'bcryptjs';
 import db from "../db/db-setup.js";
+import { getAppCookie } from '../helpers/cookie-defaults.js';
 import { LoginResponse } from "../helpers/response/login-response.js";
-import { getAppCookie, clientDOMAIN } from '../server.js';
+import { clientDOMAIN } from '../server.js';
 /**
  * Logic for the login controller method
  * in the server response class

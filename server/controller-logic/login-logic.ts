@@ -40,7 +40,7 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
             var response = true//true when there is other data to return
             var message = 'Successfully logged in.'
             var link = 'https://localhost/user-home'//(Optional)a link for http requesting data from node server
-            var serverRes = new LoginResponse(response, message, u?.id, link)
+            var loginRes = new LoginResponse(response, message, u?.id, link)
             //set app cookie
             var cookieName = 'session'//name
             var sessionId:string = uuidv4()//the cookie value
@@ -49,25 +49,39 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
 
             //store session id with user
             u!.sessionId = sessionId
-            
+            db.write()
 
-
-            
+            //check if it has been stored in db
+            db.read()
             const userCheck:User|undefined = db.data!.users.find((u:User)=> u.email == email)
             db.write()
+            
             if (userCheck?.sessionId)
             {
                 console.log(`sessionId:${userCheck?.sessionId}, was properly stored`)
                 //TODO - CREATE SESSION COOKIE
             }
-            
+            //set session cookie
+            var cname = 'session'
+            var cvalue = sessionId
+            var cdomain = 'localhost'
+            var cookie = getAppCookie(cname, cvalue, cdomain)
+            //change default for httpOnly setting
+            cookie.httpOnly = true
+            //set cookie in header
+            res.setHeader('Set-Cookie', [cookie.getCookieStr()])
+
             //set domain access control
             const name = 'Access-Control-Allow-Origin'
             const value = clientDOMAIN
             res.setHeader(name, value)
-            //set 
-            res.send(serverRes)
+            
+            //send response
+            res.send(loginRes)
+        }
+        else {
+            res.send(new LoginResponse(false))
         }
     }
-    res.send(new LoginResponse(false))
+    
 }

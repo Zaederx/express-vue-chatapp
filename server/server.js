@@ -79,6 +79,8 @@ server.get('/', (req, res) => {
 //TODO - ADD CONTROLLER FOR CSURF
 //TODO - add login controller
 server.post('/login', (req, res) => {
+    console.log(`req.body:${req.body}`);
+    console.log(`JSON.stringify(req.body):${JSON.stringify(req.body)}`);
     loginLogic(req, res);
 });
 // server.post('/login')

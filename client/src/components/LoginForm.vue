@@ -48,24 +48,27 @@ function login(event:Event)
             xhr.setRequestHeader('Access-Control-Allow-Origin','http://localhost:3000')
             xhr.setRequestHeader('CSRF-Token',token.csrfToken)
         },
+        //IMPORTANT - HEADERS field doesnt work withCredentials = true
+        //using beforeSend instead
         // headers: {
-        //     // 'Cookie':document.cookie,//maybe express expects it as a cookie?
         //     'CSRF-Token':token.csrfToken,//NOT SURE SO SEND IT BOTH WAYS
-        //     // 'XSRF-Token':token.csrfToken,//default header name used in Express
-        //     },
-		contentType: 'application/json;charset=utf-8;',
+        //},
+		contentType: 'application/json',
 		dataType: 'json',
 		data: JSON.stringify(data),
 		success: (res:LoginResponse) => {
-            const present = true
-            if(res.res == present)
+            const authenticated = true
+            if(res.res == authenticated)
             {
                 window.location.replace(res.link)
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
+                const message = `Welcome user:${res.userId}. You have succesffully logged in`
+                console.log(message)
             }
-            const message = `Welcome user:${res.userId}. You have succesffully logge ding`
-            console.log(message)
+            else {
+                console.log('Log in unsuccessful')
+            }
         },
 		error: ()=>{
             const message = 'Login was unsuccessful'

@@ -9,7 +9,7 @@ export class User {
      * @param friends
      * @param chats
      */
-    constructor(obj) {
+    constructor(obj, sessionId) {
         this.id = obj.id;
         this.email = obj.email;
         this.name = obj.name;
@@ -17,5 +17,6 @@ export class User {
         this.passwordHash = obj.password;
         this.friends = obj.friends ? obj.friends : [];
         this.chats = obj.chats ? obj.chats : [];
+        this.sessionId = sessionId ? sessionId : '';
     }
 }

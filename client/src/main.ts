@@ -22,6 +22,7 @@ import AboutSection from './components/AboutSection.vue'
 //chat app
 import ChatApp from './pages/user/ChatApp.vue'
 import UserBanner from './components/UserBanner.vue'
+import UserHome from './pages/user/UserHome.vue'
 
 import { createApp } from 'vue'
 import * as VueRouter from 'vue-router'
@@ -36,7 +37,8 @@ const routes = [
     { path: '/about', name:'About', component:About},
     { path: '/login', name:'Login', component:Login},
     { path: '/sign-up', name:'Sign Up', component:SignUp},
-    { path: '/chat-app', name:'ChatApp', component:ChatApp}
+    { path: '/user-chat', name:'ChatApp', component:ChatApp},
+    { path: '/user-home', name:'UserHome', component: UserHome}
 ]
 //add routes to Vue Router
 const router = VueRouter.createRouter({

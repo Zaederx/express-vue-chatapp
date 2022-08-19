@@ -7,23 +7,95 @@ import { getAppCookie } from '../helpers/cookie-defaults.js'
 import { LoginResponse } from "../helpers/response/login-response.js"
 import { serverDOMAIN, clientDOMAIN } from '../server.js'
 import { v4 as uuidv4 } from 'uuid';
+import { Cookie } from '../helpers/cookie'
+
+/**
+ * Reads sessionId from the Express request object
+ * @param req Express request object
+ */
+export function readSessionIdFromReq(req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>)
+{
+    //remove empty spaces
+    const matchAllSpaces:RegExp = /\s+/g//all empty spaces
+    const emptyStr = ''
+    var cookieStr:string = req.headers.cookie?.replace(matchAllSpaces,emptyStr).trim() as string
+    //split the string where there are separators
+    var cookies:string[] = cookieStr.split(';')
+    //find the array index with the session id and return the string
+    var sessionCookie:string = cookies.find((c)=> c.includes('session')) as string
+    //split it along the session name and equals sign
+    var sessionIdArr:string[] = sessionCookie.split('session=')
+    //the array position with something inside the string will be the session id
+    var sessionId = sessionIdArr.find((c)=> c.length > 0)
+
+
+    console.log(`\ncookieStr:${cookieStr}`)
+    return sessionId
+}
+
+export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,res: Response<any, Record<string, any>, number>, sessionId:string)
+{
+    console.log(`\n\n **** calling sessionCookieLogin function ***`)
+
+    //find user with matching session id
+    await db.read()
+    const u:User = db.data!.users.find((u:User)=> u.sessionId == sessionId) as User;
+    console.log(`user =`,u)
+
+    //if user exists 
+    if (u) 
+    {
+        console.log('session cookie login')
+        var response = true//true when there is other data to return
+        var message = 'Successfully logged in.'
+        var link = '' //e.g.'https://localhost/user-home'//(Optional) a link for http requesting data from node server
+        var loginRes = new LoginResponse(response, message, u?.id, link)
+        //new session id
+        var sessionId:string = uuidv4()//the cookie value 
+        //store session id with user
+        var stored = storeSessionId(u!, sessionId)
+
+        //check if it was stored successfully
+        if (stored)
+        {
+            //set session cookie
+            var sessionCookie:Cookie = setSessionCookie(sessionId)
+            //set cookie in header
+            res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()])
+        }
+        //send response
+        res.send(loginRes)
+    }
+    else {
+        loginLogic(req,res)
+    }
+    
+}
+
+
 /**
  * Logic for the login controller method
  * in the server response class
  * @param req express request object
  * @param res express response object
  */
-export async function loginLogic(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) {
-    console.log('\n','LOGIN LOGIC FUNCTION')
+export async function loginLogic(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) 
+{
+    console.log('\n ***** LOGIN LOGIC FUNCTION *****')
     //get variables from post request body
+    //turn request into string
     var body = JSON.stringify(req.body)
+    //turn string back into JS object - but now accessible (strange right...)
     var bodyJSON = JSON.parse(body)
+    //get email and password
     const email = bodyJSON.email
     const password = bodyJSON.password//already hashed at client vue
 
+    //print results to console
     console.log(`bodyJSON:${bodyJSON}`)
     console.log(`email:${email}`)
     console.log(`passwordHash:${password}`)
+
     //if variables are present / not undefined / empty
     if (email && password) 
     {
@@ -31,57 +103,101 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
         await db.read()
         const u:User|undefined = db.data!.users.find((u:User)=> u.email == email)
         console.log('\n email matches')
+
+
+        var userPresent = false
+        if (u)
+        {
+            userPresent = true
+        }
         console.log(u)
         //fetch password from db
-        const matching:boolean = bcryptjs.compareSync(password, u?.passwordHash as string)
-        if (matching) 
+
+        //check whether password is present
+        var matching:boolean = false
+        if (u?.passwordHash) 
+        {
+            //check whether passwords match
+            matching = bcryptjs.compareSync(password, u?.passwordHash as string)
+        }
+        //if password match - send session cookie and successful response
+        if (matching && userPresent) 
         {
             console.log('\n passwordHashes match')
             var response = true//true when there is other data to return
             var message = 'Successfully logged in.'
-            var link = 'https://localhost/user-home'//(Optional)a link for http requesting data from node server
+            var link = ''//'https://localhost/user-home'//(Optional)a link for http requesting data from node server
             var loginRes = new LoginResponse(response, message, u?.id, link)
-            //set app cookie
-            var cookieName = 'session'//name
-            var sessionId:string = uuidv4()//the cookie value
-            var cookie = getAppCookie(cookieName, sessionId, 'localhost')
-            res.setHeader('Set-Cookie', [cookie.getCookieStr()])
-
-            //store session id with user
-            u!.sessionId = sessionId
-            db.write()
-
-            //check if it has been stored in db
-            db.read()
-            const userCheck:User|undefined = db.data!.users.find((u:User)=> u.email == email)
-            db.write()
             
-            if (userCheck?.sessionId)
-            {
-                console.log(`sessionId:${userCheck?.sessionId}, was properly stored`)
-                //TODO - CREATE SESSION COOKIE
-            }
-            //set session cookie
-            var cname = 'session'
-            var cvalue = sessionId
-            var cdomain = 'localhost'
-            var cookie = getAppCookie(cname, cvalue, cdomain)
-            //change default for httpOnly setting
-            cookie.httpOnly = true
-            //set cookie in header
-            res.setHeader('Set-Cookie', [cookie.getCookieStr()])
+            //create session id
+            var sessionId:string = uuidv4()//the cookie value
+            //store session id with user
+            var stored = storeSessionId(u!, sessionId)
 
-            //set domain access control
+            if (stored)
+            {
+                //set session cookie
+                var sessionCookie:Cookie = setSessionCookie(sessionId)
+                //set cookie in header
+                res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()])
+            }
+            
+            //set request access control to client domain
             const name = 'Access-Control-Allow-Origin'
             const value = clientDOMAIN
             res.setHeader(name, value)
-            
+
             //send response
             res.send(loginRes)
         }
         else {
-            res.send(new LoginResponse(false))
+            var message = 'Login unsuccessful'
+            res.send(new LoginResponse(false, message))
         }
     }
     
+}
+
+/**
+ * Stores the session id on a user
+ * @param u user to have the sessions stored on
+ * @param sessionId sessionId to be stored with user
+ */
+function storeSessionId(u:User,sessionId: string)
+{
+    //store session id with user
+    u.sessionId = sessionId
+    db.write()
+
+    //check if it has been stored in db
+    db.read()
+    const userCheck:User|undefined = db.data!.users.find((u:User)=> u.sessionId == sessionId)
+    db.write()
+    
+    var stored = false
+    //check if user session was properlys stored
+    if (userCheck?.sessionId)
+    {
+        stored = true
+        console.log(`sessionId:${userCheck?.sessionId}, was properly stored`)
+    }
+
+    //return boolean value
+    return stored
+}
+
+/**
+ * Creates a session cookie given the sessionId.
+ * @param sessionId 
+ */
+function setSessionCookie(sessionId: string)
+{
+    var cname = 'session'
+    var cvalue = sessionId
+    var cdomain = 'localhost'
+    var cookie = getAppCookie(cname, cvalue, cdomain)
+    //change default for httpOnly setting
+    cookie.httpOnly = true
+
+    return cookie
 }

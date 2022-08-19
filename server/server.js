@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import KeyGrip from 'keygrip';
 //project imports
-import { loginLogic as emailPasswordLogin, readSessionIdFromReq, sessionCookieLogin } from './controller-logic/login-logic.js';
+import { loginLogic as emailPasswordLogin, loginViaSessionCookie } from './controller-logic/login-logic.js';
 export const PORT = process.env.PORT || 3000;
 export const serverDOMAIN = `http://localhost:${PORT}`;
 export const clientDOMAIN = 'https://localhost:5173';
@@ -78,15 +78,10 @@ server.get('/', (req, res) => {
 });
 //TODO - ADD CONTROLLER FOR CSURF
 //TODO - add login controller
-server.post('/login', (req, res) => {
-    var sessionId = readSessionIdFromReq(req);
-    console.log(`sessionId:${sessionId}`);
-    if (sessionId) {
-        sessionCookieLogin(req, res, sessionId);
-    }
-    else {
-        emailPasswordLogin(req, res);
-    }
+server.post('/login-session-cookie', (req, res) => {
+    loginViaSessionCookie(req, res);
 });
-// server.post('/login')
+server.post('/login', (req, res) => {
+    emailPasswordLogin(req, res);
+});
 //TODO

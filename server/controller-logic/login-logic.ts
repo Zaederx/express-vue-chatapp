@@ -9,6 +9,21 @@ import { serverDOMAIN, clientDOMAIN } from '../server.js'
 import { v4 as uuidv4 } from 'uuid';
 import { Cookie } from '../helpers/cookie'
 
+
+export function loginViaSessionCookie(req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,res: Response<any, Record<string, any>, number>) {
+    var sessionId = readSessionIdFromReq(req)
+    console.log(`sessionId:${sessionId}`)
+    if (sessionId)
+    {
+        sessionCookieLogin(req,res,sessionId)
+    }
+    else{
+        var message = 'Login unsuccessful'
+        res.send(new LoginResponse(false, message))
+    }
+}
+
+
 /**
  * Reads sessionId from the Express request object
  * @param req Express request object
@@ -66,10 +81,11 @@ export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any,
         //send response
         res.send(loginRes)
     }
-    else {
-        loginLogic(req,res)
+    else 
+    {
+        var message = 'Session Token Login Unsuccessful'
+        res.send(new LoginResponse(false, message))
     }
-    
 }
 
 

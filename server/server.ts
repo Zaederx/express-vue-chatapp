@@ -12,9 +12,10 @@ import KeyGrip from 'keygrip'
 import { Request, ParamsDictionary, Response } from 'express-serve-static-core'
 import { ParsedQs } from 'qs'
 //project imports
-import { loginLogic as emailPasswordLogin, readSessionIdFromReq, sessionCookieLogin } from './controller-logic/login-logic.js';
+import { loginLogic as emailPasswordLogin, loginViaSessionCookie, readSessionIdFromReq, sessionCookieLogin } from './controller-logic/login-logic.js';
 import { Cookie } from './helpers/cookie.js';
 import { getAppCookie } from './helpers/cookie-defaults.js';
+import { LoginResponse } from './helpers/response/login-response';
 
 
 export const PORT = process.env.PORT || 3000
@@ -108,22 +109,16 @@ server.get('/', (req, res) =>
 
 
 //TODO - add login controller
+server.post('/login-session-cookie', (req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string,any>>) =>
+{
+    loginViaSessionCookie(req,res)
+})
 
 server.post('/login', (req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string,any>>) => 
 {
-    var sessionId = readSessionIdFromReq(req)
-    console.log(`sessionId:${sessionId}`)
-    if (sessionId)
-    {
-        sessionCookieLogin(req,res,sessionId)
-    }
-    else
-    {
-        emailPasswordLogin(req,res)
-    }
-    
+    emailPasswordLogin(req,res)
 })
-// server.post('/login')
+
 
 //TODO
 

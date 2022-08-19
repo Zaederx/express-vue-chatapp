@@ -4,6 +4,17 @@ import { getAppCookie } from '../helpers/cookie-defaults.js';
 import { LoginResponse } from "../helpers/response/login-response.js";
 import { clientDOMAIN } from '../server.js';
 import { v4 as uuidv4 } from 'uuid';
+export function loginViaSessionCookie(req, res) {
+    var sessionId = readSessionIdFromReq(req);
+    console.log(`sessionId:${sessionId}`);
+    if (sessionId) {
+        sessionCookieLogin(req, res, sessionId);
+    }
+    else {
+        var message = 'Login unsuccessful';
+        res.send(new LoginResponse(false, message));
+    }
+}
 /**
  * Reads sessionId from the Express request object
  * @param req Express request object
@@ -52,7 +63,8 @@ export async function sessionCookieLogin(req, res, sessionId) {
         res.send(loginRes);
     }
     else {
-        loginLogic(req, res);
+        var message = 'Session Token Login Unsuccessful';
+        res.send(new LoginResponse(false, message));
     }
 }
 /**

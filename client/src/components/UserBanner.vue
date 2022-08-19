@@ -17,18 +17,18 @@
         <div class="collapse navbar-collapse" id="navbarScroll">
         <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
             <li class="nav-item">
-            <router-link to="/home" class="nav-link active" aria-current="page" href="#">Home</router-link>
+            <router-link to="/user-home" class="nav-link active" aria-current="page" href="#">Home</router-link>
             </li>
             <li class="nav-item">
-            <router-link to="/login" class="nav-link">Login</router-link>
+            <router-link to="/logout" class="nav-link">Logout</router-link>
             </li>
             <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Links
             </a>
             <ul class="dropdown-menu">
-                <li><router-link to="/sign-up" class="dropdown-item">Sign Up</router-link></li>
-                <li><router-link to="/login" class="dropdown-item" href="#">Another action</router-link></li>
+                <li><router-link to="/user-chat" class="dropdown-item">Chat</router-link></li>
+                <li><router-link to="/logout" class="dropdown-item" href="#">Logout</router-link></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
@@ -49,4 +49,5 @@
 </template>
 
 <style scoped>
+@import url("../assets/banner.css")
 </style>

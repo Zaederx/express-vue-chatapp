@@ -1,32 +1,6 @@
 
 <script setup lang="ts">
 
-// import { ref, computed } from 'vue'
-// import Home from '../pages/Home.vue'
-// import Login from '../pages/Login.vue'
-// import About from '../pages/About.vue'
-// import ChatApp from '../pages/user/ChatApp.vue'
-
-// const routes:any = {
-//     '/': Home,
-//     '/home':Home,
-//     '/login': Login,
-//     '/about': About,
-//     '/chat-app': ChatApp,
-// }
-
-// const currentPath = ref(window.location.hash)//#hash just takes the hash vaule as the end of the path
-// console.log(`currentPath: ${currentPath}`)
-// console.log(`currentPath.value:${currentPath.value}`)
-// window.addEventListener('hashchange', ()=> {
-//     currentPath.value = window.location.hash
-// })
-
-// const currentView = computed(()=> {
-//     return routes[currentPath.value.slice(1) || '/' || 'NotFound']
-// })
-// //props - short for properties of html elements
-// //these are properties that we set out the elements we create
 const props = defineProps({
     heading1:String,
     heading2:String
@@ -85,30 +59,5 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.heading2 
-{
-  text-align:center;
-}
-
-.nav-center
-{
-  display: grid;
-  justify-content:center;
-}
-
-.nav-right
-{
-  margin-left: auto;
-}
-.nav-link
-{
-  cursor: pointer;
-}
-
-/* SECTION Override Bootstrap */
-/* banner ul was too wide */
-.me-auto {
-  /* margin-right: auto !important; */
-  margin-right: 300px;
-}
+@import url("../assets/banner.css")
 </style>

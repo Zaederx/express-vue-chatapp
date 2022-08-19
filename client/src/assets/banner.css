@@ -1,0 +1,26 @@
+.heading2 
+{
+  text-align:center;
+}
+
+.nav-center
+{
+  display: grid;
+  justify-content:center;
+}
+
+.nav-right
+{
+  margin-left: auto;
+}
+.nav-link
+{
+  cursor: pointer;
+}
+
+/* SECTION Override Bootstrap */
+/* banner ul was too wide */
+.me-auto {
+  /* margin-right: auto !important; */
+  margin-right: 300px;
+}

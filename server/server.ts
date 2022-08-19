@@ -12,7 +12,7 @@ import KeyGrip from 'keygrip'
 import { Request, ParamsDictionary, Response } from 'express-serve-static-core'
 import { ParsedQs } from 'qs'
 //project imports
-import { loginLogic } from './controller-logic/login-logic.js';
+import { loginLogic as emailPasswordLogin, readSessionIdFromReq, sessionCookieLogin } from './controller-logic/login-logic.js';
 import { Cookie } from './helpers/cookie.js';
 import { getAppCookie } from './helpers/cookie-defaults.js';
 
@@ -111,7 +111,17 @@ server.get('/', (req, res) =>
 
 server.post('/login', (req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string,any>>) => 
 {
-    loginLogic(req,res)
+    var sessionId = readSessionIdFromReq(req)
+    console.log(`sessionId:${sessionId}`)
+    if (sessionId)
+    {
+        sessionCookieLogin(req,res,sessionId)
+    }
+    else
+    {
+        emailPasswordLogin(req,res)
+    }
+    
 })
 // server.post('/login')
 

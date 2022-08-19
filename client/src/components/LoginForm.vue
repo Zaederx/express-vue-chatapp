@@ -3,12 +3,11 @@ import $ from 'jquery'
 import bcryptjs from 'bcryptjs';
 import { messageToHTML } from '@/helpers/message-to-html.js';
 import type { LoginResponse } from '@/helpers/response/login-response.js';
-
-
+import { useRouter } from 'vue-router'
 const serverDOMAIN = 'http://localhost:3000'
 const clientDOMAIN = 'http://localhost:5173'
 
-
+var router = useRouter()
 //TODO - COMPLETE AJAX LOGIN REQUEST
 
 
@@ -59,7 +58,8 @@ function login(event:Event)
             const authenticated = true
             if(res.res == authenticated)
             {
-                window.location.replace(res.link)
+                // window.location.replace(res.link) - messes with Vue - use router instead
+                router.push('/user-home')
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
                 const message = `Welcome user:${res.userId}. You have succesffully logged in`

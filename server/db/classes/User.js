@@ -10,7 +10,7 @@ export class User {
      * @param chats
      */
     constructor(obj, sessionId) {
-        this.id = obj.id;
+        this.id = User.ID++; //auto incrementing id
         this.email = obj.email;
         this.name = obj.name;
         this.username = obj.username;
@@ -33,3 +33,4 @@ export class User {
         return str;
     }
 }
+User.ID = 0;

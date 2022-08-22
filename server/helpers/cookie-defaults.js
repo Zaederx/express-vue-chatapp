@@ -37,3 +37,16 @@ export function getAppCookie(name, value, domain) {
     var cookie = new Cookie(cname, cvalue, cdomain, path, expires, secure, httpOnly, sameSite);
     return cookie;
 }
+/**
+ * Creates a session cookie given the sessionId.
+ * @param sessionId
+ */
+export function setSessionCookie(sessionId) {
+    var cname = 'session';
+    var cvalue = sessionId;
+    var cdomain = 'localhost';
+    var cookie = getAppCookie(cname, cvalue, cdomain);
+    //change default for httpOnly setting
+    cookie.httpOnly = true;
+    return cookie;
+}

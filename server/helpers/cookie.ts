@@ -13,7 +13,7 @@
  */
 export class Cookie {
     name:string
-    value:string
+    value:string|null
     domain:string
     path:string
     expires:string|Date|null
@@ -34,7 +34,7 @@ export class Cookie {
      * @param httpOnly whether the cookie should be inaccessible to javascript
      * @param sameSite whether the cookies can be sent with cross site requests
      */
-    constructor(name:string, value:string, domain:string, path?:string, expires?:string|Date|null, secure?:boolean, httpOnly?:boolean, sameSite?:'Strict'|'Lax'|'None'|null) {
+    constructor(name:string, value:string|null, domain:string, path?:string, expires?:string|Date|null, secure?:boolean, httpOnly?:boolean, sameSite?:'Strict'|'Lax'|'None'|null) {
         this.name = name
         this.value = value
         this.domain = domain 

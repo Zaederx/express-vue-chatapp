@@ -15,7 +15,9 @@ import { ParsedQs } from 'qs'
 import { loginLogic as emailPasswordLogin, loginViaSessionCookie, readSessionIdFromReq, sessionCookieLogin } from './controller-logic/login-logic.js';
 import { Cookie } from './helpers/cookie.js';
 import { getAppCookie } from './helpers/cookie-defaults.js';
-import { LoginResponse } from './helpers/response/login-response';
+import { LoginResponse } from './helpers/response/login-response.js';
+import { getUsersNames } from './controller-logic/users-logic.js';
+import { logout } from './controller-logic/logout-logic.js';
 
 
 export const PORT = process.env.PORT || 3000
@@ -120,5 +122,14 @@ server.post('/login', (req: Request<ParamsDictionary, any, any, ParsedQs, Record
 })
 
 
-//TODO
+server.post('/logout', (req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string,any>>)=> {
+    logout(req,res)
+})
 
+
+//TODO - Setup chat aspects of chat app - see [link](https://www.cometchat.com/tutorials/how-to-build-a-chat-app-with-websockets-and-node-js?utm_term=&utm_campaign=UK-+React+Chat+SDK&utm_source=adwords&utm_medium=ppc&hsa_acc=7711039152&hsa_cam=17296071286&hsa_grp=146623375104&hsa_ad=615146609899&hsa_src=g&hsa_tgt=dsa-1720747545788&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gclid=EAIaIQobChMIn6zR-e7S-QIVk813Ch0CRgEIEAAYASAAEgLeJfD_BwE)
+
+//return first 10 users with names similar to set name
+server.get('/get-users/with-name/:name', (req,res) => {
+    getUsersNames(req,res)
+})

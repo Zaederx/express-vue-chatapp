@@ -15,15 +15,37 @@ const { cert, key } = keystore['tomcat'];
 // use of mkcert - [see](https://stackoverflow.com/questions/69417788/vite-https-on-localhost)
 export default defineConfig({
   plugins: [vue(), vueJsx()],
-  resolve: {
-    alias: {
+  resolve: 
+  {
+    alias: 
+    {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  server: {
-    https: {
+  server: 
+  {
+    https: 
+    {
       key: key,
       cert: cert
+    },
+    //see [link](https://vitejs.dev/config/server-options.html#server-proxy)
+    proxy: 
+    {
+      // string shorthand
+      // '/foo': 'http://localhost:4567',
+      // with options
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure:false,//https?
+        ws:true,//proxy websockets
+        // configure: (proxy, options) => {
+        //   // proxy will be an instance of 'http-proxy'
+
+        // }
+      }
     }
     
   },

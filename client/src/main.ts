@@ -23,6 +23,7 @@ import AboutSection from './components/AboutSection.vue'
 import ChatApp from './pages/user/ChatApp.vue'
 import UserBanner from './components/UserBanner.vue'
 import UserHome from './pages/user/UserHome.vue'
+import ChatWindow from './components/ChatWindow.vue'
 
 import { createApp } from 'vue'
 import * as VueRouter from 'vue-router'
@@ -60,6 +61,7 @@ const app = createApp(App)
 .component('SignUpForm', SignUpForm)
 .component('AboutSection', AboutSection)
 .component('UserBanner', UserBanner)
+.component('ChatWindow', ChatWindow)
 
 //add router to App
 .use(router)

@@ -26,7 +26,7 @@ import { Cookie } from "./cookie.js"
 }
  * `````````````
  */
-export function getAppCookie(name:string, value:string, domain:string):Cookie
+export function getAppCookie(name:string, value:string|null, domain:string):Cookie
 {
     var cname = name
     var cvalue = value
@@ -41,3 +41,19 @@ export function getAppCookie(name:string, value:string, domain:string):Cookie
 
     return cookie
 }
+
+/**
+ * Creates a session cookie given the sessionId.
+ * @param sessionId 
+ */
+ export function setSessionCookie(sessionId: string|null)
+ {
+     var cname = 'session'
+     var cvalue = sessionId
+     var cdomain = 'localhost'
+     var cookie = getAppCookie(cname, cvalue, cdomain)
+     //change default for httpOnly setting
+     cookie.httpOnly = true
+ 
+     return cookie
+ }

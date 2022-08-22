@@ -7,8 +7,8 @@
 
 //making a request for a CSRF token
 console.warn('************* HeadScript.vue script **************')
-var url = 'http://localhost:3000/csrf-token'
-var response:Response = await fetch(url,{
+var proxyUrl = '/api/csrf-token'
+var response:Response = await fetch(proxyUrl,{
                             method: 'GET',//IMPORTANT CONSIDER CHANGING IT TO POST
                             credentials: 'include' //whether user agent should send and recieve cookies - see [link](https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials) and [link](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
                         })

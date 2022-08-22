@@ -2,8 +2,8 @@
 
 
     //fetch name from user in db
-    const url = "http://localhost/3000/username/"
-    var response:Response = await fetch(url)
+    const proxyUrl = "/api/username/"
+    var response:Response = await fetch(proxyUrl)
     //set sub heading to name
     var responseStr = JSON.stringify(response.body)
     var res = JSON.parse(responseStr)

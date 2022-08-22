@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import db from "../db/db-setup.js";
-import { getAppCookie } from '../helpers/cookie-defaults.js';
+import { setSessionCookie } from '../helpers/cookie-defaults.js';
 import { LoginResponse } from "../helpers/response/login-response.js";
 import { clientDOMAIN } from '../server.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -40,7 +40,7 @@ export async function sessionCookieLogin(req, res, sessionId) {
     //find user with matching session id
     await db.read();
     const u = db.data.users.find((u) => u.sessionId == sessionId);
-    console.log(`user =`, u);
+    console.log('user', u);
     //if user exists 
     if (u) {
         console.log('session cookie login');
@@ -116,6 +116,7 @@ export async function loginLogic(req, res) {
             var sessionId = uuidv4(); //the cookie value
             //store session id with user
             var stored = storeSessionId(u, sessionId);
+            console.log('user', u);
             if (stored) {
                 //set session cookie
                 var sessionCookie = setSessionCookie(sessionId);
@@ -137,17 +138,17 @@ export async function loginLogic(req, res) {
 }
 /**
  * Stores the session id on a user
- * @param u user to have the sessions stored on
+ * Assumes db.read() is already called on Low db object
+ * @param user user to have the sessions stored on
  * @param sessionId sessionId to be stored with user
  */
-function storeSessionId(u, sessionId) {
+function storeSessionId(user, sessionId) {
     //store session id with user
-    u.sessionId = sessionId;
-    db.write();
+    user.sessionId = sessionId;
     //check if it has been stored in db
     db.read();
-    const userCheck = db.data.users.find((u) => u.sessionId == sessionId);
-    db.write();
+    const userCheck = db.data.users.find((u) => u.id == user.id);
+    db.write(); // - causes duplicates - only use for new objects, bot updating objects
     var stored = false;
     //check if user session was properlys stored
     if (userCheck?.sessionId) {
@@ -156,17 +157,4 @@ function storeSessionId(u, sessionId) {
     }
     //return boolean value
     return stored;
-}
-/**
- * Creates a session cookie given the sessionId.
- * @param sessionId
- */
-function setSessionCookie(sessionId) {
-    var cname = 'session';
-    var cvalue = sessionId;
-    var cdomain = 'localhost';
-    var cookie = getAppCookie(cname, cvalue, cdomain);
-    //change default for httpOnly setting
-    cookie.httpOnly = true;
-    return cookie;
 }

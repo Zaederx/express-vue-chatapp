@@ -3,11 +3,11 @@ import { Request, ParamsDictionary, Response } from 'express-serve-static-core'
 import { ParsedQs } from 'qs'
 import { User } from "../db/classes/User.js"
 import db from "../db/db-setup.js"
-import { getAppCookie } from '../helpers/cookie-defaults.js'
+import { getAppCookie, setSessionCookie } from '../helpers/cookie-defaults.js'
 import { LoginResponse } from "../helpers/response/login-response.js"
 import { serverDOMAIN, clientDOMAIN } from '../server.js'
 import { v4 as uuidv4 } from 'uuid';
-import { Cookie } from '../helpers/cookie'
+import { Cookie } from '../helpers/cookie.js'
 
 
 export function loginViaSessionCookie(req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,res: Response<any, Record<string, any>, number>) {
@@ -55,7 +55,7 @@ export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any,
     //find user with matching session id
     await db.read()
     const u:User = db.data!.users.find((u:User)=> u.sessionId == sessionId) as User;
-    console.log(`user =`,u)
+    console.log('user',u)
 
     //if user exists 
     if (u) 
@@ -68,7 +68,7 @@ export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any,
         //new session id
         var sessionId:string = uuidv4()//the cookie value 
         //store session id with user
-        var stored = storeSessionId(u!, sessionId)
+        var stored = storeSessionId(u, sessionId)
 
         //check if it was stored successfully
         if (stored)
@@ -148,8 +148,9 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
             //create session id
             var sessionId:string = uuidv4()//the cookie value
             //store session id with user
-            var stored = storeSessionId(u!, sessionId)
+            var stored = storeSessionId(u!,sessionId)
 
+            console.log('user',u)
             if (stored)
             {
                 //set session cookie
@@ -176,19 +177,19 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
 
 /**
  * Stores the session id on a user
- * @param u user to have the sessions stored on
+ * Assumes db.read() is already called on Low db object
+ * @param user user to have the sessions stored on
  * @param sessionId sessionId to be stored with user
  */
-function storeSessionId(u:User,sessionId: string)
+function storeSessionId(user:User, sessionId: string)
 {
     //store session id with user
-    u.sessionId = sessionId
-    db.write()
+    user.sessionId = sessionId
 
     //check if it has been stored in db
     db.read()
-    const userCheck:User|undefined = db.data!.users.find((u:User)=> u.sessionId == sessionId)
-    db.write()
+    const userCheck:User|undefined = db.data!.users.find((u:User)=> u.id == user.id)
+    db.write()// - causes duplicates - only use for new objects, bot updating objects
     
     var stored = false
     //check if user session was properlys stored
@@ -202,18 +203,3 @@ function storeSessionId(u:User,sessionId: string)
     return stored
 }
 
-/**
- * Creates a session cookie given the sessionId.
- * @param sessionId 
- */
-function setSessionCookie(sessionId: string)
-{
-    var cname = 'session'
-    var cvalue = sessionId
-    var cdomain = 'localhost'
-    var cookie = getAppCookie(cname, cvalue, cdomain)
-    //change default for httpOnly setting
-    cookie.httpOnly = true
-
-    return cookie
-}

@@ -1,6 +1,7 @@
 import { Chat } from "./Chat.js";
 
 export class User {
+    static ID:number = 0;
     id:number;
     email:string;
     name:string;
@@ -21,9 +22,9 @@ export class User {
      * @param friends 
      * @param chats 
      */
-    constructor(obj:{id:number, email:string, name:string, username:string, password:string, friends?:User[], chats?:Chat[]}, sessionId?:string)
+    constructor(obj:{ email:string, name:string, username:string, password:string, friends?:User[], chats?:Chat[]}, sessionId?:string)
     {
-        this.id = obj.id;
+        this.id = User.ID++;//auto incrementing id
         this.email = obj.email;
         this.name = obj.name;
         this.username = obj.username;

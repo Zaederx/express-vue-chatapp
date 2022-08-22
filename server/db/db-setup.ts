@@ -18,20 +18,20 @@ await db.read();
 db.data ||= {users: []}
 const password = 'password'
 const passwordHash = bcryptjs.hashSync(password, 10)
-
-var u1:User = new User({id:0 ,email:'email0@email.com',
+export var vars = {id:0}
+var u1:User = new User({email:'email0@email.com',
                         name:'name' ,
                         username:'username0',
                         password:passwordHash
                     });
 
-var u2:User = new User({id:1 ,email:'email1@email.com',
+var u2:User = new User({email:'email1@email.com',
                         name:'name' ,
                         username:'username1',
                         password:passwordHash
                         });
 
-var u3:User = new User({id:2 ,email:'email2@email.com',
+var u3:User = new User({email:'email2@email.com',
                         name:'name' ,
                         username:'username2',
                         password:passwordHash
@@ -40,6 +40,7 @@ var u3:User = new User({id:2 ,email:'email2@email.com',
 db.data.users.push(u1)
 db.data.users.push(u2)
 db.data.users.push(u3)
-db.write()
+db.write()//writes new objects - don't use for updating objects or it causes duplicates
+//only use for writing new objects
 
 export default db

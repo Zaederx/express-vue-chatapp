@@ -5,8 +5,8 @@
   "main": "js/server.js",
   "type": "module",
   "scripts": {
-    "start": "tsc; node server.js",
-    "server-reload": "tsc; nodemon server.js",
+    "start": "tsc; node js/server.js",
+    "server-reload": "tsc; nodemon js/server.js",
     "server": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

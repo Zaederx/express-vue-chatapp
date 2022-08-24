@@ -1,6 +1,6 @@
 import { User } from '../db/classes/User.js'
 import db from '../db/db-setup.js'
-import { compareTwoStrings } from '../helpers/editDistance.js'
+import { compareTwoStrings } from '../helpers/simplystring.js'
 /**
  * Returns a json list of users who's names
  * match the request paramerter 'name'
@@ -10,7 +10,6 @@ import { compareTwoStrings } from '../helpers/editDistance.js'
 export async function getUsersNames(req:any,res:any) {
     //get name from request params
     var name = req.params.name
-
     //read from db
     await db.read()
     //find user from users database where the name is similar over 50%
@@ -25,7 +24,7 @@ export async function getUsersNames(req:any,res:any) {
     //convert array of names to json string
     var usersJSON = JSON.stringify(arrStr)
     //send json list of namesof users
-    res.json(usersJSON)
+    res.json({usersJSON})
 }
 
 

@@ -101,6 +101,15 @@ var u12:User = new User({email:'email2@email.com',
 db.data.users.push(u1)
 db.data.users.push(u2)
 db.data.users.push(u3)
+db.data.users.push(u4)
+db.data.users.push(u5)
+db.data.users.push(u6)
+db.data.users.push(u7)
+db.data.users.push(u8)
+db.data.users.push(u9)
+db.data.users.push(u10)
+db.data.users.push(u11)
+db.data.users.push(u12)
 db.write()//writes new objects - don't use for updating objects or it causes duplicates
 //only use for writing new objects
 }

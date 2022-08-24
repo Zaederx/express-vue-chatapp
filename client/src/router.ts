@@ -16,7 +16,7 @@ import SignUpForm from './components/SignUpForm.vue'
 import About from './pages/About.vue'
 import AboutSection from './components/AboutSection.vue'
 //chat app
-import ChatApp from './pages/user/ChatApp.vue'
+import UserChat from './pages/user/ChatApp.vue'
 import UserBanner from './components/UserBanner.vue'
 import UserHome from './pages/user/UserHome.vue'
 import ChatWindow from './components/ChatWindow.vue'
@@ -32,7 +32,7 @@ const routes = [
         isAuthenticated : false
     }},
     { path: '/sign-up', name:'SignUp', component:SignUp},
-    { path: '/user-chat', name:'ChatApp', component:ChatApp},
+    { path: '/user-chat', name:'UserChat', component:UserChat},
     { path: '/user-home', name:'UserHome', component: UserHome}
 ]
 //add routes to Vue Router
@@ -42,13 +42,25 @@ const router = VueRouter.createRouter({
 })
 
 router.beforeEach((to,from) => {
-    if(to.name == 'UserHome' && (from.name = 'Login') && from.meta.isAuthenticated == true) 
+
+    //if heading to user pages and meta 'isAuthenticated' is present and true - allow it
+    if(to.name == 'UserHome' && from.meta.isAuthenticated == true ||
+    to.name == 'UserChat' && from.meta.isAuthenticated == true) 
     {
         true
     }
-    else if (to.name == 'UserHome' && (from.meta = {})) {
+    //if heading to user pages and meta 'isAuthenticated' is present and false - redirect to login
+    if(to.name == 'UserHome' && from.meta.isAuthenticated == false ||
+    to.name == 'UserChat' && from.meta.isAuthenticated == false) 
+    {
         router.push('/login')
     }
+    //if heading to user pages and meta 'isAuthenticated' is not present. Don't allow it. Redirect to login
+    else if (to.name == 'UserHome' && (from.meta = {}) || to.name == 'UserChat' && (from.meta = {})) 
+    {
+        router.push('/login')
+    }
+    //everything else allow it
     else
     {
         return true

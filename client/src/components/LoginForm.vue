@@ -57,6 +57,8 @@ function loginViaEmailPassword(e:Event, url:string='/api/login')
                 // window.location.replace(res.link) - messes with Vue - use router instead
                 //set meta isAuthenticated as true
                 router.currentRoute.value.meta = {isAuthenticated : true}
+                router.getRoutes().forEach(r => r.meta = {isAuthenticated : true})
+                
                 router.push('/user-home')
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
@@ -64,6 +66,7 @@ function loginViaEmailPassword(e:Event, url:string='/api/login')
                 console.log(message)
             }
             else {
+                router.getRoutes().forEach(r => r.meta = {isAuthenticated : false})
                 console.log('Log in unsuccessful')
             }
         },

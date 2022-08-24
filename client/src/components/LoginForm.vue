@@ -9,7 +9,8 @@ const clientDOMAIN = 'http://localhost:5173'
 
 var router = useRouter()
 /**
- * 
+ * Attempts to log the user in via email and password.
+ * Client recieves session cookie upon successful authentication
  * @param e user event of cliking the login button
  * @param url the url of the request to be made 
  */
@@ -54,6 +55,8 @@ function loginViaEmailPassword(e:Event, url:string='/api/login')
             if(res.res == authenticated)
             {
                 // window.location.replace(res.link) - messes with Vue - use router instead
+                //set meta isAuthenticated as true
+                router.currentRoute.value.meta = {isAuthenticated : true}
                 router.push('/user-home')
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
@@ -65,6 +68,8 @@ function loginViaEmailPassword(e:Event, url:string='/api/login')
             }
         },
 		error: ()=>{
+            //set meta isAuthenticated as true
+            router.currentRoute.value.meta = {isAuthenticated : false}
             const message = 'Login was unsuccessful'
             const html = messageToHTML(message)
             $('#errors').html(html)
@@ -75,80 +80,15 @@ function loginViaEmailPassword(e:Event, url:string='/api/login')
 }
 
 
-
-/**
- * Function ensure that user credentials are authenticated.
- * If successful and credentials are valid, returns cookie to user session
- * 
- * NOTE: The Access-Control-Allow-Credentials response header tells browsers whether
- *  to expose the response to the frontend JavaScript code
- *  see [link](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials#examples)
- */
-function loginViaSessionCookie(url?:string='/api/login-session-cookie', router:Router)
-{
-    console.log('loginViaSessionCookie called')
-    var token = {csrfToken:''}
-    
-    token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
-    if(token.csrfToken == null || token.csrfToken == undefined) {
-
-    }
-    console.log(`Login Form setup script - csrfToken: ${token.csrfToken}`);
-    console.log('Attempting to login')
-    console.log(`document.cookie: ${document.cookie}`)
-    console.log(`token.csrfToken: ${token.csrfToken}`)
-    var email = $("#email").val() as string
-    var password = $("#password").val() as string
-    var data = {email:email, password:password}
-    // var cookie = getAppCookie(cookieName,cookieValue)
-    $.ajax({
-        type:'POST',
-        url: url,
-        //accidentally sets Access-Control-Allow-Origins twice - setting it to *
-        xhrFields:{
-            withCredentials: true,//ignore cookies when false
-        },
-        beforeSend: (xhr) => {
-            xhr.setRequestHeader('Access-Control-Allow-Origin','http://localhost:3000')
-            xhr.setRequestHeader('CSRF-Token',token.csrfToken)
-        },
-        //IMPORTANT - HEADERS field doesnt work withCredentials = true
-        //using beforeSend instead
-        // headers: {
-        //     'CSRF-Token':token.csrfToken,//NOT SURE SO SEND IT BOTH WAYS
-        //},
-		contentType: 'application/json',
-		dataType: 'json',
-		data: JSON.stringify(data),
-		success: (res:LoginResponse) => {
-            const authenticated = true
-            if(res.res == authenticated)
-            {
-                // window.location.replace(res.link) - messes with Vue - use router instead
-                router.push('/user-home')
-                //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
-                console.log(`userId: ${res.userId}`)
-                const message = `Welcome user:${res.userId}. You have succesfully logged in`
-                console.log(message)
-            }
-            else {
-                console.log('Log in unsuccessful')
-            }
-        },
-		error: ()=>{
-            const message = 'Login was unsuccessful'
-            const html = messageToHTML(message)
-            $('#errors').html(html)
-        }
-	})
-}
 
 </script>
 
 <script lang="ts">
 /**
- * Function ensure that user credentials are authenticated.
- * If successful and credentials are valid, returns cookie to user session
+ * Attempts to log user in via session cookie on the client broswer.
+ * If valid session cookie is present and is sent along with a csrfToken
+ * and _csrf cookie for CSRF protection, then the user is logged in
+ * on the server side and given an update session cookie with a new id
  * 
  * NOTE: The Access-Control-Allow-Credentials response header tells browsers whether
  *  to expose the response to the frontend JavaScript code
@@ -195,6 +135,8 @@ function loginViaSessionCookie(url?:string='/api/login-session-cookie', router:R
             if(res.res == authenticated)
             {
                 // window.location.replace(res.link) - messes with Vue - use router instead
+                //set meta isAuthenticated as true
+                router.currentRoute.value.meta = {isAuthenticated : true}
                 router.push('/user-home')
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
@@ -202,6 +144,7 @@ function loginViaSessionCookie(url?:string='/api/login-session-cookie', router:R
                 console.log(message)
             }
             else {
+                router.currentRoute.value.meta = {isAuthenticated : false}
                 console.log('Log in unsuccessful')
             }
         },

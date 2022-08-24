@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "tsc; node js/server.js",
+    "test-ts": "ts-node ./test.ts",
     "server-reload": "tsc; nodemon js/server.js",
     "server": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -10,37 +10,100 @@ const adapter = new JSONFile<Data>(file);
 var db = new Low(adapter)
 
 
+
 //Read data from Json file, this will set the db.content
 await db.read();
 
+// setup()
+function setup() {
 //if file.json does not exist db.data will be null
 //Set data to default
 db.data ||= {users: []}
 const password = 'password'
 const passwordHash = bcryptjs.hashSync(password, 10)
-export var vars = {id:0}
+
 var u1:User = new User({email:'email0@email.com',
-                        name:'name' ,
+                        name:'name asdhg' ,
                         username:'username0',
                         password:passwordHash
                     });
 
 var u2:User = new User({email:'email1@email.com',
-                        name:'name' ,
+                        name:'name asd asd' ,
                         username:'username1',
                         password:passwordHash
                         });
 
 var u3:User = new User({email:'email2@email.com',
-                        name:'name' ,
-                        username:'username2',
+                        name:'name ghdfgh' ,
+                        username:'username3',
                         password:passwordHash
                         });
+
+
+
+var u4:User = new User({email:'email1@email.com',
+                        name:'asd  asd' ,
+                        username:'username4',
+                        password:passwordHash
+                        });
+
+var u5:User = new User({email:'email2@email.com',
+                        name:'asd name' ,
+                        username:'username5',
+                        password:passwordHash
+                        });
+
+
+var u6:User = new User({email:'email1@email.com',
+                        name:'name' ,
+                        username:'username6',
+                        password:passwordHash
+                        });
+
+var u7:User = new User({email:'email2@email.com',
+                        name:'name' ,
+                        username:'username7',
+                        password:passwordHash
+                        });
+
+var u8:User = new User({email:'email1@email.com',
+                        name:'name' ,
+                        username:'username8',
+                        password:passwordHash
+                        });
+
+var u9:User = new User({email:'email2@email.com',
+                        name:'name' ,
+                        username:'username9',
+                        password:passwordHash
+                        });
+
+var u10:User = new User({email:'email0@email.com',
+                        name:'name' ,
+                        username:'username10',
+                        password:passwordHash
+                        });
+
+var u11:User = new User({email:'email1@email.com',
+                        name:'name' ,
+                        username:'username11',
+                        password:passwordHash
+                        });
+
+var u12:User = new User({email:'email2@email.com',
+                        name:'name' ,
+                        username:'username12',
+                        password:passwordHash
+                        });
+                
 
 db.data.users.push(u1)
 db.data.users.push(u2)
 db.data.users.push(u3)
 db.write()//writes new objects - don't use for updating objects or it causes duplicates
 //only use for writing new objects
+}
+
 
 export default db

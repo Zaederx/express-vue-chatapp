@@ -26,26 +26,8 @@ import UserHome from './pages/user/UserHome.vue'
 import ChatWindow from './components/ChatWindow.vue'
 
 import { createApp } from 'vue'
-import * as VueRouter from 'vue-router'
+import router from './router'
 
-// create routes
-const routes = [
-    { path: '/', name:'Home', component:Home,
-    children: [
-                {path: '/home', name: 'Home', component:Home}
-            ]
-    },
-    { path: '/about', name:'About', component:About},
-    { path: '/login', name:'Login', component:Login},
-    { path: '/sign-up', name:'Sign Up', component:SignUp},
-    { path: '/user-chat', name:'ChatApp', component:ChatApp},
-    { path: '/user-home', name:'UserHome', component: UserHome}
-]
-//add routes to Vue Router
-const router = VueRouter.createRouter({
-    history: VueRouter.createWebHistory(),
-    routes: routes
-})
 
 
 //set up app for fronend SPA (Single Page Application)
@@ -77,6 +59,6 @@ const app = createApp(App)
 // .component('SiteFooter', SiteFooter)
 // .mount('#app')
 
-
+export default router
 
 // **********************

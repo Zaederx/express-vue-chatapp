@@ -148,12 +148,13 @@ function storeSessionId(user, sessionId) {
     //check if it has been stored in db
     db.read();
     const userCheck = db.data.users.find((u) => u.id == user.id);
-    db.write(); // - causes duplicates - only use for new objects, bot updating objects
+    db.write(); //sometimes causes duplicates - beware not for industrial projects
     var stored = false;
     //check if user session was properlys stored
     if (userCheck?.sessionId) {
         stored = true;
         console.log(`sessionId:${userCheck?.sessionId}, was properly stored`);
+        console.log('user', userCheck);
     }
     //return boolean value
     return stored;

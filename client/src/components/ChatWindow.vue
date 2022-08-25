@@ -1,19 +1,19 @@
 <script setup lang="ts">
 
 
-    //fetch name from user in db
-    const proxyUrl = "/api/username/"
-    var response:Response = await fetch(proxyUrl)
-    //set sub heading to name
-    var responseStr = JSON.stringify(response.body)
-    var res = JSON.parse(responseStr)
-    var username = res.user
-    //set subheading to username
-    var subHeading = document.querySelector('#to') as HTMLDivElement
-    subHeading.innerHTML = username
-    subHeading.oninput = () => {
+    // //fetch name from user in db
+    // const proxyUrl = "/api/username/"
+    // var response:Response = await fetch(proxyUrl)
+    // //set sub heading to name
+    // var responseStr = JSON.stringify(response.body)
+    // var res = JSON.parse(responseStr)
+    // var username = res.user
+    // //set subheading to username
+    // var subHeading = document.querySelector('#to') as HTMLDivElement
+    // subHeading.innerHTML = username
+    // subHeading.oninput = () => {
 
-    }
+    // }
 </script>
 <template>
     <!-- Chat Window -->

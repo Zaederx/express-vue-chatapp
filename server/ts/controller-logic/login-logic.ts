@@ -1,12 +1,16 @@
+//bcryptjs
 import bcryptjs from 'bcryptjs'
+//express
 import { Request, ParamsDictionary, Response } from 'express-serve-static-core'
 import { ParsedQs } from 'qs'
+//uuidv4
+import { v4 as uuidv4 } from 'uuid';
+//project files
 import { User } from "../db/classes/User.js"
 import db from "../db/db-setup.js"
 import { getAppCookie, setSessionCookie } from '../helpers/cookie-defaults.js'
 import { LoginResponse } from "../helpers/response/login-response.js"
 import { serverDOMAIN, clientDOMAIN } from '../server.js'
-import { v4 as uuidv4 } from 'uuid';
 import { Cookie } from '../helpers/cookie.js'
 
 
@@ -77,6 +81,8 @@ export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any,
             var sessionCookie:Cookie = setSessionCookie(sessionId)
             //set cookie in header
             res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()])
+            //set authentication header
+            res.setHeader('Authenticated','true')
         }
         //send response
         res.send(loginRes)
@@ -157,13 +163,15 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
                 var sessionCookie:Cookie = setSessionCookie(sessionId)
                 //set cookie in header
                 res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()])
+                //set authentication header
+            res.setHeader('Authenticated','true')
             }
             
             //set request access control to client domain
             const name = 'Access-Control-Allow-Origin'
             const value = clientDOMAIN
             res.setHeader(name, value)
-
+            
             //send response
             res.send(loginRes)
         }

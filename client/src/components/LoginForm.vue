@@ -4,10 +4,15 @@ import bcryptjs from 'bcryptjs';
 import { messageToHTML } from '@/helpers/message-to-html.js';
 import type { LoginResponse } from '@/helpers/response/login-response.js';
 import { useRouter, type Router } from 'vue-router'
+import { useAuthenticationStore } from '../stores/isAuthenticated.js';
+//pinia stores
+
 const serverDOMAIN = 'http://localhost:3000'
 const clientDOMAIN = 'http://localhost:5173'
 
 var router = useRouter()
+const authStore = useAuthenticationStore()
+
 /**
  * Attempts to log the user in via email and password.
  * Client recieves session cookie upon successful authentication
@@ -54,25 +59,23 @@ function loginViaEmailPassword(e:Event, url:string='/api/login')
             const authenticated = true
             if(res.res == authenticated)
             {
-                // window.location.replace(res.link) - messes with Vue - use router instead
-                //set meta isAuthenticated as true
-                router.currentRoute.value.meta = {isAuthenticated : true}
-                router.getRoutes().forEach(r => r.meta = {isAuthenticated : true})
-                
+                //set authentication store variable as true
+                //set pinia store isAuthenticated = false
+                authStore.authenticate()
+                console.log(`authStore.setAuthenticated:${authStore.isAuthenticated}`)
                 router.push('/user-home')
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
-                const message = `Welcome user:${res.userId}. You have succesffully logged in`
+                const message = `Welcome user:${res.userId}. You have succesfully logged in`
                 console.log(message)
             }
             else {
-                router.getRoutes().forEach(r => r.meta = {isAuthenticated : false})
+                //unauthenicate
+                authStore.unauthenticate()
                 console.log('Log in unsuccessful')
             }
         },
 		error: ()=>{
-            //set meta isAuthenticated as true
-            router.currentRoute.value.meta = {isAuthenticated : false}
             const message = 'Login was unsuccessful'
             const html = messageToHTML(message)
             $('#errors').html(html)
@@ -82,11 +85,6 @@ function loginViaEmailPassword(e:Event, url:string='/api/login')
 
 }
 
-
-
-</script>
-
-<script lang="ts">
 /**
  * Attempts to log user in via session cookie on the client broswer.
  * If valid session cookie is present and is sent along with a csrfToken
@@ -138,8 +136,10 @@ function loginViaSessionCookie(url?:string='/api/login-session-cookie', router:R
             if(res.res == authenticated)
             {
                 // window.location.replace(res.link) - messes with Vue - use router instead
-                //set meta isAuthenticated as true
-                router.currentRoute.value.meta = {isAuthenticated : true}
+                //set authentication store variable as true
+                //set pinia store isAuthenticated = true
+                authStore.authenticate()
+                console.log(`authStore.setAuthenticated:${authStore.isAuthenticated}`)
                 router.push('/user-home')
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
@@ -147,7 +147,8 @@ function loginViaSessionCookie(url?:string='/api/login-session-cookie', router:R
                 console.log(message)
             }
             else {
-                router.currentRoute.value.meta = {isAuthenticated : false}
+                //set pinia store isAuthenticated = false
+                authStore.unauthenticate()
                 console.log('Log in unsuccessful')
             }
         },
@@ -159,18 +160,14 @@ function loginViaSessionCookie(url?:string='/api/login-session-cookie', router:R
 	})
 }
 
-export default {
-    mounted() {
         console.log('window on load called')
-        var router = this.$router
-        
+        //how to reference router outside of setup script
+        // var router = this.$router
+
         const proxyUrl = '/api/login-session-cookie'
         loginViaSessionCookie(proxyUrl, router)
-
-    }
-}
-
 </script>
+
 
 
 

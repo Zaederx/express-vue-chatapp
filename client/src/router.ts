@@ -20,20 +20,37 @@ import UserChat from './pages/user/ChatApp.vue'
 import UserBanner from './components/UserBanner.vue'
 import UserHome from './pages/user/UserHome.vue'
 import ChatWindow from './components/ChatWindow.vue'
+
+//pinia stores
+
+
+
 // create routes
 const routes = [
-    { path: '/', name:'Home', component:Home,
+    { path: '/', name:'Home', component:Home, meta:{
+        isAuthenticated : false
+    },
     children: [
-                {path: '/home', name: 'Home', component:Home}
+                {path: '/home', name: 'Home', component:Home ,meta:{
+                    isAuthenticated : false
+                }}
             ]
     },
-    { path: '/about', name:'About', component:About},
+    { path: '/about', name:'About', component:About,meta:{
+        isAuthenticated : false
+    }},
     { path: '/login', name:'Login', component:Login , meta:{
         isAuthenticated : false
     }},
-    { path: '/sign-up', name:'SignUp', component:SignUp},
-    { path: '/user-chat', name:'UserChat', component:UserChat},
-    { path: '/user-home', name:'UserHome', component: UserHome}
+    { path: '/sign-up', name:'SignUp', component:SignUp,meta:{
+        isAuthenticated : false
+    }},
+    { path: '/user-chat', name:'UserChat', component:UserChat, meta:{
+        isAuthenticated : false
+    }},
+    { path: '/user-home', name:'UserHome', component: UserHome, meta:{
+        isAuthenticated : false
+    }}
 ]
 //add routes to Vue Router
 const router = VueRouter.createRouter({
@@ -41,30 +58,7 @@ const router = VueRouter.createRouter({
     routes: routes
 })
 
-router.beforeEach((to,from) => {
 
-    //if heading to user pages and meta 'isAuthenticated' is present and true - allow it
-    if(to.name == 'UserHome' && from.meta.isAuthenticated == true ||
-    to.name == 'UserChat' && from.meta.isAuthenticated == true) 
-    {
-        true
-    }
-    //if heading to user pages and meta 'isAuthenticated' is present and false - redirect to login
-    if(to.name == 'UserHome' && from.meta.isAuthenticated == false ||
-    to.name == 'UserChat' && from.meta.isAuthenticated == false) 
-    {
-        router.push('/login')
-    }
-    //if heading to user pages and meta 'isAuthenticated' is not present. Don't allow it. Redirect to login
-    else if (to.name == 'UserHome' && (from.meta = {}) || to.name == 'UserChat' && (from.meta = {})) 
-    {
-        router.push('/login')
-    }
-    //everything else allow it
-    else
-    {
-        return true
-    }
-})
+
 
 export default router

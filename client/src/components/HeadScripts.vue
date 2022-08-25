@@ -1,8 +1,12 @@
+<script setup lang="ts">
+
+import { useRouter, type Router } from 'vue-router'
+import { useAuthenticationStore } from '../stores/isAuthenticated.js'
+
+const authStore = useAuthenticationStore()
+console.log(`authStore.isAuthenticated:${authStore.isAuthenticated}`)
+</script>
 <script lang="ts">
-// a place for dependencies to be added to the html head
-//IMPORTANT try to log in with authentication cookie
-
-
 //IMPORTANT check if there is a csrfToken present, if no - make a request
 
 //making a request for a CSRF token
@@ -21,6 +25,8 @@ const csrfToken = document.createElement('meta') as HTMLMetaElement
 csrfToken.name = 'csrf-token'
 csrfToken.content= data.csrfToken
 document.head.append(csrfToken)
+
+
 export default {
     // inheritAttrs: true //true is default
     mounted() {
@@ -70,10 +76,15 @@ export default {
     
 }
 
+
+
+
+
+
+
 </script>
 
-<script setup lang="ts">
-</script>
+
 
 <template>
 </template>

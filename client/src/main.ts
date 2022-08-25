@@ -26,9 +26,12 @@ import UserHome from './pages/user/UserHome.vue'
 import ChatWindow from './components/ChatWindow.vue'
 
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+
 import router from './router'
+import { useAuthenticationStore } from './stores/isAuthenticated.js';
 
-
+const pinia = createPinia()
 
 //set up app for fronend SPA (Single Page Application)
 const app = createApp(App)
@@ -45,12 +48,32 @@ const app = createApp(App)
 .component('UserBanner', UserBanner)
 .component('ChatWindow', ChatWindow)
 
-//add router to App
+//add router & pinia to App
 .use(router)
+.use(pinia)
 
 //load app
 .mount('#app')
 
+const authStore = useAuthenticationStore()
+
+//Navigation Guard
+router.beforeEach( (to) => {
+    
+    console.log(`router: authStore.isAuthenticated - ${authStore.isAuthenticated}`)
+    //if heading to user pages and meta 'isAuthenticated' is present and true - allow it
+    if(to.name == 'UserHome' && !authStore.isAuthenticated) 
+    {
+        router.push('/login')
+    }
+    else if(to.name == 'UserChat' && !authStore.isAuthenticated) 
+    {
+        router.push('/login')
+    }
+    else {
+        return true
+    }
+})
 
 // const app = createApp(Home)
 // .component('HeadScripts', HeadScripts)
@@ -59,6 +82,5 @@ const app = createApp(App)
 // .component('SiteFooter', SiteFooter)
 // .mount('#app')
 
-export default router
 
 // **********************

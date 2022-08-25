@@ -61,7 +61,6 @@ const authStore = useAuthenticationStore()
 router.beforeEach( (to) => {
     
     console.log(`router: authStore.isAuthenticated - ${authStore.isAuthenticated}`)
-    //if heading to user pages and meta 'isAuthenticated' is present and true - allow it
     if(to.name == 'UserHome' && !authStore.isAuthenticated) 
     {
         router.push('/login')

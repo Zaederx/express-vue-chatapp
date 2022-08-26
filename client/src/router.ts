@@ -28,28 +28,28 @@ import ChatWindow from './components/ChatWindow.vue'
 // create routes
 const routes = [
     { path: '/', name:'Home', component:Home, meta:{
-        isAuthenticated : false
+        requiresAuth : false
     },
     children: [
                 {path: '/home', name: 'Home', component:Home ,meta:{
-                    isAuthenticated : false
+                    requiresAuth : false
                 }}
             ]
     },
     { path: '/about', name:'About', component:About,meta:{
-        isAuthenticated : false
+        requiresAuth : false
     }},
     { path: '/login', name:'Login', component:Login , meta:{
-        isAuthenticated : false
+        requiresAuth : false
     }},
     { path: '/sign-up', name:'SignUp', component:SignUp,meta:{
-        isAuthenticated : false
+        requiresAuth : false
     }},
     { path: '/user-chat', name:'UserChat', component:UserChat, meta:{
-        isAuthenticated : false
+        requiresAuth : true
     }},
     { path: '/user-home', name:'UserHome', component: UserHome, meta:{
-        isAuthenticated : false
+        requiresAuth : true
     }}
 ]
 //add routes to Vue Router

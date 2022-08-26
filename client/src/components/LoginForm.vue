@@ -62,7 +62,7 @@ function loginViaEmailPassword(e:Event, url:string='/api/login')
                 //set authentication store variable as true
                 //set pinia store isAuthenticated = false
                 authStore.authenticate()
-                console.log(`authStore.setAuthenticated:${authStore.isAuthenticated}`)
+                console.log(`authStore.setAuthenticated:${authStore.auth.isAuthenticated}`)
                 router.push('/user-home')
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
@@ -139,7 +139,7 @@ function loginViaSessionCookie(url?:string='/api/login-session-cookie', router:R
                 //set authentication store variable as true
                 //set pinia store isAuthenticated = true
                 authStore.authenticate()
-                console.log(`authStore.setAuthenticated:${authStore.isAuthenticated}`)
+                console.log(`authStore.setAuthenticated:${authStore.auth.isAuthenticated}`)
                 router.push('/user-home')
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)

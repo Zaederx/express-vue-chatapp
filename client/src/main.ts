@@ -25,11 +25,13 @@ import UserBanner from './components/UserBanner.vue'
 import UserHome from './pages/user/UserHome.vue'
 import ChatWindow from './components/ChatWindow.vue'
 
+//Vue and Pinia
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
 import router from './router'
 import { useAuthenticationStore } from './stores/isAuthenticated.js';
+
+
 
 const pinia = createPinia()
 
@@ -37,7 +39,7 @@ const pinia = createPinia()
 const app = createApp(App)
 
 //add main components globally
-.component('Home', Home)
+app.component('Home', Home)
 .component('HeadScripts', HeadScripts)
 .component('Banner', Banner)
 .component('HomeMain', HomeMain)
@@ -48,24 +50,22 @@ const app = createApp(App)
 .component('UserBanner', UserBanner)
 .component('ChatWindow', ChatWindow)
 
+
 //add router & pinia to App
-.use(router)
-.use(pinia)
+app.use(router)
+
+app.use(pinia)
 
 //load app
-.mount('#app')
+app.mount('#app')
 
-const authStore = useAuthenticationStore()
+
 
 //Navigation Guard
-router.beforeEach( (to) => {
-    
-    console.log(`router: authStore.isAuthenticated - ${authStore.isAuthenticated}`)
-    if(to.name == 'UserHome' && !authStore.isAuthenticated) 
-    {
-        router.push('/login')
-    }
-    else if(to.name == 'UserChat' && !authStore.isAuthenticated) 
+router.beforeEach( async (to) => {
+    const authStore = useAuthenticationStore()
+    console.log(`router: authStore.isAuthenticated - ${authStore.auth.isAuthenticated}`)
+    if(to.meta.requiresAuth && !authStore.auth.isAuthenticated)
     {
         router.push('/login')
     }
@@ -82,4 +82,4 @@ router.beforeEach( (to) => {
 // .mount('#app')
 
 
-// **********************
+// *********** Adding WebSockets ***********

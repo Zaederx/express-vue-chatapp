@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { watch, ref , computed } from 'vue'
+import { watch, ref } from 'vue'
 
 const auth = ref({ isAuthenticated: false})
 export const useAuthenticationStore = defineStore('isAuthenticated', ()=> {
@@ -18,13 +18,11 @@ export const useAuthenticationStore = defineStore('isAuthenticated', ()=> {
         sessionStorage.setItem('auth', JSON.stringify(authVal)),
         {deep:true}
     })
-    
-
     function authenticate() {
-            console.log('authStore.authenicate called')
-            auth.value.isAuthenticated = true
-            console.log(`isAuthenticated:${auth.value.isAuthenticated}`)
-        }
+        console.log('authStore.authenicate called')
+        auth.value.isAuthenticated = true
+        console.log(`isAuthenticated:${auth.value.isAuthenticated}`)
+    }
     function unauthenticate() 
     {
         console.log('authStore.unauthenicate called')

@@ -13,20 +13,21 @@ export const useAuthenticationStore = defineStore('isAuthenticated', ()=> {
     }
     
     //save auth default value ( { isAuthenticated: false}) to localStorage
-    watch(auth.value,(authVal) => {
+    watch(auth,(authVal) => {
         console.log('setting auth in localStorage')
         sessionStorage.setItem('auth', JSON.stringify(authVal)),
         {deep:true}
     })
+    
     function authenticate() {
         console.log('authStore.authenicate called')
-        auth.value.isAuthenticated = true
+        auth.value = {isAuthenticated : true}
         console.log(`isAuthenticated:${auth.value.isAuthenticated}`)
     }
     function unauthenticate() 
     {
         console.log('authStore.unauthenicate called')
-        auth.value.isAuthenticated = false
+        auth.value = {isAuthenticated : false}
         console.log(`isAuthenticated:${auth.value.isAuthenticated}`)
     }
 

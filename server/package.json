@@ -14,6 +14,7 @@
   "author": "Zachary Ishmael",
   "license": "ISC",
   "dependencies": {
+    "@types/socket.io": "^3.0.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.6",
@@ -25,6 +26,7 @@
     "lowdb": "^3.0.0",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^2.0.19",
+    "socket.io": "^4.5.1",
     "string-similarity": "^4.0.4",
     "uuid": "^8.3.2"
   },

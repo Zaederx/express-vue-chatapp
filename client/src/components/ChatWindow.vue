@@ -1,20 +1,88 @@
-<script setup lang="ts">
+<script setup lang="ts" defer>
+import { onMounted } from 'vue';
 
+/*** 
+ * The idea of this seciton is to create a Filter Dropdown Table 
+ * Examples of what is meant by such a table can be found at [w3schools](https://www.w3schools.com/howto/howto_js_filter_dropdown.asp)
+ * 
+ * **** */
 
-    // //fetch name from user in db
-    // const proxyUrl = "/api/username/"
-    // var response:Response = await fetch(proxyUrl)
-    // //set sub heading to name
-    // var responseStr = JSON.stringify(response.body)
-    // var res = JSON.parse(responseStr)
-    // var username = res.user
-    // //set subheading to username
-    // var subHeading = document.querySelector('#to') as HTMLDivElement
-    // subHeading.innerHTML = username
-    // subHeading.oninput = () => {
+const varContainer = 
+{
+    friend_name : '',
+    friend_id : '',
+    chatId: '',
+    url : '/api/get-users/with-name/'
+}
+//fetch name from user in db
+ onMounted(async() => {
+    var name = '';
+    var searchbar = (document.querySelector('#searchbar') as HTMLDivElement)
+    searchbar.addEventListener('input', async() => { 
+        name = document.querySelector('#searchbar')?.innerHTML as string;
+        const emptyStr = ''
+        if (name != emptyStr) 
+        {
+            //put name a path vairable in proxyURL
+            const proxyUrl = `${varContainer.url}${name}`
+            //fetch response string
+            var namesHTML:string = await (await fetch(proxyUrl)).text()
+            console.log(namesHTML)
 
-    // }
+            //set queryDiv to names HTML
+            var queryDiv = document.querySelector('#queryDiv') as HTMLDivElement
+            queryDiv.innerHTML = namesHTML
+            
+            //each node is an `<a><div>name</div></a>` tag with a name enclosed
+            queryDiv.childNodes.forEach((nameNode) => {
+                console.log(`nameNode.textContent:${nameNode.textContent}`)
+                console.log(`nameNode.nodeName:${nameNode.nodeName}`)
+                if (nameNode != undefined && nameNode.nodeName != '#text')
+                {
+                    var a = nameNode as HTMLLinkElement
+                    console.log(`a.innerHTML:${a.innerHTML}`)
+                    //get user id
+                    var userId = a.getAttribute('data-id') as string
+                    // get user's name
+                    var friend_name = (a.childNodes[0] as HTMLDivElement).innerHTML//contains user's name
+                    //set the element with a function onclick - function takes data-ids
+
+                }
+                
+            })
+        }
+        
+    })
+    
+    
+
+    /**
+     * Function to put user's name into the searchbar when it is selected.
+     * Function to put the user's id into a variable to be used for
+     * websocket messaging.
+     * @param friend_id user's id
+     * @param friend_name user's name (not username)
+     */
+    function selectName(friend_id:string, friend_name:string)
+    {
+        //set this name in the searchbar
+        var searchbar = (document.querySelector('#searchbar') as HTMLDivElement)
+        searchbar.innerHTML = friend_name
+
+        //set variable in varContainer for later user in messaging
+        varContainer.friend_id = friend_id
+        varContainer.friend_name = friend_name
+    }
+
+   
+
+    function returnListofNamesHTML()
+    {
+
+    }
+ })   
 </script>
+
 <template>
     <!-- Chat Window -->
     <div class="chat-grid">
@@ -23,8 +91,12 @@
             <div class="header"> Chat </div>
             <div class="btn-close"> X </div>
         </div>
-        <!-- sub heading -->
-        <div id="to" contenteditable="true"></div>
+        <!-- contact box -->
+        <!-- Note to self:always use span for this kind of searcbar thing - not div - divs have weird sid effects like break tags added to text when you press backspace -->
+        <span id="searchbar" class="searchbar" contenteditable="true" data-placeholder="Enter a name"></span>
+        <div id="queryDiv">
+            
+        </div>
         <!-- Message box -->
         <div id="messages" class="message-box">
             Type message...
@@ -34,7 +106,6 @@
             <button id="btn-send" class="btn btn-primary form-control">Send</button>
         </div>
     </div>
-
 </template>
 
 <style scoped>
@@ -58,6 +129,16 @@
     justify-content:center;
 }
 
+.searchbar 
+{
+    background-color:  rgb(202, 202, 202);
+    height: 30px;
+    content: attr(data-placeholder);
+    color: #6d6d6d;
+    white-space: pre-wrap;
+    word-wrap: normal;
+}
+
 .chat-grid 
 {
     width: 30%;
@@ -75,7 +156,18 @@
 
 }
 
-.message-box {
+.contact-box 
+{
     background-color: rgb(202, 202, 202);
+    border-color: black;
+}
+
+.message-box 
+{
+    background-color: rgb(202, 202, 202);
+    border-color: black;
 }
 </style>
+
+
+

@@ -1,3 +1,4 @@
+import { RESERVED_EVENTS } from 'socket.io/dist/socket'
 import { User } from '../db/classes/User.js'
 import db from '../db/db-setup.js'
 import { compareTwoStrings } from '../helpers/simplystring.js'
@@ -7,9 +8,25 @@ import { compareTwoStrings } from '../helpers/simplystring.js'
  * @param req 
  * @param res 
  */
-export async function getUsersNames(req:any,res:any) {
+export async function fetchUsersNames(req:any,res:any) {
     //get name from request params
     var name = req.params.name
+    var namesArr:User[] = await getUsersNamesListFromDB(name)
+    var namesHTML = ''
+    namesArr.forEach((u)=> {
+        namesHTML += (`<a data-id="${u.id}"><div>${u.name}</div></a>\n`) as string
+    })
+    res.send(namesHTML)
+}
+
+
+/**
+ * Returns a json list of users who's names
+ * match the request paramerter 'name'
+ * @param req 
+ * @param res 
+ */
+ export async function getUsersNamesListFromDB(name:string) {
     //read from db
     await db.read()
     //find user from users database where the name is similar over 50%
@@ -18,13 +35,14 @@ export async function getUsersNames(req:any,res:any) {
         compareTwoStrings(name,user.name) >= 0.5))?.slice(0,limit) as User[]
         //take list of users and create list of names
         var arrStr:string[] = [] 
-        arr.forEach(user => {
-                    arrStr.push(user.name)
-                })
+        // arr.forEach(user => {
+        //             // arrStr.push(user.name)
+        //         })
+        
     //convert array of names to json string
-    var usersJSON = JSON.stringify(arrStr)
+    // var usersJSON = JSON.stringify(arrStr)
     //send json list of namesof users
-    res.json({usersJSON})
+    return arr
 }
 
 

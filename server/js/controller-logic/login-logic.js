@@ -1,9 +1,11 @@
+//bcryptjs
 import bcryptjs from 'bcryptjs';
+//uuidv4
+import { v4 as uuidv4 } from 'uuid';
 import db from "../db/db-setup.js";
 import { setSessionCookie } from '../helpers/cookie-defaults.js';
 import { LoginResponse } from "../helpers/response/login-response.js";
 import { clientDOMAIN } from '../server.js';
-import { v4 as uuidv4 } from 'uuid';
 export function loginViaSessionCookie(req, res) {
     var sessionId = readSessionIdFromReq(req);
     console.log(`sessionId:${sessionId}`);
@@ -58,6 +60,8 @@ export async function sessionCookieLogin(req, res, sessionId) {
             var sessionCookie = setSessionCookie(sessionId);
             //set cookie in header
             res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()]);
+            //set authentication header
+            res.setHeader('Authenticated', 'true');
         }
         //send response
         res.send(loginRes);
@@ -122,6 +126,8 @@ export async function loginLogic(req, res) {
                 var sessionCookie = setSessionCookie(sessionId);
                 //set cookie in header
                 res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()]);
+                //set authentication header
+                res.setHeader('Authenticated', 'true');
             }
             //set request access control to client domain
             const name = 'Access-Control-Allow-Origin';

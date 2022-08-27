@@ -2,7 +2,9 @@
     <HeadScripts></HeadScripts>
     <Banner heading1="Chat" heading2="ChatApp"></Banner>
     <HomeMain>
-        <ChatWindow></ChatWindow>
+        <Suspense>
+            <ChatWindow></ChatWindow>
+        </Suspense>
     </HomeMain>
     <SiteFooter></SiteFooter>
 </template>

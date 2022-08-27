@@ -4,7 +4,7 @@ import { useRouter, type Router } from 'vue-router'
 import { useAuthenticationStore } from '../stores/isAuthenticated.js'
 
 const authStore = useAuthenticationStore()
-console.log(`authStore.isAuthenticated:${authStore.isAuthenticated}`)
+console.log(`authStore.isAuthenticated:${authStore.auth.isAuthenticated}`)
 </script>
 <script lang="ts">
 //IMPORTANT check if there is a csrfToken present, if no - make a request
@@ -30,7 +30,14 @@ document.head.append(csrfToken)
 export default {
     // inheritAttrs: true //true is default
     mounted() {
-        
+        //socket.io
+        const socket_io = document.createElement('script') as HTMLScriptElement
+        socket_io.type = 'text/javascript'
+        socket_io.src =  'https://cdn.socket.io/4.5.0/socket.io.min.js'
+        socket_io.integrity = 'sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k'
+        socket_io.crossOrigin = 'anonymous'
+
+
         //view router
         const viewRouter = document.createElement('script') as HTMLScriptElement
         viewRouter.type = 'text/javascript'

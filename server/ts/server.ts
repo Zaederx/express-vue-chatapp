@@ -16,17 +16,71 @@ import { loginLogic as emailPasswordLogin, loginViaSessionCookie, readSessionIdF
 import { Cookie } from './helpers/cookie.js';
 import { getAppCookie } from './helpers/cookie-defaults.js';
 import { LoginResponse } from './helpers/response/login-response.js';
-import { getUsersNames } from './controller-logic/users-logic.js';
+import { fetchUsersNames } from './controller-logic/users-logic.js';
 import { logout } from './controller-logic/logout-logic.js';
-
-
+import { v4 as uuidv4 } from 'uuid'
+import  db  from './db/db-setup.js'
 export const PORT = process.env.PORT || 3000
 export const serverDOMAIN = `http://localhost:${PORT}`
 export const clientDOMAIN = 'https://localhost:5173'
 
+
+
+//********** WebSocket *********** */
+
+
+import { createServer } from "http";
+import { Server } from "socket.io";
+
+const server = express();//create a server instance
+const httpServer = createServer(server);
+const io = new Server(httpServer, { /* options */ });
+// var userId
+io.on("connection", (socket) => {
+    
+
+    //on - recieves messages
+    //emit - sends messages
+    // io.to("some room").emit("some event", () => {console.log(message)});
+    // or socket.to("some room").emit("some event");
+    socket.on('create-join-chat', async (userId, friendId) => {
+        //generate chat id
+        const chatId = uuidv4()
+        //store chat id in user
+        await db.read()
+        //friend id
+        var user = db.data?.users.find((u) => u.id === userId)
+        var friend = db.data?.users.find((u) => u.id === friendId)
+
+        socket.join(chatId)
+    })
+
+    socket.broadcast.emit('')
+    //emit
+    socket.to("some room").emit('message',)
+
+    //recieve
+    socket.on('set-conversation-id', (chatId) => {
+        // console.log(`confirm conversation id:returned id '${id}' should equal '${chatId}'`)
+    })
+
+    
+
+});
+
+httpServer.listen(3001);
+
+
+
+
+
+
+
+
+
 const keylist = ['ETwA@S!72', '83HWUW', 'ygT6tT9jNbCr']
 const keys = new KeyGrip(keylist)
-const server = express();//create a server instance
+
 const upload = multer({dest: 'uploads/'});//see- //TODO //IMPORTANT https://expressjs.com/en/resources/middleware/multer.html
 const csrfProtection = csrf({
                             cookie:true,
@@ -131,5 +185,5 @@ server.post('/logout', (req:Request<ParamsDictionary, any, any, ParsedQs, Record
 
 //return first 10 users with names similar to set name
 server.get('/get-users/with-name/:name', (req,res) => {
-    getUsersNames(req,res)
+    fetchUsersNames(req,res)
 })

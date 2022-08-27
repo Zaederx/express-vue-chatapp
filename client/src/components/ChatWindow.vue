@@ -77,33 +77,36 @@ var varContainer =
      */
     function setQueryAllNamesWithClickEvent()
     {
+        console.log(`****** setQueryAllNamesWithClickEvent called *****`)
         //each node is an `<a><div>name</div></a>` tag with a name enclosed
             //want each node to add itself to the nameBadgeBox onclick
-            queryDiv.childNodes.forEach((node) => {
+            queryDiv.childNodes.forEach((node) => 
+            {
                 console.log(`nameNode.textContent:${node.textContent}`)
                 console.log(`nameNode.nodeName:${node.nodeName}`)
                 if (node != undefined && node.nodeName != '#text')
                 {
                     var a = node as HTMLLinkElement
                     console.log(`a.innerHTML:${a.innerHTML}`)
-                    //get user id
+                    //get friend id
                     var friendId = a.getAttribute('data-id') as string
-                    // get user's name
+                    // get friend's name
                     var friendName = (a.childNodes[0] as HTMLDivElement).innerHTML//contains user's name
-
+                    console.log(`friendId ${friendId} and friendName ${friendName}`)
                     
                     //set the element with a function onclick
                     a.onclick = () => 
                     {
                         //select name and put into badge box
-                        setNameInNameBadgeBox(friendName)
+                        setNameInNameBadgeBox(friendId, friendName)
 
                         //add friends to varContainer.selectedFriends
                         varContainer.selectedFriends.push(new Friend(friendName,friendId))
-
+                        console.log(`added Friend name:${friendName}, id:${friendId}`)
+                        
                         //set badge buttons - with remove event
-                        makeClickableBadgeButtons(friendId, friendName)
-
+                        makeClickableBadgeButtons()
+                        
                         displayNameBadgeBox()
                         hideQueryDiv()
 
@@ -112,6 +115,7 @@ var varContainer =
                 }
                 
             })
+            
     }
     /** //SECTION hide and display functions */
     //hide and display searchbar
@@ -167,12 +171,13 @@ var varContainer =
      * the nameBadgeBox
      * @param friendName name to put into the badge box
      */
-    function setNameInNameBadgeBox(friendName:string)
+    function setNameInNameBadgeBox(friendId:string, friendName:string)
     {
         clearSearchbar()
         //set this name in the searchbar
-        var nameBadgeBox = (document.querySelector('#name-badge-box') as HTMLDivElement)
-        nameBadgeBox.innerHTML += `<span class='friend-name'>${friendName}<span class="btn-close">X</span></span>`
+
+        nameBadgeBox.innerHTML += `<span data-id="${friendId}" class='friend-name'>${friendName}<span class="btn-close">X</span></span>`
+
     }
     /**
      * Make badge buttons respond to click.
@@ -180,30 +185,34 @@ var varContainer =
      * varContainer.selectedFriends.
      * It then refills the badge div with names left in
      * varContainer.selectedFriends
-     * @param friendId user's id
-     * @param friendName user's name (not username)
      */
-    function makeClickableBadgeButtons(friendId:string, friendName?:string)
+    function makeClickableBadgeButtons()
     {
+        console.log(' **** makeClickableBadgeButtons ****')
 
-        //set onclick events on the span of <div class='friend-name'>${friend_name}<span>X</span></div>
+        //set onclick events on the span of <span data-id="friendId" class='friend-name'>${friend_name}<span>X</span></span>
         nameBadgeBox.childNodes.forEach((node) => {
             if(node != undefined && node.nodeName != '#text')
             {
+
                 var span1 = (node as HTMLDivElement)
+                console.log(`span1.textContent:${span1.textContent}`)
+                var friendId = span1.getAttribute('data-id')
+                console.log(`friendId: ${friendId}`)
                 var span2 = ((node as HTMLDivElement).childNodes[0] as HTMLSpanElement)
                 span1.addEventListener('click' ,() => {
                     console.log('close-btn-div click')
-                    removeSelectedFriend({id:friendId})
+                    removeSelectedFriend({id:friendId as string})
                 })
                 span2.addEventListener('click' ,() => {
                     console.log('close-btn-div click')
-                    removeSelectedFriend({id:friendId})
+                    removeSelectedFriend({id:friendId as string})
 
                 })
             }
         })
 
+        console.log(' **** End of makeClickableBadgeButtons ****')
         
     }
 
@@ -218,6 +227,7 @@ var varContainer =
         {
             //find index of friend in array / list - using obj.id
             var i = varContainer.selectedFriends.findIndex((f:Friend) => f.id == id)
+            console.log(`index of friend with id '${id}':${i}`)
             //remove that index that spot in the array / list
             varContainer.selectedFriends.splice(i, 1)
         }
@@ -243,6 +253,7 @@ var varContainer =
     /**
      * Fills name badge box with name badges from names found
      * in varContainer.selectedFriends.
+     * Also makes them clickable
      */
     function fillNameBadgeBoxFromVarsContainer()
     {
@@ -250,8 +261,8 @@ var varContainer =
         nameBadgeBox.innerHTML = ''
         //fill name badge box
         varContainer.selectedFriends.forEach((f:Friend) => {
-            setNameInNameBadgeBox(f.name)
-            makeClickableBadgeButtons(f.id, f.name)
+            setNameInNameBadgeBox(f.id,f.name)
+            makeClickableBadgeButtons()
         })
     }
 

@@ -6,75 +6,254 @@ import { onMounted } from 'vue';
  * Examples of what is meant by such a table can be found at [w3schools](https://www.w3schools.com/howto/howto_js_filter_dropdown.asp)
  * 
  * **** */
-
-const varContainer = 
+class Friend
 {
-    friend_name : '',
-    friend_id : '',
-    chatId: '',
+    name:string
+    id:string
+
+    constructor(name:string, id:string)
+    {
+        this.name = name
+        this.id = id
+    }
+    toString()
+    {
+        var str =  
+        `Friend:{
+            name:${this.name},
+            id:${this.id}
+        }`
+        return str
+    }
+}
+
+var friendArr:Friend[] = []
+var varContainer = 
+{
+    selectedFriends: friendArr,
     url : '/api/get-users/with-name/'
 }
+
 //fetch name from user in db
  onMounted(async() => {
     var name = '';
-    var searchbar = (document.querySelector('#searchbar') as HTMLDivElement)
-    searchbar.addEventListener('input', async() => { 
-        name = document.querySelector('#searchbar')?.innerHTML as string;
+    const searchbar = (document.querySelector('#searchbar') as HTMLDivElement)
+    const queryDiv = document.querySelector('#queryDiv') as HTMLDivElement
+    const nameBadgeBox = document.querySelector('#name-badge-box') as HTMLDivElement
+    const messageBox = document.querySelector('#message-box') as HTMLDivElement
+
+    searchbar.addEventListener('input', async() => 
+    { 
+        //get name from the searchbar
+        name = searchbar.innerHTML as string;
+        
         const emptyStr = ''
         if (name != emptyStr) 
         {
-            //put name a path vairable in proxyURL
+            //display the queryDiv
+            displayQueryDiv()
+            //put name a path vairable (name) in proxyURL
             const proxyUrl = `${varContainer.url}${name}`
             //fetch response string
             var namesHTML:string = await (await fetch(proxyUrl)).text()
             console.log(namesHTML)
 
             //set queryDiv to names HTML
-            var queryDiv = document.querySelector('#queryDiv') as HTMLDivElement
             queryDiv.innerHTML = namesHTML
             
-            //each node is an `<a><div>name</div></a>` tag with a name enclosed
-            queryDiv.childNodes.forEach((nameNode) => {
-                console.log(`nameNode.textContent:${nameNode.textContent}`)
-                console.log(`nameNode.nodeName:${nameNode.nodeName}`)
-                if (nameNode != undefined && nameNode.nodeName != '#text')
-                {
-                    var a = nameNode as HTMLLinkElement
-                    console.log(`a.innerHTML:${a.innerHTML}`)
-                    //get user id
-                    var userId = a.getAttribute('data-id') as string
-                    // get user's name
-                    var friend_name = (a.childNodes[0] as HTMLDivElement).innerHTML//contains user's name
-                    //set the element with a function onclick - function takes data-ids
-
-                }
-                
-            })
+            setQueryAllNamesWithClickEvent()
+            
+        }
+        else 
+        {
+            hideQueryDiv()
         }
         
     })
-    
-    
 
     /**
-     * Function to put user's name into the searchbar when it is selected.
-     * Function to put the user's id into a variable to be used for
-     * websocket messaging.
-     * @param friend_id user's id
-     * @param friend_name user's name (not username)
+     * Sets query names in queryDiv with event to 
+     * to add self to nameBadgeBox onclick
      */
-    function selectName(friend_id:string, friend_name:string)
+    function setQueryAllNamesWithClickEvent()
     {
-        //set this name in the searchbar
-        var searchbar = (document.querySelector('#searchbar') as HTMLDivElement)
-        searchbar.innerHTML = friend_name
+        //each node is an `<a><div>name</div></a>` tag with a name enclosed
+            //want each node to add itself to the nameBadgeBox onclick
+            queryDiv.childNodes.forEach((node) => {
+                console.log(`nameNode.textContent:${node.textContent}`)
+                console.log(`nameNode.nodeName:${node.nodeName}`)
+                if (node != undefined && node.nodeName != '#text')
+                {
+                    var a = node as HTMLLinkElement
+                    console.log(`a.innerHTML:${a.innerHTML}`)
+                    //get user id
+                    var friendId = a.getAttribute('data-id') as string
+                    // get user's name
+                    var friendName = (a.childNodes[0] as HTMLDivElement).innerHTML//contains user's name
 
-        //set variable in varContainer for later user in messaging
-        varContainer.friend_id = friend_id
-        varContainer.friend_name = friend_name
+                    
+                    //set the element with a function onclick
+                    a.onclick = () => 
+                    {
+                        //select name and put into badge box
+                        setNameInNameBadgeBox(friendName)
+
+                        //add friends to varContainer.selectedFriends
+                        varContainer.selectedFriends.push(new Friend(friendName,friendId))
+
+                        //set badge buttons - with remove event
+                        makeClickableBadgeButtons(friendId, friendName)
+
+                        displayNameBadgeBox()
+                        hideQueryDiv()
+
+                        
+                    }
+                }
+                
+            })
+    }
+    /** //SECTION hide and display functions */
+    //hide and display searchbar
+    function hideSearchbar()
+    {
+        searchbar.style.display = 'none'
+    }
+    function displaySeachbar()
+    {
+        searchbar.style.display = 'block'
+    }
+    // hide and display queryDiv
+    function hideQueryDiv()
+    {
+        queryDiv.style.display = "none"
+    }
+    function displayQueryDiv()
+    {
+        queryDiv.style.display = "block"
     }
 
-   
+    //hide and display Name Badge Box
+    function hideNameBadgeBox()
+    {
+        nameBadgeBox.style.display = "none"
+    }
+    function displayNameBadgeBox()
+    {
+        nameBadgeBox.style.display = "block"
+    }
+
+    //hide and display message Box
+    function hideMessageBox()
+    {
+        messageBox.style.display = "none"
+    }
+    function displayMessageBox()
+    {
+        messageBox.style.display = "block"
+    }
+
+    /**
+     * Clears the searchbar
+     */
+    function clearSearchbar()
+    {
+        var searchbar = (document.querySelector('#searchbar') as HTMLDivElement)
+        searchbar.innerHTML = ''
+    }
+
+    /**
+     * Turns name into badge which is then put into 
+     * the nameBadgeBox
+     * @param friendName name to put into the badge box
+     */
+    function setNameInNameBadgeBox(friendName:string)
+    {
+        clearSearchbar()
+        //set this name in the searchbar
+        var nameBadgeBox = (document.querySelector('#name-badge-box') as HTMLDivElement)
+        nameBadgeBox.innerHTML += `<span class='friend-name'>${friendName}<span class="btn-close">X</span></span>`
+    }
+    /**
+     * Make badge buttons respond to click.
+     * Responds by removing themselves from 
+     * varContainer.selectedFriends.
+     * It then refills the badge div with names left in
+     * varContainer.selectedFriends
+     * @param friendId user's id
+     * @param friendName user's name (not username)
+     */
+    function makeClickableBadgeButtons(friendId:string, friendName?:string)
+    {
+
+        //set onclick events on the span of <div class='friend-name'>${friend_name}<span>X</span></div>
+        nameBadgeBox.childNodes.forEach((node) => {
+            if(node != undefined && node.nodeName != '#text')
+            {
+                var span1 = (node as HTMLDivElement)
+                var span2 = ((node as HTMLDivElement).childNodes[0] as HTMLSpanElement)
+                span1.addEventListener('click' ,() => {
+                    console.log('close-btn-div click')
+                    removeSelectedFriend({id:friendId})
+                })
+                span2.addEventListener('click' ,() => {
+                    console.log('close-btn-div click')
+                    removeSelectedFriend({id:friendId})
+
+                })
+            }
+        })
+
+        
+    }
+
+
+    /**
+     * Removes Friend of given id from varContainer.selectedFriends
+     * @param id 
+     */
+    function removeFriendFromVarsContainer(id:string, name?:string)
+    {
+        if(id)
+        {
+            //find index of friend in array / list - using obj.id
+            var i = varContainer.selectedFriends.findIndex((f:Friend) => f.id == id)
+            //remove that index that spot in the array / list
+            varContainer.selectedFriends.splice(i, 1)
+        }
+        else
+        {
+            //find index of friend in array / list - using obj.name
+            var i = varContainer.selectedFriends.findIndex((f:Friend) => f.name == name)
+            //remove that index that spot in the array / list
+            varContainer.selectedFriends.splice(i, 1)
+        }
+    }
+    function removeSelectedFriend(obj:{id?:string, name?:string}) 
+    {   
+        console.log('******* removeSelectedFriend called *******')
+        console.log(`varContainer.selectedFriends:${varContainer.selectedFriends.toLocaleString()}`)
+        removeFriendFromVarsContainer(obj.id as string, obj.name)
+        clearSearchbar()
+        console.log(`varContainer.selectedFriends:${varContainer.selectedFriends}`)
+        fillNameBadgeBoxFromVarsContainer()
+
+    }
+
+    /**
+     * Fills name badge box with name badges from names found
+     * in varContainer.selectedFriends.
+     */
+    function fillNameBadgeBoxFromVarsContainer()
+    {
+        //empty name badge box
+        nameBadgeBox.innerHTML = ''
+        //fill name badge box
+        varContainer.selectedFriends.forEach((f:Friend) => {
+            setNameInNameBadgeBox(f.name)
+            makeClickableBadgeButtons(f.id, f.name)
+        })
+    }
 
     function returnListofNamesHTML()
     {
@@ -91,16 +270,23 @@ const varContainer =
             <div class="header"> Chat </div>
             <div class="btn-close"> X </div>
         </div>
-        <!-- contact box -->
+        <!-- Searchbar and name badge box -->
         <!-- Note to self:always use span for this kind of searcbar thing - not div - divs have weird sid effects like break tags added to text when you press backspace -->
-        <span id="searchbar" class="searchbar" contenteditable="true" data-placeholder="Enter a name"></span>
-        <div id="queryDiv">
+        <span id="searchbar" class="searchbar editable" contenteditable="true" data-placeholder="Enter a name"></span>
+        <div id="name-badge-box" class="name-badge-box" ></div>
+        
+
+        <!-- Query Div and Message Box -->
+        <div id="queryDiv" class="queryDiv" style="display:none">
+        </div>
+        <div id="message-box" class="message-box">
+                <div class="message-recieved">Message recieved</div>
             
+                <div class="message-sent">Message sent</div>
         </div>
-        <!-- Message box -->
-        <div id="messages" class="message-box">
-            Type message...
-        </div>
+        <!-- Message text -->
+        <span id="message-text" class="message-text editable" contenteditable="true" data-placeholder="Enter a message...">
+        </span>
         <!-- Send button -->
         <div>
             <button id="btn-send" class="btn btn-primary form-control">Send</button>
@@ -110,9 +296,21 @@ const varContainer =
 
 <style scoped>
 
-.btn-close 
+.chat-grid 
 {
-    background-color: red
+    width: 30%;
+    height: 450px;
+    background-color: white;
+    z-index: 1;
+    right: 20%;
+    position: fixed;
+    display: grid;
+    grid-template-rows: [chat-header] 2fr [searchbar]1fr [name-badge-box] 1fr [message] 4fr [send-button] 2fr;
+}
+.btn-close
+{
+    background-color: red;
+    cursor: pointer;
 }
 
 .chat-header
@@ -129,44 +327,55 @@ const varContainer =
     justify-content:center;
 }
 
-.searchbar 
+.editable:empty:before
 {
     background-color:  rgb(202, 202, 202);
-    height: 30px;
     content: attr(data-placeholder);
-    color: #6d6d6d;
     white-space: pre-wrap;
     word-wrap: normal;
 }
 
-.chat-grid 
+.searchbar
 {
-    width: 30%;
-    height: 450px;
-    background-color: white;
+    background-color:  rgb(202, 202, 202);
+    border: 1px solid black;
+}
+
+.name-badge-box
+{
     z-index: 1;
-    right: 20%;
-    position: fixed;
-    display: grid;
-    grid-template-rows: [chat-header] 2fr [sub-header] 2fr [message] 5fr [send-button] 1fr;
+    background-color: transparent;
 }
-
-.chat-header 
+.queryDiv
 {
-
-}
-
-.contact-box 
-{
-    background-color: rgb(202, 202, 202);
-    border-color: black;
+    background-color: yellow;
+    z-index: 1;
 }
 
 .message-box 
 {
     background-color: rgb(202, 202, 202);
     border-color: black;
+    overflow-y: scroll;
 }
+
+.message-recieved
+{
+    background-color: rgb(86, 166, 227);
+    margin-right: 30%;
+    border-radius: 2%;
+    margin-top:10px;
+}
+
+.message-sent
+{
+    background-color: rgb(86, 166, 227);
+    margin-left: 30%;
+    border-radius: 2%;
+    margin-top:10px;
+    
+}
+
 </style>
 
 

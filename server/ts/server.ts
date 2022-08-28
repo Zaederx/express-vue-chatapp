@@ -31,6 +31,7 @@ export const clientDOMAIN = 'https://localhost:5173'
 
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { Chat } from './db/classes/Chat';
 
 const server = express();//create a server instance
 const httpServer = createServer(server);
@@ -51,19 +52,51 @@ io.on("connection", (socket) => {
         //friend id
         var user = db.data?.users.find((u) => u.id === userId)
         var friend = db.data?.users.find((u) => u.id === friendId)
+        var chat = user?.chats.find((chat)=> chat.id == chatId)
 
+        //if chat is undefined -create chat in db
+        if (chat == undefined) 
+        {
+            //create a new chat room in data with chatId
+            chat = new Chat(chatId)
+
+            //add chat to user and friend
+            user?.chats.push(chat)
+            friend?.chats.push(chat)
+            db.write()
+        }
+        //otherwise just join that chat bu calling
+        //socket.join and using chatId
+        //subscribes user to a given channel
         socket.join(chatId)
+
     })
 
-    socket.broadcast.emit('')
-    //emit
-    socket.to("some room").emit('message',)
-
+    
     //recieve
-    socket.on('set-conversation-id', (chatId) => {
-        // console.log(`confirm conversation id:returned id '${id}' should equal '${chatId}'`)
+    socket.on('chat', (userId,chatId,message) => {
+
+        //find chat
+        db.read()
+        var user = db.data?.users.find((u) => u.id  == userId)
+        var chat = user?.chats.find((chat) => chat.id == chatId)
+        chat?.messages.push(message)
+        db.write()
+
+        //emit
+        socket.to(chatId).emit('message', (message:string) => {
+            console.log(message)
+        })
     })
 
+    
+    socket.on("disconnecting", () => {
+        console.log(socket.rooms); // the Set contains at least the socket ID
+    });
+    
+    socket.on("disconnect", () => {
+        // socket.rooms.size === 0
+    });
     
 
 });

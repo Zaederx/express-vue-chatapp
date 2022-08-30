@@ -22,20 +22,26 @@ export function loginViaSessionCookie(req, res) {
  * @param req Express request object
  */
 export function readSessionIdFromReq(req) {
+    console.log('*** readSessionIdFromReq called ***');
     //remove empty spaces
     const matchAllSpaces = /\s+/g; //all empty spaces
     const emptyStr = '';
     var cookieStr = req.headers.cookie?.replace(matchAllSpaces, emptyStr).trim();
+    console.log(`cookieStr:${cookieStr}`);
     //split the string where there are separators
     var cookies = cookieStr.split(';');
     //find the array index with the session id and return the string
     var sessionCookie = cookies.find((c) => c.includes('session'));
-    //split it along the session name and equals sign
-    var sessionIdArr = sessionCookie.split('session=');
-    //the array position with something inside the string will be the session id
-    var sessionId = sessionIdArr.find((c) => c.length > 0);
-    console.log(`\ncookieStr:${cookieStr}`);
-    return sessionId;
+    //if theres a cookie
+    if (sessionCookie) {
+        //split it along the session name and equals sign
+        var sessionIdArr = sessionCookie.split('session=');
+        //the array position with something inside the string will be the session id
+        var sessionId = sessionIdArr.find((c) => c.length > 0);
+        console.log(`\ncookieStr:${cookieStr}`);
+        return sessionId;
+    }
+    return 'no session cookie/id' + sessionId;
 }
 export async function sessionCookieLogin(req, res, sessionId) {
     console.log(`\n\n **** calling sessionCookieLogin function ***`);
@@ -120,11 +126,10 @@ export async function loginLogic(req, res) {
             var sessionId = uuidv4(); //the cookie value
             //store session id with user
             var stored = storeSessionId(u, sessionId);
-            console.log('user', u);
             if (stored) {
-                //set session cookie
+                //set/create session cookie
                 var sessionCookie = setSessionCookie(sessionId);
-                //set cookie in header
+                //set session cookie in header
                 res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()]);
                 //set authentication header
                 res.setHeader('Authenticated', 'true');

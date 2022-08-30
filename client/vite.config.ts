@@ -40,13 +40,19 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         secure:false,//https?
-        ws:true,//proxy websockets
+        ws:true//proxy websockets
         // configure: (proxy, options) => {
         //   // proxy will be an instance of 'http-proxy'
 
         // }
+      },
+      '/socket.io': {
+        target: 'ws://localhost:3000',
+        secure:false,//https?
+        ws: true
       }
-    }
+    },
+    hmr:true
     
   },
  

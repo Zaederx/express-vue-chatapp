@@ -2,6 +2,14 @@
 import { displayDiv, hideDiv, setNameInNameBadgeBox, setQueryAllNamesWithClickEvent } from '@/helpers/chat-window/chat-window-helper.js';
 import { onMounted } from 'vue';
 import type {Friend} from '../classes/friend.js'
+import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+import $ from 'jquery'
+
+
+
+
+
+
 /*** 
  * The idea of this seciton is to create a Filter Dropdown Table 
  * Examples of what is meant by such a table can be found at [w3schools](https://www.w3schools.com/howto/howto_js_filter_dropdown.asp)
@@ -18,6 +26,44 @@ var varContainer =
 
 //fetch name from user in db
  onMounted(async() => {
+    var token = {csrfToken:''}
+    token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
+    //CHAT SOCKETS
+     const socketVars = {
+        userId: '',
+        chatId: ''
+    }
+    const socket = 
+    io({
+        //proxy address + socket.io
+        path:'/socket.io',
+        withCredentials: true,
+        extraHeaders: 
+        {
+            'CSRF-Token': token.csrfToken
+        },
+        transports: ['websocket']
+    });
+
+    var btnJoinChat = document.querySelector('#btn-join-chat') as HTMLDivElement
+    socketVars.userId = await (await fetch('/api/userId')).text()
+    // socketVars.chatId = ''
+    btnJoinChat.onclick = () => 
+    {
+        console.log('btn-join-chat clicked')
+        socket.on('connect', () => 
+        {
+            console.log(socketVars.userId,varContainer.selectedFriends)
+        })
+    }
+
+    
+    // socket.on('chat', ()=> 
+    // {
+
+    // })
+
+    //SEARCHBAR
     var name = '';
     const searchbar = (document.querySelector('#searchbar') as HTMLDivElement)
     const queryDiv = document.querySelector('#queryDiv') as HTMLDivElement
@@ -54,9 +100,15 @@ var varContainer =
     })
     
 
-    
- })   
+ }) 
+ 
 </script>
+
+
+<script type="module">
+    
+</script>
+
 
 <template>
     <!-- Chat Window -->
@@ -68,7 +120,10 @@ var varContainer =
         </div>
         <!-- Searchbar and name badge box -->
         <!-- Note to self:always use span for this kind of searcbar thing - not div - divs have weird sid effects like break tags added to text when you press backspace -->
-        <span id="searchbar" class="searchbar editable" contenteditable="true" data-placeholder="Enter a name"></span>
+        <div class="searchbar-btn-join-chat">
+            <span id="searchbar" class="searchbar editable" contenteditable="true" data-placeholder="Enter a name"></span><span id="btn-join-chat" class="btn btn-success btn-join-chat">Join Chat</span>
+        </div>
+        
         <div id="name-badge-box" class="name-badge-box" ></div>
         
 
@@ -76,9 +131,8 @@ var varContainer =
         <div id="queryDiv" class="queryDiv" style="display:none">
         </div>
         <div id="message-box" class="message-box">
-                <div class="message-recieved">Message recieved</div>
-            
-                <div class="message-sent">Message sent</div>
+            <div class="message-recieved">Message recieved</div>
+            <div class="message-sent">Message sent</div>
         </div>
         <!-- Message text -->
         <span id="message-text" class="message-text editable" contenteditable="true" data-placeholder="Enter a message...">
@@ -136,7 +190,15 @@ var varContainer =
     background-color:  rgb(202, 202, 202);
     border: 1px solid black;
 }
+.btn-join-chat
+{
+}
 
+.searchbar-btn-join-chat
+{
+    display: grid;
+    grid-template-columns: [searchbar] 7fr [btn-join-chat] 3fr ;
+}
 .name-badge-box
 {
     z-index: 1;

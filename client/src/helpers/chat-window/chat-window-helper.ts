@@ -9,7 +9,7 @@ class VarContainer
      * Sets query names in queryDiv with event to 
      * to add self to nameBadgeBox onclick
      */
-export function setQueryAllNamesWithClickEvent(queryDiv:HTMLDivElement, varContainer:VarContainer, nameBadgeBox:HTMLDivElement)
+export function setQueryAllNamesWithClickEvent(queryDiv:HTMLDivElement, varContainer:VarContainer, nameBadgeBox:HTMLDivElement, messagesBox:HTMLDivElement)
   {
     console.log(`****** setQueryAllNamesWithClickEvent called *****`)
     //each node is an `<a><div>name</div></a>` tag with a name enclosed
@@ -31,19 +31,37 @@ export function setQueryAllNamesWithClickEvent(queryDiv:HTMLDivElement, varConta
             //set the element with a function onclick
             a.onclick = () => 
             {
-                //select name and put into badge box
-                setNameInNameBadgeBox(nameBadgeBox, friendId, friendName)
+                //create friend object from name and id
+                var selectedFriend = new Friend(friendName,friendId)
+                //get selected friends
+                var selectedFriends = varContainer.selectedFriends
 
-                //add friends to varContainer.selectedFriends
-                varContainer.selectedFriends.push(new Friend(friendName,friendId))
-                console.log(`added Friend name:${friendName}, id:${friendId}`)
-                
-                //set badge buttons - with remove event
-                makeClickableBadgeButtons(nameBadgeBox, varContainer)
+                //check whether create friend already exists in selectedFriends list
+                varContainer.selectedFriends = filter(selectedFriends,selectedFriend) as Friend[]
 
+                //check for duplicates
+                var duplicateFriend = false
+                var friendsCount = selectedFriends.length
+                var newFriendsCount = varContainer.selectedFriends.length
+                if (newFriendsCount > friendsCount) {duplicateFriend = false}
+                else if (newFriendsCount == friendsCount) {duplicateFriend = true}
+
+                //if not duplicate...
+                if (!duplicateFriend)
+                {
+                    //select name and put into badge box
+                    setNameInNameBadgeBox(nameBadgeBox, friendId, friendName)
+                    //log friend that has been added
+                    console.log(`added Friend name:${friendName}, id:${friendId}`)
+                    //set all badge buttons - with remove event
+                    makeClickableBadgeButtons(nameBadgeBox, varContainer)
+                }
+                 
                 // displayNameBadgeBox()
                 displayDiv(nameBadgeBox)
+                displayDiv(messagesBox)
                 hideDiv(queryDiv)
+
 
                 
             }
@@ -52,7 +70,13 @@ export function setQueryAllNamesWithClickEvent(queryDiv:HTMLDivElement, varConta
     })
           
 }
-
+export function filter(friends:Friend[],friend:Friend):Friend[]|null 
+{
+    var selectedFriends:Friend[] = friends.filter(f => !(f.equals(friend)))
+    console.log(`selectedFriends:${selectedFriends}`)
+    selectedFriends.push(friend)
+    return selectedFriends
+}
 // hide and display queryDiv
 export function hideDiv(div:HTMLDivElement)
 {
@@ -64,12 +88,12 @@ export function displayDiv(div:HTMLDivElement)
 }
 
 /**
-     * Make badge buttons respond to click.
-     * Responds by removing themselves from 
-     * varContainer.selectedFriends.
-     * It then refills the badge div with names left in
-     * varContainer.selectedFriends
-     */
+ * Make badge buttons respond to click.
+ * Responds by removing themselves from 
+ * varContainer.selectedFriends.
+ * It then refills the badge div with names left in
+ * varContainer.selectedFriends
+ */
 export function makeClickableBadgeButtons(nameBadgeBox:HTMLDivElement, varContainer:VarContainer)
  {
      console.log(' **** makeClickableBadgeButtons ****')
@@ -78,21 +102,20 @@ export function makeClickableBadgeButtons(nameBadgeBox:HTMLDivElement, varContai
      nameBadgeBox.childNodes.forEach((node) => {
          if(node != undefined && node.nodeName != '#text')
          {
+            var span1 = (node as HTMLDivElement)
+            console.log(`span1.textContent:${span1.textContent}`)
+            var friendId = span1.getAttribute('data-id')
+            console.log(`friendId: ${friendId}`)
+            var span2 = ((node as HTMLDivElement).childNodes[0] as HTMLSpanElement)
+            span1.addEventListener('click' ,() => {
+                console.log('close-btn-div click')
+                removeSelectedFriend(nameBadgeBox, varContainer, {id:friendId as string})
+            })
+            span2.addEventListener('click' ,() => {
+                console.log('close-btn-div click')
+                removeSelectedFriend(nameBadgeBox,varContainer,{id:friendId as string})
 
-             var span1 = (node as HTMLDivElement)
-             console.log(`span1.textContent:${span1.textContent}`)
-             var friendId = span1.getAttribute('data-id')
-             console.log(`friendId: ${friendId}`)
-             var span2 = ((node as HTMLDivElement).childNodes[0] as HTMLSpanElement)
-             span1.addEventListener('click' ,() => {
-                 console.log('close-btn-div click')
-                 removeSelectedFriend(nameBadgeBox, varContainer, {id:friendId as string})
-             })
-             span2.addEventListener('click' ,() => {
-                 console.log('close-btn-div click')
-                 removeSelectedFriend(nameBadgeBox,varContainer,{id:friendId as string})
-
-             })
+            })
          }
      })
 

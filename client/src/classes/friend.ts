@@ -17,4 +17,18 @@ export class Friend
         }`
         return str
     }
+
+    equals(friend:Friend)
+    {
+        if (friend.name === this.name && friend.id === this.id)
+        {
+            console.log('*same friend*')
+            return true
+        }
+        else
+        {
+            console.log('*different friend*')
+            return false
+        }
+    }
 }

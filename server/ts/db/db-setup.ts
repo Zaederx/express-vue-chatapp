@@ -97,7 +97,7 @@ var u12:User = new User({email:'email2@email.com',
                         password:passwordHash
                         });
                 
-
+u1.friends.push(u2,u3,u4,u5,u6,u7)
 db.data.users.push(u1)
 db.data.users.push(u2)
 db.data.users.push(u3)

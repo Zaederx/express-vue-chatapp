@@ -60,10 +60,10 @@ console.log('**** ChatWindow Setup Script called ****');
             });
     //fetch user id
     const userId = await fetchUserId()
-    //fetch chats
-    const chats:Chat[] = await fetchChatsJson(userId)
     //set userId value in socketVars
     socketVars.userId = userId
+    //fetch chats
+    const chats:Chat[] = await fetchChatsJson(userId)
     //fill chat sidebar with fetched chats
     chatsSidebar.innerHTML = chatsToHTML(chats)
     //set each chat with onclick event - set chat id
@@ -111,12 +111,12 @@ async function fetchMessages(chatId:string, userId:string='')
  * Takes an array of chats and converts them to HTML divs
  * @param chats chats to be turned to HTML
  */
-function chatsToHTML(chats:Chat[])
+function chatsToHTML(chats:Chat[]):string
 {
 var chatsHTML = ''
 chats.forEach((c) => {
     //get div from html - fill with chat div
-    chatsHTML += `<div data-id="${c.id}">${c.name}</div>`
+    chatsHTML += `<div data-id="${c.id}" class="chat">${c.name}</div>`
 })
 return chatsHTML
 }
@@ -190,7 +190,7 @@ async function createJoinChat()
 
 
         <div id="chat-sidebar" class="chat-sidebar">
-            
+            <div class="chat">No Chats Avaialable</div>
         </div>
         <!-- Chat grid -->
         <div class="chat-grid">
@@ -212,7 +212,7 @@ async function createJoinChat()
         <div id="queryDiv" class="queryDiv" style="display:none">
         </div>
         <div id="message-box" class="message-box">
-            <div class="message-recieved">Message recieved</div>
+            <div class="message-received">Message recieved</div>
             <div class="message-sent">Message sent</div>
         </div>
         <!-- Message text -->
@@ -227,7 +227,8 @@ async function createJoinChat()
     
 </template>
 
-<style scoped>
+<!-- removed scoped - it stopped css from being applied to elements added via AJAX during onMounted being called  -->
+<style>
 .chat-window
 {
     width: 30%;
@@ -245,6 +246,13 @@ async function createJoinChat()
     grid-column: 1;
     overflow-y: scroll;
 }
+
+.chat
+{
+    background-color: rgb(86, 166, 227);
+    cursor: pointer;
+}
+
 .chat-grid 
 {
    

@@ -165,12 +165,15 @@ expServer.get('/userId', (req, res) => {
     res.send({ userId: userId });
 });
 expServer.get('/chats/:userId', (req, res) => {
+    console.log('\n *** get /chats/:userId called ***');
     var userId = req.params.userId;
     var chats = fetchChats(userId);
     if (chats.length > 0) {
+        console.log('chats are present');
         res.send({ res: true, chats: chats });
     }
     else {
+        console.log('not chats are present');
         res.send({ res: false, chats: chats });
     }
 });

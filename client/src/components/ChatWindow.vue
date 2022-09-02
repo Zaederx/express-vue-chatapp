@@ -64,14 +64,18 @@ console.log('**** ChatWindow Setup Script called ****');
     //set userId value in socketVars
     socketVars.userId = userId
     //fetch chats
+    await loadChats(userId)
+
+  })
+
+  async function loadChats(userId:string) 
+  {
     const chats:Chat[] = await fetchChatsJson(userId)
     //fill chat sidebar with fetched chats
     chatsSidebar.innerHTML = chatsToHTML(chats)
     //set each chat with onclick event - set chat id
     setChatDivsWithEvent(messageBox)
-
-  })
-
+  }
   /**
    * set each chat div with onclick event
    * to set chat id to the data-id attribute
@@ -170,6 +174,8 @@ async function createJoinChat()
 
     console.log('btn-join-chat clicked')
     socket.emit('create-join-chat', socketVars.userId, varContainer.selectedFriends, socketVars.chatId)
+
+    await loadChats(socketVars.userId)
 }
 
 /*** 

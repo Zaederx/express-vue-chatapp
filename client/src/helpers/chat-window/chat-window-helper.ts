@@ -1,4 +1,6 @@
-import { Friend } from "@/classes/Friend"
+
+//@ts-ignore
+import { Friend } from "@/classes/Friend.js"
 
 class VarContainer 
 {
@@ -82,11 +84,11 @@ export function filter(friends:Friend[],friend:Friend):Friend[]|null
     return selectedFriends
 }
 // hide and display queryDiv
-export function hideDiv(div:HTMLDivElement)
+export function hideDiv(div:HTMLElement)
 {
     div.style.display = "none"
 }
-export function displayDiv(div:HTMLDivElement)
+export function displayDiv(div:HTMLElement)
 {
     div.style.display = "block"
 }

@@ -11,13 +11,14 @@ console.log('**** ChatWindow Setup Script called ****');
     //SEARCHBAR 
     //declare variables
     var name:string
-    var searchbar:HTMLDivElement
+    var searchbar:HTMLSpanElement
     var queryDiv: HTMLDivElement
     var nameBadgeBox: HTMLDivElement
     var messageBox:HTMLDivElement
     var btnJoinChat:HTMLDivElement
-
+    var btnSendMessage:HTMLDivElement
     var chatsSidebar:HTMLDivElement
+    var messageText:HTMLSpanElement
     var token = {csrfToken:''}
 
      //CHAT SOCKETS
@@ -42,12 +43,14 @@ console.log('**** ChatWindow Setup Script called ****');
     //initialise variables
     token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
     name = '';
-    searchbar = (document.querySelector('#searchbar') as HTMLDivElement)
+    searchbar = (document.querySelector('#searchbar') as HTMLSpanElement)
     queryDiv = document.querySelector('#queryDiv') as HTMLDivElement
     nameBadgeBox = document.querySelector('#name-badge-box') as HTMLDivElement
     messageBox = document.querySelector('#message-box') as HTMLDivElement
     btnJoinChat = document.querySelector('#btn-join-chat') as HTMLDivElement
+    btnSendMessage = document.querySelector('#btn-send') as HTMLDivElement
     chatsSidebar = document.querySelector('#chat-sidebar') as HTMLDivElement
+    messageText = document.querySelector('#message-text') as HTMLSpanElement
     socket = io({
                 //proxy address + socket.io
                 path:'/socket.io',
@@ -68,6 +71,12 @@ console.log('**** ChatWindow Setup Script called ****');
 
   })
 
+  function sendMessage()
+  {
+    var message = messageText.innerHTML
+    var {userId, chatId} = socketVars
+    socket.emit('chat', userId, chatId, message)
+  }
   async function loadChats(userId:string) 
   {
     const chats:Chat[] = await fetchChatsJson(userId)
@@ -80,7 +89,7 @@ console.log('**** ChatWindow Setup Script called ****');
    * set each chat div with onclick event
    * to set chat id to the data-id attribute
    */
-  function setChatDivsWithEvent(messageBoxDiv:HTMLDivElement)
+  function setChatDivsWithEvent(messageBoxDiv:HTMLSpanElement)
   {
     chatsSidebar.childNodes.forEach((node) => {
         //if node is not a text node
@@ -222,7 +231,7 @@ async function createJoinChat()
             </span>
             <!-- Send button -->
         
-            <span id="btn-send" class="btn-send">Send</span>
+            <span id="btn-send" class="btn-send" @click="sendMessage">Send</span>
             
         </div>
         <div class="btn-column">

@@ -52,7 +52,6 @@ export function fetchUserId(req:any)
     }
     else 
     {
-        
         return false
     }
 }
@@ -151,9 +150,14 @@ export async function fetchMessagesFromDb(chatId:string, userId:string):Promise<
     //find user in db
     var user = db.data?.users.find(u => u.id == Number(chatId)) as User
     //find chat in list of user chats
-    var chat = user.chats.find(c => c.id == chatId) as Chat
+    var chatMessages:Message[] = []
+    if (user != undefined && user.chats.length > 0)
+    {
+        var chat = user.chats.find(c => c.id == chatId) as Chat
+        chatMessages = chat.messages
+    }
     //return chat messages
-    return chat.messages
+    return chatMessages
 }
 
 export function messagesToHTML(messages:Message[], userId:string) 
@@ -172,6 +176,10 @@ export function messagesToHTML(messages:Message[], userId:string)
         }
         
     })
+    if (messagesHTML == '') 
+    {
+        messagesHTML = `<div class="notice">No Messages</div>`
+    }
     return messagesHTML
 }
 

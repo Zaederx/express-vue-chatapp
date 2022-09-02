@@ -118,9 +118,13 @@ export async function fetchMessagesFromDb(chatId, userId) {
     //find user in db
     var user = db.data?.users.find(u => u.id == Number(chatId));
     //find chat in list of user chats
-    var chat = user.chats.find(c => c.id == chatId);
+    var chatMessages = [];
+    if (user != undefined && user.chats.length > 0) {
+        var chat = user.chats.find(c => c.id == chatId);
+        chatMessages = chat.messages;
+    }
     //return chat messages
-    return chat.messages;
+    return chatMessages;
 }
 export function messagesToHTML(messages, userId) {
     var messagesHTML = '';
@@ -133,5 +137,8 @@ export function messagesToHTML(messages, userId) {
             messagesHTML += `<div class="message-received">${message}</div>`;
         }
     });
+    if (messagesHTML == '') {
+        messagesHTML = `<div class="notice">No Messages</div>`;
+    }
     return messagesHTML;
 }

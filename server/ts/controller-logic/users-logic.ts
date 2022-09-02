@@ -1,4 +1,6 @@
 import { RESERVED_EVENTS } from 'socket.io/dist/socket'
+import { Chat } from '../db/classes/Chat'
+import { Message } from '../db/classes/Message'
 import { User } from '../db/classes/User.js'
 import db from '../db/db-setup.js'
 import { compareTwoStrings } from '../helpers/simplystring.js'
@@ -6,7 +8,34 @@ import { readSessionIdFromReq } from './login-logic.js'
 
 
 
-export function fetchUserId(req:any, res:any)
+
+
+/**
+ * Fetches chats from the database.
+ * Uses user id to find mathcing user and
+ * return their chats list
+ * 
+ * @param userId id of the user you want to find chats for
+ */
+export function fetchChats(userId:any)
+{
+    //search for user with that id
+    const user = db.data?.users.find((u) => u.id == userId) as User
+    //if one exists return their chats list
+    if (user != null || user != undefined)
+    {
+        return user.chats
+    }
+    //otherwise..
+    return []//empty list
+}
+
+/**
+ * Fetches user id from db, using session id found on
+ * the requests session cookie.
+ * @param req 
+ */
+export function fetchUserId(req:any)
 {
     console.log('*** fetchUserId called ***')
     var sessionId = readSessionIdFromReq(req)
@@ -18,12 +47,13 @@ export function fetchUserId(req:any, res:any)
        if (user != undefined) 
        {
         console.log('session id\'s match')
-        res.send({res:true,userId:user.id})
+        return user.id
        }
     }
     else 
     {
-        res.send({ res: false, message: 'no user id associated with the given session id' });
+        
+        return false
     }
 }
 
@@ -34,10 +64,36 @@ export function fetchUserId(req:any, res:any)
  */
 export async function fetchFriendNames(userId: string, friendName: string)
 {
-    var friends:User[] = await getMatchingFriends(userId, friendName)
+    var friends:User[] = await getFriendsWithSimilarName(userId, friendName)
     var friendsHTML:string = friendsToHTML(friends)
     return friendsHTML
 }
+
+/**
+ * Finds friends with names similar the given friend name
+ * @param userId user id of current user who's freinds you want to search through
+ * @param friendName name of friend they want to find
+ */
+export async function getFriendsWithSimilarName(userId:any, friendName:string)
+{
+    await db.read()
+    //get user
+    var user:User = db.data?.users.filter((u) => u.id == userId)[0] as User
+    var friends:User[] = []
+    if (user != undefined)
+    {
+        //get users friends
+        const limit = 10
+        friends = user.friends.filter((f) => compareTwoStrings(f.name,friendName) > 0.5).slice(0,limit) as User[]
+    }
+    else 
+    {
+        console.log(`user is undefined`)
+    }
+    
+    return friends
+}
+
 function friendsToHTML(friends:User[]):string
 {
     var friendsHTML = ''
@@ -45,21 +101,6 @@ function friendsToHTML(friends:User[]):string
         friendsHTML += (`<a data-id="${f.id}"><div>${f.name}</div></a>\n`) as string
     })
     return friendsHTML
-}
-/**
- * 
- * @param userId user id of current user
- * @param friendName name of firend they want to find
- */
-export async function getMatchingFriends(userId:string, friendName:string)
-{
-    await db.read()
-    //get user
-    var user:User = db.data?.users.filter((u) => {u.id == Number(userId)})[0] as User
-    //get users friends
-    const limit = 10
-    var friends:User[] = user.friends.filter((f) => compareTwoStrings(f.name,friendName)).slice(0,limit) as User[]
-    return friends
 }
 
 /**
@@ -86,7 +127,7 @@ export async function fetchUsersNames(req:any,res:any) {
  * @param req 
  * @param res 
  */
- export async function getUsersNamesListFromDB(name:string) {
+export async function getUsersNamesListFromDB(name:string) {
     //read from db
     await db.read()
     //find user from users database where the name is similar over 50%
@@ -105,6 +146,33 @@ export async function fetchUsersNames(req:any,res:any) {
     return arr
 }
 
+export async function fetchMessagesFromDb(chatId:string, userId:string):Promise<Message[]>
+{
+    //find user in db
+    var user = db.data?.users.find(u => u.id == Number(chatId)) as User
+    //find chat in list of user chats
+    var chat = user.chats.find(c => c.id == chatId) as Chat
+    //return chat messages
+    return chat.messages
+}
 
+export function messagesToHTML(messages:Message[], userId:string) 
+{
+    var messagesHTML = ''
+    messages.forEach(message => 
+    {
+        //if sent by user
+        if (message.senderId == userId) 
+        {
+            messagesHTML += `<div class="message-sent">${message}</div>`
+        }
+        else
+        {
+            messagesHTML += `<div class="message-received">${message}</div>`
+        }
+        
+    })
+    return messagesHTML
+}
 
 

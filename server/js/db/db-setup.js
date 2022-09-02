@@ -8,7 +8,7 @@ const adapter = new JSONFile(file);
 var db = new Low(adapter);
 //Read data from Json file, this will set the db.content
 await db.read();
-// setup()
+setup();
 function setup() {
     //if file.json does not exist db.data will be null
     //Set data to default
@@ -75,6 +75,7 @@ function setup() {
         username: 'username12',
         password: passwordHash
     });
+    u1.friends.push(u2, u3, u4, u5, u6, u7);
     db.data.users.push(u1);
     db.data.users.push(u2);
     db.data.users.push(u3);

@@ -17,10 +17,6 @@ export function loginViaSessionCookie(req, res) {
         res.send(new LoginResponse(false, message));
     }
 }
-/**
- * Reads sessionId from the Express request object
- * @param req Express request object
- */
 export function readSessionIdFromReq(req) {
     console.log('*** readSessionIdFromReq called ***');
     //remove empty spaces
@@ -41,7 +37,7 @@ export function readSessionIdFromReq(req) {
         console.log(`\ncookieStr:${cookieStr}`);
         return sessionId;
     }
-    return 'no session cookie/id' + sessionId;
+    return 'no session cookie/id';
 }
 export async function sessionCookieLogin(req, res, sessionId) {
     console.log(`\n\n **** calling sessionCookieLogin function ***`);

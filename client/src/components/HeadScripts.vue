@@ -31,11 +31,11 @@ export default {
     // inheritAttrs: true //true is default
     mounted() {
         //socket.io
-        const socket_io = document.createElement('script') as HTMLScriptElement
-        socket_io.type = 'text/javascript'
-        socket_io.src =  'https://cdn.socket.io/4.5.0/socket.io.min.js'
-        socket_io.integrity = 'sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k'
-        socket_io.crossOrigin = 'anonymous'
+        // const socket_io = document.createElement('script') as HTMLScriptElement
+        // socket_io.type = 'text/javascript'
+        // socket_io.src =  'https://cdn.socket.io/4.5.0/socket.io.min.js'
+        // socket_io.integrity = 'sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k'
+        // socket_io.crossOrigin = 'anonymous'
 
 
         //view router

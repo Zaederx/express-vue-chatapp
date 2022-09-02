@@ -28,10 +28,7 @@ export function loginViaSessionCookie(req:Request<ParamsDictionary, any, any, Pa
 }
 
 
-/**
- * Reads sessionId from the Express request object
- * @param req Express request object
- */
+
 export function readSessionIdFromReq(req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>):string
 {
     console.log('*** readSessionIdFromReq called ***')
@@ -53,7 +50,7 @@ export function readSessionIdFromReq(req:Request<ParamsDictionary, any, any, Par
         console.log(`\ncookieStr:${cookieStr}`);
         return sessionId as string;
     }
-    return 'no session cookie/id'+sessionId;
+    return 'no session cookie/id';
 }
 
 export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,res: Response<any, Record<string, any>, number>, sessionId:string)

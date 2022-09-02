@@ -1,7 +1,29 @@
 import db from '../db/db-setup.js';
 import { compareTwoStrings } from '../helpers/simplystring.js';
 import { readSessionIdFromReq } from './login-logic.js';
-export function fetchUserId(req, res) {
+/**
+ * Fetches chats from the database.
+ * Uses user id to find mathcing user and
+ * return their chats list
+ *
+ * @param userId id of the user you want to find chats for
+ */
+export function fetchChats(userId) {
+    //search for user with that id
+    const user = db.data?.users.find((u) => u.id == userId);
+    //if one exists return their chats list
+    if (user != null || user != undefined) {
+        return user.chats;
+    }
+    //otherwise..
+    return []; //empty list
+}
+/**
+ * Fetches user id from db, using session id found on
+ * the requests session cookie.
+ * @param req
+ */
+export function fetchUserId(req) {
     console.log('*** fetchUserId called ***');
     var sessionId = readSessionIdFromReq(req);
     console.log(`fetchUserId function -  sessionId:${sessionId}`);
@@ -10,11 +32,11 @@ export function fetchUserId(req, res) {
         user = db.data?.users.find((u) => u.sessionId == sessionId);
         if (user != undefined) {
             console.log('session id\'s match');
-            res.send({ res: true, userId: user.id });
+            return user.id;
         }
     }
     else {
-        res.send({ res: false, message: 'no user id associated with the given session id' });
+        return false;
     }
 }
 /**
@@ -23,9 +45,29 @@ export function fetchUserId(req, res) {
  * @param friendName name of the friend they want to find
  */
 export async function fetchFriendNames(userId, friendName) {
-    var friends = await getMatchingFriends(userId, friendName);
+    var friends = await getFriendsWithSimilarName(userId, friendName);
     var friendsHTML = friendsToHTML(friends);
     return friendsHTML;
+}
+/**
+ * Finds friends with names similar the given friend name
+ * @param userId user id of current user who's freinds you want to search through
+ * @param friendName name of friend they want to find
+ */
+export async function getFriendsWithSimilarName(userId, friendName) {
+    await db.read();
+    //get user
+    var user = db.data?.users.filter((u) => u.id == userId)[0];
+    var friends = [];
+    if (user != undefined) {
+        //get users friends
+        const limit = 10;
+        friends = user.friends.filter((f) => compareTwoStrings(f.name, friendName) > 0.5).slice(0, limit);
+    }
+    else {
+        console.log(`user is undefined`);
+    }
+    return friends;
 }
 function friendsToHTML(friends) {
     var friendsHTML = '';
@@ -33,20 +75,6 @@ function friendsToHTML(friends) {
         friendsHTML += (`<a data-id="${f.id}"><div>${f.name}</div></a>\n`);
     });
     return friendsHTML;
-}
-/**
- *
- * @param userId user id of current user
- * @param friendName name of firend they want to find
- */
-export async function getMatchingFriends(userId, friendName) {
-    await db.read();
-    //get user
-    var user = db.data?.users.filter((u) => { u.id == Number(userId); })[0];
-    //get users friends
-    const limit = 10;
-    var friends = user.friends.filter((f) => compareTwoStrings(f.name, friendName)).slice(0, limit);
-    return friends;
 }
 /**
  * Returns a json list of users who's names
@@ -85,4 +113,25 @@ export async function getUsersNamesListFromDB(name) {
     // var usersJSON = JSON.stringify(arrStr)
     //send json list of namesof users
     return arr;
+}
+export async function fetchMessagesFromDb(chatId, userId) {
+    //find user in db
+    var user = db.data?.users.find(u => u.id == Number(chatId));
+    //find chat in list of user chats
+    var chat = user.chats.find(c => c.id == chatId);
+    //return chat messages
+    return chat.messages;
+}
+export function messagesToHTML(messages, userId) {
+    var messagesHTML = '';
+    messages.forEach(message => {
+        //if sent by user
+        if (message.senderId == userId) {
+            messagesHTML += `<div class="message-sent">${message}</div>`;
+        }
+        else {
+            messagesHTML += `<div class="message-received">${message}</div>`;
+        }
+    });
+    return messagesHTML;
 }

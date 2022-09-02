@@ -2,7 +2,7 @@ export class Message
 {
     senderId:string;
     senderUsername:string;
-    receiverId:string;
+    receiverId:string;//can be the chatId if to a group
     message:string;
 
     constructor(senderId:string, senderUsername:string, receiverId:string, message:string)

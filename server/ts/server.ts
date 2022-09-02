@@ -1,3 +1,5 @@
+//******** SECTION Imports ******* */
+
 //node imports
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -16,10 +18,13 @@ import { loginLogic as emailPasswordLogin, loginViaSessionCookie, readSessionIdF
 import { Cookie } from './helpers/cookie.js';
 import { getAppCookie } from './helpers/cookie-defaults.js';
 import { LoginResponse } from './helpers/response/login-response.js';
-import { fetchUserId, fetchUsersNames } from './controller-logic/users-logic.js';
+import { fetchChats, fetchFriendNames as fetchFriendNamesHTML, fetchMessagesFromDb, fetchUserId, fetchUsersNames, messagesToHTML } from './controller-logic/users-logic.js';
 import { logout } from './controller-logic/logout-logic.js';
-import { v4 as uuidv4 } from 'uuid'
+
 import  db  from './db/db-setup.js'
+import { Friend } from './db/classes/Friend.js'
+
+
 export const PORT = process.env.PORT || 3000
 export const serverDOMAIN = `http://localhost:${PORT}`
 export const clientDOMAIN = 'https://localhost:5173'
@@ -27,20 +32,21 @@ export const clientDOMAIN = 'https://localhost:5173'
 
 
 //********** WebSocket *********** */
-
-
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { Chat } from './db/classes/Chat.js';
-
+import { User } from './db/classes/User';
+import { createChat } from './controller-logic/socket-logic.js'
 const expServer = express();//create a server instance
 const httpServer = createServer(expServer);
 const io = new Server(httpServer, {
     cors: {
-        origin: '*'
+        origin: '*',
     }
  });
- httpServer.listen(3000)
+ httpServer.listen(PORT)
+
+
 // var userId
 io.on("connection", (socket) => {
     console.log('\n\n\n\n******** SOCKET CONNECTED ********')
@@ -49,39 +55,34 @@ io.on("connection", (socket) => {
     //emit - sends messages
     // io.to("some room").emit("some event", () => {console.log(message)});
     // or socket.to("some room").emit("some event");
-    socket.on('create-join-chat', async (userId, friendId) => {
-        console.log()
-        //generate chat id
-        const chatId = uuidv4()
-        //store chat id in user
-        await db.read()
-        //friend id
-        var user = db.data?.users.find((u) => u.id === userId)
-        var friend = db.data?.users.find((u) => u.id === friendId)
-        var chat = user?.chats.find((chat)=> chat.id == chatId)
-
-        //if chat is undefined -create chat in db
-        if (chat == undefined) 
+    socket.on('create-join-chat', async (userId, selectedFriends, chatId) => 
+    {
+        //create chat and save them to user and friends in db
+        var chat:Chat = await createChat(userId, selectedFriends, chatId)
+        //if chat is present
+        if (chat != undefined) 
         {
-            //create a new chat room in data with chatId
-            chat = new Chat(chatId)
-
-            //add chat to user and friend
-            user?.chats.push(chat)
-            friend?.chats.push(chat)
-            db.write()
+            //join current user's socket to chat room
+            socket.join(chat.id)
         }
-        //otherwise just join that chat bu calling
-        //socket.join and using chatId
-        //subscribes user to a given channel
-        socket.join(chatId)
-
+        
     })
 
+    socket.on('join-chat', (chatId) => {
+        socket.join(chatId)
+    })
+
+    socket.on('join-invited-chats', async (userId)=> {
+        await db.read()
+        //find user in db
+        var user:User = db.data?.users.find(u => u.id == userId) as User
+        //subscribe user to chats on their chats list
+        user.chats.forEach(c => socket.join(c.id))
+    })
     
     //recieve
     socket.on('chat', (userId,chatId,message) => {
-
+        console.log('* chat called *')
         //find chat
         db.read()
         var user = db.data?.users.find((u) => u.id  == userId)
@@ -90,14 +91,12 @@ io.on("connection", (socket) => {
         db.write()
 
         //emit
-        socket.to(chatId).emit('message', (message:string) => {
-            console.log(message)
-        })
+        socket.to(chatId).emit('message', message)
     })
 
     
     socket.on("disconnecting", () => {
-        console.log(socket.rooms); // the Set contains at least the socket ID
+        console.log(`socket.rooms:${socket.rooms}`); // the Set contains at least the socket ID
     });
     
     socket.on("disconnect", () => {
@@ -107,15 +106,7 @@ io.on("connection", (socket) => {
 
 });
 
-// httpServer.listen(3001)
-
-
-
-
-
-
-
-
+/****************** Express Server **************** */
 
 const keylist = ['ETwA@S!72', '83HWUW', 'ygT6tT9jNbCr']
 const keys = new KeyGrip(keylist)
@@ -153,11 +144,7 @@ expServer.use(csrfProtection)
 
 expServer.disable('x-powered-by')//remove defualt express header ad
 //run server
-// server.listen(PORT, () => 
-// {
-//     console.log(`server listening on http://localhost:${PORT}`)
-//     console.log(`csrf token at http://localhost:${PORT}/csrf-token`)
-// })
+
 
 
 
@@ -227,11 +214,51 @@ expServer.get('/get-users/with-name/:name', (req,res) => {
     fetchUsersNames(req,res)
 })
 
-expServer.get('/get-friends/with-name/:name', (req,res) => {
-
+expServer.get('/get-friends/with-name/:name', async (req,res) => {
+    console.log('******* get friends with name called *******')
+    var userId = String(fetchUserId(req))
+    console.log(`userId:${userId}`)
+    var name = req.params.name
+    console.log(`name:${name}`)
+    var friendsHTML = await fetchFriendNamesHTML(userId,name)
+    console.log(`friendsHTML:${friendsHTML}`)
+    res.send(friendsHTML)
 })
 
 expServer.get('/userId', (req,res) => {
-    fetchUserId(req,res)
+    var userId = fetchUserId(req)
+    res.send({userId:userId})
 })
 
+expServer.get('/chats/:userId', (req,res) => {
+    console.log('\n *** get /chats/:userId called ***')
+    var userId = req.params.userId
+    var chats:Chat[] = fetchChats(userId)
+    if (chats.length > 0)
+    {
+        console.log('chats are present')
+        res.send({res:true, chats:chats})
+    }
+    else
+    {
+        console.log('not chats are present')
+        res.send({res:false, chats:chats})
+    }
+    
+})
+
+expServer.get('/messages/:chatId/:userId', async (req,res) => 
+{
+    //get chatId and userId
+    var chatId = req.params.chatId
+    var userId = req.params.userId
+    if (userId == '' || userId == undefined)
+    {
+        userId = readSessionIdFromReq(req)
+    }
+    //fetch messages from db
+    var messages = await fetchMessagesFromDb(chatId, userId)
+    var messagesHTML = messagesToHTML(messages, userId)
+
+    res.send(messagesHTML)
+})

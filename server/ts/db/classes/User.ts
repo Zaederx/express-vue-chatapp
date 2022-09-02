@@ -7,9 +7,10 @@ export class User {
     name:string;
     username:string;
     passwordHash:string;
+    sessionId:string;
     friends:User[];
     chats:Chat[];
-    sessionId:string;
+    
 
 
     /**

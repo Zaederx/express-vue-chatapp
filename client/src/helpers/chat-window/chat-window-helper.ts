@@ -1,4 +1,4 @@
-import { Friend } from "@/classes/friend"
+import { Friend } from "@/classes/Friend"
 
 class VarContainer 
 {
@@ -6,27 +6,23 @@ class VarContainer
     url :string = ''
 }
  /**
-     * Sets query names in queryDiv with event to 
-     * to add self to nameBadgeBox onclick
-     */
+ * Sets query names in queryDiv with event to 
+ * to add self to nameBadgeBox onclick
+ */
 export function setQueryAllNamesWithClickEvent(queryDiv:HTMLDivElement, varContainer:VarContainer, nameBadgeBox:HTMLDivElement, messagesBox:HTMLDivElement)
   {
     console.log(`****** setQueryAllNamesWithClickEvent called *****`)
-    //each node is an `<a><div>name</div></a>` tag with a name enclosed
+    //each node is an `<a data-id="${id}"><div>name</div></a>` tag with a name enclosed
     //want each node to add itself to the nameBadgeBox onclick
     queryDiv.childNodes.forEach((node) => 
     {
-        console.log(`nameNode.textContent:${node.textContent}`)
-        console.log(`nameNode.nodeName:${node.nodeName}`)
         if (node != undefined && node.nodeName != '#text')
         {
             var a = node as HTMLLinkElement
-            console.log(`a.innerHTML:${a.innerHTML}`)
             //get friend id
             var friendId = a.getAttribute('data-id') as string
             // get friend's name
             var friendName = (a.childNodes[0] as HTMLDivElement).innerHTML//contains user's name
-            console.log(`friendId ${friendId} and friendName ${friendName}`)
             
             //set the element with a function onclick
             a.onclick = () => 
@@ -70,6 +66,14 @@ export function setQueryAllNamesWithClickEvent(queryDiv:HTMLDivElement, varConta
     })
           
 }
+
+/**
+ * Adds friends to a friend list ensuring that there are new duplicates
+ * of the given friend.
+ * Returns a list with the friend included, but no duplicates of that friend.
+ * @param friends 
+ * @param friend 
+ */
 export function filter(friends:Friend[],friend:Friend):Friend[]|null 
 {
     var selectedFriends:Friend[] = friends.filter(f => !(f.equals(friend)))
@@ -103,9 +107,7 @@ export function makeClickableBadgeButtons(nameBadgeBox:HTMLDivElement, varContai
          if(node != undefined && node.nodeName != '#text')
          {
             var span1 = (node as HTMLDivElement)
-            console.log(`span1.textContent:${span1.textContent}`)
             var friendId = span1.getAttribute('data-id')
-            console.log(`friendId: ${friendId}`)
             var span2 = ((node as HTMLDivElement).childNodes[0] as HTMLSpanElement)
             span1.addEventListener('click' ,() => {
                 console.log('close-btn-div click')
@@ -166,7 +168,6 @@ export function setNameInNameBadgeBox(nameBadgeBox:HTMLDivElement,friendId:strin
        {
            //find index of friend in array / list - using obj.id
            var i = varContainer.selectedFriends.findIndex((f:Friend) => f.id == id)
-           console.log(`index of friend with id '${id}':${i}`)
            //remove that index that spot in the array / list
            varContainer.selectedFriends.splice(i, 1)
        }

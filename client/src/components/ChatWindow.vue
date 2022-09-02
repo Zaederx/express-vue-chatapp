@@ -16,6 +16,7 @@ console.log('**** ChatWindow Setup Script called ****');
     var nameBadgeBox: HTMLDivElement
     var messageBox:HTMLDivElement
     var btnJoinChat:HTMLDivElement
+
     var chatsSidebar:HTMLDivElement
     var token = {csrfToken:''}
 
@@ -187,42 +188,42 @@ async function createJoinChat()
 <template>
     <!-- Chat Window -->
     <div class="chat-window">
-
-
         <div id="chat-sidebar" class="chat-sidebar">
             <div class="chat">No Chats Avaialable</div>
         </div>
         <!-- Chat grid -->
         <div class="chat-grid">
-        <!-- window heading -->
-        <div class="chat-header">
-            <div class="header"> Chat </div>
-            <div class="btn-close"> X </div>
-        </div>
-        <!-- Searchbar and name badge box -->
-        <!-- Note to self:always use span for this kind of searcbar thing - not div - divs have weird sid effects like break tags added to text when you press backspace -->
-        <div class="searchbar-btn-join-chat">
-            <span id="searchbar" class="searchbar editable" contenteditable="true" data-placeholder="Enter a name" @input="searchbarInput"></span><span id="btn-join-chat" class="btn btn-success btn-join-chat" @click="createJoinChat">Join Chat</span>
-        </div>
-        
-        <div id="name-badge-box" class="name-badge-box" ></div>
-        
+            <!-- window heading -->
+            
+            <!-- Searchbar and name badge box -->
+            <!-- Note to self:always use span for this kind of searcbar thing - not div - divs have weird sid effects like break tags added to text when you press backspace -->
 
-        <!-- Query Div and Message Box -->
-        <div id="queryDiv" class="queryDiv" style="display:none">
+            <span id="searchbar" class="searchbar editable" contenteditable="true" data-placeholder="Enter a name" @input="searchbarInput"></span>
+
+            
+            <div id="name-badge-box" class="name-badge-box" style="display:none"></div>
+            
+
+            <!-- Query Div and Message Box -->
+            <div id="queryDiv" class="queryDiv" style="display:none">
+            </div>
+            <div id="message-box" class="message-box">
+                <div class="message-received">Message recieved</div>
+                <div class="message-sent">Message sent</div>
+            </div>
+            <!-- Message text -->
+            <span id="message-text" class="message-text editable" contenteditable="true" data-placeholder="Enter a message...">
+            </span>
+            <!-- Send button -->
+        
+            <span id="btn-send" class="btn-send">Send</span>
+            
         </div>
-        <div id="message-box" class="message-box">
-            <div class="message-received">Message recieved</div>
-            <div class="message-sent">Message sent</div>
+        <div class="btn-column">
+            <span id="btn-join-chat" class="btn-join-chat" @click="createJoinChat">Join Chat</span>
+            <span id="btn-leave-chat" class="btn-leave-chat" @click="leaveChat">Leave Chat</span>
         </div>
-        <!-- Message text -->
-        <span id="message-text" class="message-text editable" contenteditable="true" data-placeholder="Enter a message...">
-        </span>
-        <!-- Send button -->
-        <div>
-            <button id="btn-send" class="btn btn-primary form-control">Send</button>
-        </div>
-        </div>
+        
     </div>
     
 </template>
@@ -231,47 +232,55 @@ async function createJoinChat()
 <style>
 .chat-window
 {
-    width: 30%;
-    height: 450px;
+    width: 622px;
+    height: 560px;
+    border-radius:5%;
     z-index: 1;
     right: 20%;
     position: fixed;
-    background-color: white;
+    background-color: rgb(235,235,235);
     display:grid;
-    grid-template-columns: [chat-sidebar]2fr [main]8fr;
+    /* 6 columns */
+    grid-template-columns: [gap1]22px [chat-sidebar]139px [gap2]20px [main]311px [gap3]12px [button-col]109px;
 }
 .chat-sidebar
 {
-    background-color: grey;
-    grid-column: 1;
-    overflow-y: scroll;
+    width:139px;
+    height:503px;
+    border-radius:25px;
+    margin-top:26px;
+    background-color: rgb(186, 203, 207);
+    grid-column: 2;
+    overflow-y: auto;
 }
 
 .chat
 {
-    background-color: rgb(86, 166, 227);
+    height:40px;
+    width: 100px;
+    border-radius: 10px;
+    padding-top: 8px;
+    margin-top: 23px;
+    margin-left: auto;
+    margin-right:auto;
+    background-color: white;
     cursor: pointer;
+    text-align: center;
 }
 
 .chat-grid 
 {
-   
-    display: grid;
-    grid-column: 2;
-    grid-template-rows: [chat-header]2fr [searchbar]1fr [name-badge-box]1fr [message]4fr [send-button]2fr;
+    margin-top: 46px;
+    grid-column: 4;
 }
+
+
 .btn-close
 {
     background-color: red;
     cursor: pointer;
 }
 
-.chat-header
-{
-    display: grid;
-    grid-template-columns: [header] 9fr 1fr[btn-close];
-
-}
 
 .header
 {
@@ -282,42 +291,55 @@ async function createJoinChat()
 
 .editable:empty:before
 {
-    background-color:  rgb(202, 202, 202);
     content: attr(data-placeholder);
     white-space: pre-wrap;
     word-wrap: normal;
+    text-align: center;
 }
 
 .searchbar
 {
-    background-color:  rgb(202, 202, 202);
-    border: 1px solid black;
-}
-.btn-join-chat
-{
+    border-radius: 25px;
+    background-color: white;
+    color:rgb(172,172,172);
+    height: 79px;
+    width: 306px;
+    text-align: center;
+    padding-top: 25px;
+    cursor: pointer;
+    margin-bottom:0;
+    display:block;
 }
 
 .searchbar-btn-join-chat
 {
     display: grid;
-    grid-template-columns: [searchbar] 7fr [btn-join-chat] 3fr ;
 }
+
 .name-badge-box
 {
     z-index: 1;
     background-color: transparent;
 }
+
 .queryDiv
 {
-    background-color: yellow;
+    background-color: rgb(207, 207, 188);
+    color:white;
+    border-radius: 10px;
     z-index: 1;
 }
 
 .message-box 
 {
-    background-color: rgb(202, 202, 202);
+    margin-top: 15px;
+    border-radius: 25px;
+    background-color: white;
+    color:rgb(172,172,172);
     border-color: black;
-    overflow-y: scroll;
+    height:280px;
+    overflow-y: auto;
+    text-align:center;
 }
 
 .message-received
@@ -337,6 +359,76 @@ async function createJoinChat()
     
 }
 
+.message-text
+{
+    background-color: white;
+    color:rgb(172,172,172);
+    border-radius: 10px;
+    margin-top:14px;
+    padding-top: 8px;
+    width: 306px;
+    height: 38px;
+    text-align: center;
+    display:block;
+}
+
+.btn-send
+{
+    background-color: rgb(186, 203, 207);
+    color: white;
+    border-radius: 10px;
+    padding-top: 10px;
+    margin-top:12px;
+    width: 306px;
+    height: 44px;
+    text-align: center;
+    display:block;
+    cursor: pointer;
+}
+
+.btn-send:hover
+{
+    background-color:rgb(129, 165, 173);
+}
+
+.btn-column
+{
+    grid-column: 6;
+}
+.btn-join-chat
+{
+    background-color: rgb(186, 203, 207);
+    color:white;
+    border-radius: 10px;
+    margin-top: 57px;
+    padding: 15px;
+    height: 60px;
+    width: 109px;
+    display:block;
+    text-align:center;
+    cursor: pointer;
+}
+
+.btn-join-chat:hover
+{
+    background-color:rgb(129, 165, 173);
+}
+.btn-leave-chat
+{
+    background-color: rgb(207, 186, 188);
+    color:white;
+    border-radius: 10px;
+    margin-top: 38px;
+    padding: 13.8px;
+    height: 60px;
+    width: 109px;
+    display:block;
+    text-align:center;
+}
+.btn-leave-chat:hover
+{
+    background-color:rgb(171, 129, 134);
+}
 </style>
 
 

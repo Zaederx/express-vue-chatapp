@@ -6,7 +6,9 @@
 
 <!-- HTML -->
 <template>
-   <HeadScripts></HeadScripts>
+   <Suspense>
+        <HeadScripts></HeadScripts>
+   </Suspense>
    <Banner heading1="Chat" heading2="Home"></Banner>
    <HomeMain></HomeMain>
    <SiteFooter></SiteFooter>

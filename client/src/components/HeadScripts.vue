@@ -1,36 +1,40 @@
 <script setup lang="ts">
 
+import { onMounted } from 'vue'
 import { useRouter, type Router } from 'vue-router'
 import { useAuthenticationStore } from '../stores/isAuthenticated.js'
 
 const authStore = useAuthenticationStore()
 console.log(`authStore.isAuthenticated:${authStore.auth.isAuthenticated}`)
-</script>
-<script lang="ts">
-//IMPORTANT check if there is a csrfToken present, if no - make a request
+
+
+onMounted( async ()=> {
+
+    //IMPORTANT check if there is a csrfToken present, if no - make a request
 
 //making a request for a CSRF token
 console.warn('************* HeadScript.vue script **************')
 var proxyUrl = '/api/csrf-token'
-var response:Response = await fetch(proxyUrl,{
+try {
+    var response:Response = await fetch(proxyUrl,{
                             method: 'GET',//IMPORTANT CONSIDER CHANGING IT TO POST
                             credentials: 'include' //whether user agent should send and recieve cookies - see [link](https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials) and [link](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
                         })
-var data = await response.json()
-// document.cookie = response.headers.get('Set-Cookie') as string
-console.log(`document.cookie:${document.cookie}`)
-console.warn('************* End of script HeadSciprt.vue **************')
-//create meta tag with csrf token
-const csrfToken = document.createElement('meta') as HTMLMetaElement
-csrfToken.name = 'csrf-token'
-csrfToken.content= data.csrfToken
-document.head.append(csrfToken)
+    var data = await response.json()
+    // document.cookie = response.headers.get('Set-Cookie') as string
+    console.log(`document.cookie:${document.cookie}`)
+    console.warn('************* End of script HeadSciprt.vue **************')
+    //create meta tag with csrf token
+    const csrfToken = document.createElement('meta') as HTMLMetaElement
+    csrfToken.name = 'csrf-token'
+    csrfToken.content= data.csrfToken
+    document.head.append(csrfToken)
+} catch (error) {
+    console.warn('csrf token could not be obtained')
+}
 
 
-export default {
-    // inheritAttrs: true //true is default
-    mounted() {
-        //socket.io
+//socket.io
         // const socket_io = document.createElement('script') as HTMLScriptElement
         // socket_io.type = 'text/javascript'
         // socket_io.src =  'https://cdn.socket.io/4.5.0/socket.io.min.js'
@@ -78,18 +82,10 @@ export default {
 
         //add popperjs, bootstrapJS and bootstrapCSS to head tag
         document.head.append( popperjs, bootstrapJS, bootstrapCSS, fa)
-    }
 
-    
-}
-
-
-
-
-
-
-
+})
 </script>
+
 
 
 

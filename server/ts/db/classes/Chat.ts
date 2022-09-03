@@ -5,11 +5,13 @@ export class Chat
     id:string;
     name:string;
     messages:Message[]
+    subscriberIds:string[]
 
-    constructor(id:string, name?:string, messages:Message[]= [])
+    constructor(id:string, name?:string, messages:Message[]= [], subscriberIds:string[] = [])
     {
         this.id = id
         this.name = `Chat${Chat.COUNT++}`
         this.messages = messages
+        this.subscriberIds = subscriberIds
     }
 }

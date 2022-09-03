@@ -38,7 +38,7 @@ console.log('**** ChatWindow Setup Script called ****');
     
     var socket:any;
 
-    
+
   onMounted(async () => {
     console.log('  ***** onMounted was called ***** ')
     //initialise variables
@@ -53,7 +53,7 @@ console.log('**** ChatWindow Setup Script called ****');
     chatsSidebar = document.querySelector('#chat-sidebar') as HTMLDivElement
     messageText = document.querySelector('#message-text') as HTMLSpanElement
     socket = io({
-                //proxy address + socket.io
+                //proxy address
                 path:'/socket.io',
                 withCredentials: true,
                 extraHeaders: 
@@ -74,13 +74,28 @@ console.log('**** ChatWindow Setup Script called ****');
 
   /**
    * Sends a message to the server through web socket.
+   * Also reloads messages can clears message text input span.
    */
-  function sendMessage()
+  async function sendMessage()
   {
+    //get message text input
     var message = messageText.innerHTML
+    //get userId and chatId
     var {userId, chatId} = socketVars
-
+    //send the message to the server via websocket
     socket.emit('chat', userId, chatId, message)
+    //wait half a second and load messages
+    setTimeout(()=> loadMessages(),500)
+    //clear text from input span
+    messageText.innerHTML = ''
+  }
+
+  async function loadMessages()
+  {
+    var { chatId, userId } = socketVars
+    //send request for fetch messages
+    var messagesHTML = await fetchMessages(chatId, userId)//TODO WRITE FUNCTION
+    messageBox.innerHTML = messagesHTML
   }
 
   /**

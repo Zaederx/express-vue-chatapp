@@ -15,7 +15,7 @@ export class User {
         this.name = obj.name;
         this.username = obj.username;
         this.passwordHash = obj.password;
-        this.friends = obj.friends ? obj.friends : [];
+        this.friendIds = obj.friendIds ? obj.friendIds : [];
         this.chats = obj.chats ? obj.chats : [];
         this.sessionId = sessionId ? sessionId : '';
     }
@@ -26,7 +26,7 @@ export class User {
             name: ${this.name},
             username: ${this.username},
             passwordHash: ${this.passwordHash},
-            friends: ${this.friends.length},
+            friends: ${this.friendIds.length},
             chats: ${this.chats.length},
             sessionId: ${this.sessionId}
         }`;

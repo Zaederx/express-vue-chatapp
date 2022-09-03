@@ -59,15 +59,21 @@ export async function getFriendsWithSimilarName(userId, friendName) {
     //get user
     var user = db.data?.users.filter((u) => u.id == userId)[0];
     var friends = [];
+    var friendsWithSimilarNames = [];
     if (user != undefined) {
         //get users friends
+        user.friendIds.forEach((friendId) => {
+            var u = db.data?.users.find(u => u.id == friendId);
+            friends.push(u);
+        });
+        //filter list to get up to 10 friends with similar names to var 'friendName'
         const limit = 10;
-        friends = user.friends.filter((f) => compareTwoStrings(f.name, friendName) > 0.5).slice(0, limit);
+        friendsWithSimilarNames = friends.filter((f) => compareTwoStrings(f.name, friendName) > 0.5).slice(0, limit);
     }
     else {
         console.log(`user is undefined`);
     }
-    return friends;
+    return friendsWithSimilarNames;
 }
 function friendsToHTML(friends) {
     var friendsHTML = '';

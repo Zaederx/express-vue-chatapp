@@ -8,7 +8,7 @@ export class User {
     username:string;
     passwordHash:string;
     sessionId:string;
-    friends:User[];
+    friendIds:number[];
     chats:Chat[];
     
 
@@ -23,14 +23,14 @@ export class User {
      * @param friends 
      * @param chats 
      */
-    constructor(obj:{ email:string, name:string, username:string, password:string, friends?:User[], chats?:Chat[]}, sessionId?:string)
+    constructor(obj:{ email:string, name:string, username:string, password:string, friendIds?:number[], chats?:Chat[]}, sessionId?:string)
     {
         this.id = User.ID++;//auto incrementing id
         this.email = obj.email;
         this.name = obj.name;
         this.username = obj.username;
         this.passwordHash = obj.password;
-        this.friends = obj.friends ? obj.friends : [];
+        this.friendIds = obj.friendIds ? obj.friendIds : [];
         this.chats = obj.chats ? obj.chats : [];
         this.sessionId = sessionId ? sessionId : ''
     }
@@ -42,7 +42,7 @@ export class User {
             name: ${this.name},
             username: ${this.username},
             passwordHash: ${this.passwordHash},
-            friends: ${this.friends.length},
+            friends: ${this.friendIds.length},
             chats: ${this.chats.length},
             sessionId: ${this.sessionId}
         }`

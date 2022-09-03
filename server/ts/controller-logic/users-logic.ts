@@ -79,18 +79,24 @@ export async function getFriendsWithSimilarName(userId:any, friendName:string)
     //get user
     var user:User = db.data?.users.filter((u) => u.id == userId)[0] as User
     var friends:User[] = []
+    var friendsWithSimilarNames:User[] = []
     if (user != undefined)
     {
         //get users friends
+        user.friendIds.forEach((friendId) => {
+            var u = db.data?.users.find(u => u.id == friendId) as User
+            friends.push(u)
+        })
+        //filter list to get up to 10 friends with similar names to var 'friendName'
         const limit = 10
-        friends = user.friends.filter((f) => compareTwoStrings(f.name,friendName) > 0.5).slice(0,limit) as User[]
+        friendsWithSimilarNames = friends.filter((f) => compareTwoStrings(f.name,friendName) > 0.5).slice(0,limit) as User[]
     }
     else 
     {
         console.log(`user is undefined`)
     }
     
-    return friends
+    return friendsWithSimilarNames
 }
 
 function friendsToHTML(friends:User[]):string

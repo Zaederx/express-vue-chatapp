@@ -82,19 +82,30 @@ io.on("connection", (socket) => {
     })
     
     //recieve
-    socket.on('chat', (userId,chatId,messageText) => {
+    socket.on('chat', async (userId,chatId,messageText) => {
         console.log('* chat called *')
-        //find chat
-        db.read()
+        await db.read()
+        
+        //find the current user
         var user = db.data?.users.find((u) => u.id  == userId)
-        console.log(user)
+        //find their copy of the chat - to access chat subscribers
         var chat = user?.chats.find((chat) => chat.id == chatId)
-        var m = new Message(userId,user?.username as string, chat?.id as string, messageText)
-        chat?.messages.push(m)
-        db.write()
+
+        //for each subscriber...
+        chat?.subscriberIds.forEach(async (subscriberId) => 
+        {
+            //find user
+            user = db.data?.users.find((u) => u.id  == Number(subscriberId))
+            //find their copy of the chat
+            var chat = user?.chats.find((chat) => chat.id == chatId)
+            //add message to their copy of the chat
+            var m = new Message(userId,user?.username as string, chat?.id as string, messageText)
+            chat?.messages.push(m)
+            await db.write()
+        })
 
         //emit
-        socket.to(chatId).emit('message', messageText)
+        // socket.to(chatId).emit('message', messageText)
     })
 
     

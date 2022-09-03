@@ -15,7 +15,7 @@ var db = new Low(adapter)
 await db.read();
 
 // setup()
-function setup() {
+async function setup() {
 //if file.json does not exist db.data will be null
 //Set data to default
 db.data ||= {users: []}
@@ -96,8 +96,11 @@ var u12:User = new User({email:'email2@email.com',
                         username:'username12',
                         password:passwordHash
                         });
-                
-u1.friends.push(u2,u3,u4,u5,u6,u7)
+
+//add friends to u1
+u1.friendIds.push(u2.id,u3.id,u4.id,u5.id,u6.id,u7.id)
+
+//add all users and their information to database
 db.data.users.push(u1)
 db.data.users.push(u2)
 db.data.users.push(u3)
@@ -110,9 +113,18 @@ db.data.users.push(u9)
 db.data.users.push(u10)
 db.data.users.push(u11)
 db.data.users.push(u12)
-db.write()//writes new objects - don't use for updating objects or it causes duplicates
-//only use for writing new objects
-}
+//write this data to json file
+await db.write()
 
+
+/** 
+ * needs to be in this order so that db is filled before being queried for users
+ */
+await db.read()
+//add u1 id to all friends
+u1.friendIds.forEach(fId => db.data?.users.find(u => u.id == fId)?.friendIds.push(u1.id) )
+await db.write()
+
+}
 
 export default db

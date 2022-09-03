@@ -24,12 +24,16 @@ export async function createChat(userId, selectedFriends, chatId) {
         //create a new chat room in data with chatId
         chat = new Chat(chatId);
         //add chat to user
+        chat.subscriberIds.push(String(user.id));
         user?.chats.push(chat);
         await db.write();
         //add chat to selectedFriends
+        await db.read();
         if (selectedFriends.length > 0) {
             selectedFriends.forEach(f => {
                 var friend = db.data?.users.find((u) => u.id == Number(f.id));
+                //add friend id to list of subscriber ids
+                chat?.subscriberIds.push(String(friend.id));
                 //add chat to friend list of chats
                 friend.chats.push(chat);
             });

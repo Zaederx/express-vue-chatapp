@@ -20,6 +20,7 @@ export const clientDOMAIN = 'https://localhost:5173';
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { createChat } from './controller-logic/socket-logic.js';
+import { Message } from './db/classes/Message.js';
 const expServer = express(); //create a server instance
 const httpServer = createServer(expServer);
 const io = new Server(httpServer, {
@@ -55,16 +56,18 @@ io.on("connection", (socket) => {
         user.chats.forEach(c => socket.join(c.id));
     });
     //recieve
-    socket.on('chat', (userId, chatId, message) => {
+    socket.on('chat', (userId, chatId, messageText) => {
         console.log('* chat called *');
         //find chat
         db.read();
         var user = db.data?.users.find((u) => u.id == userId);
+        console.log(user);
         var chat = user?.chats.find((chat) => chat.id == chatId);
-        chat?.messages.push(message);
+        var m = new Message(userId, user?.username, chat?.id, messageText);
+        chat?.messages.push(m);
         db.write();
         //emit
-        socket.to(chatId).emit('message', message);
+        socket.to(chatId).emit('message', messageText);
     });
     socket.on("disconnecting", () => {
         console.log(`socket.rooms:${socket.rooms}`); // the Set contains at least the socket ID

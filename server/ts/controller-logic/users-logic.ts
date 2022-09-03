@@ -145,10 +145,16 @@ export async function getUsersNamesListFromDB(name:string) {
     return arr
 }
 
+/**
+ * Fetch messages from database.
+ * @param chatId chat id of the user's chat
+ * @param userId id of the user
+ */
 export async function fetchMessagesFromDb(chatId:string, userId:string):Promise<Message[]>
 {
+    await db.read()
     //find user in db
-    var user = db.data?.users.find(u => u.id == Number(chatId)) as User
+    var user = db.data?.users.find(u => u.id == Number(userId)) as User
     //find chat in list of user chats
     var chatMessages:Message[] = []
     if (user != undefined && user.chats.length > 0)
@@ -163,16 +169,16 @@ export async function fetchMessagesFromDb(chatId:string, userId:string):Promise<
 export function messagesToHTML(messages:Message[], userId:string) 
 {
     var messagesHTML = ''
-    messages.forEach(message => 
+    messages.forEach(m => 
     {
         //if sent by user
-        if (message.senderId == userId) 
+        if (m.senderId == userId) 
         {
-            messagesHTML += `<div class="message-sent">${message}</div>`
+            messagesHTML += `<div class="message-sent">${m.message}</div>`
         }
         else
         {
-            messagesHTML += `<div class="message-received">${message}</div>`
+            messagesHTML += `<div class="message-received">${m.message}</div>`
         }
         
     })

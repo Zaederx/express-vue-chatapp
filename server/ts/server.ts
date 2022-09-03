@@ -37,6 +37,7 @@ import { Server } from "socket.io";
 import { Chat } from './db/classes/Chat.js';
 import { User } from './db/classes/User';
 import { createChat } from './controller-logic/socket-logic.js'
+import { Message } from './db/classes/Message.js';
 const expServer = express();//create a server instance
 const httpServer = createServer(expServer);
 const io = new Server(httpServer, {
@@ -81,17 +82,19 @@ io.on("connection", (socket) => {
     })
     
     //recieve
-    socket.on('chat', (userId,chatId,message) => {
+    socket.on('chat', (userId,chatId,messageText) => {
         console.log('* chat called *')
         //find chat
         db.read()
         var user = db.data?.users.find((u) => u.id  == userId)
+        console.log(user)
         var chat = user?.chats.find((chat) => chat.id == chatId)
-        chat?.messages.push(message)
+        var m = new Message(userId,user?.username as string, chat?.id as string, messageText)
+        chat?.messages.push(m)
         db.write()
 
         //emit
-        socket.to(chatId).emit('message', message)
+        socket.to(chatId).emit('message', messageText)
     })
 
     

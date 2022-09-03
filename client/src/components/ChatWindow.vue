@@ -36,8 +36,9 @@ console.log('**** ChatWindow Setup Script called ****');
         url : '/api/get-friends/with-name/'
     }
     
-    
     var socket:any;
+
+    
   onMounted(async () => {
     console.log('  ***** onMounted was called ***** ')
     //initialise variables
@@ -71,12 +72,22 @@ console.log('**** ChatWindow Setup Script called ****');
 
   })
 
+  /**
+   * Sends a message to the server through web socket.
+   */
   function sendMessage()
   {
     var message = messageText.innerHTML
     var {userId, chatId} = socketVars
+
     socket.emit('chat', userId, chatId, message)
   }
+
+  /**
+   * Loads chats of the current user into
+   * chat sidebar.
+   * @param userId user id of the current user
+   */
   async function loadChats(userId:string) 
   {
     const chats:Chat[] = await fetchChatsJson(userId)
@@ -101,7 +112,7 @@ console.log('**** ChatWindow Setup Script called ****');
             div.addEventListener('click', async ()=> {
                 //set chat id from div data-id attribute - store for later
                 socketVars.chatId = div.getAttribute('data-id')as string;
-                var {chatId, userId } = socketVars
+                var { chatId, userId } = socketVars
                 //send request for fetch messages
                 var messagesHTML = await fetchMessages(chatId, userId)//TODO WRITE FUNCTION
                 messageBoxDiv.innerHTML = messagesHTML
@@ -111,11 +122,11 @@ console.log('**** ChatWindow Setup Script called ****');
     })
   }
 
-  /**
-   * Fetches the messages of the user's chat
-   * @param chatId id of the chat you want messages from
-   * @param userId optional (because user can be found through session cookie)
-   */
+/**
+ * Fetches the messages of the user's chat
+ * @param chatId id of the chat you want messages from
+ * @param userId optional (because user can be found through session cookie)
+ */
 async function fetchMessages(chatId:string, userId:string='') 
 {
     return (await (await fetch(`/api/messages/${chatId}/${userId}`)).text())
@@ -134,11 +145,19 @@ chats.forEach((c) => {
 })
 return chatsHTML
 }
+
+
+/**
+ * Fetches the current users chats.
+ * @param userId user id of the current user
+ */
 async function fetchChatsJson(userId:string):Promise<Chat[]>
 {
     //fetch response and then turn to json
     return (await (await fetch('/api/chats/'+userId)).json()).chats
 }
+
+
 /**
  * Fetches the current users id
  */
@@ -146,6 +165,13 @@ async function fetchUserId():Promise<string>
 {
     return (await (await fetch('/api/userId')).json()).userId
 }
+
+
+/**
+ * Takes searchbar input and fetches user names
+ * that are similar. These can be clicked in order to
+ * add them to chats
+ */
 async function searchbarInput() 
     { 
         console.log('typing into searchbar...')
@@ -176,6 +202,9 @@ async function searchbarInput()
         } 
         
 }
+/**
+ * Sends a message via websocket requesting a chat to be created
+*/
 async function createJoinChat()
 {
     console.log('create-join-chat clicked')

@@ -95,7 +95,7 @@ function loginViaEmailPassword(e:Event, url:string='/api/login')
  *  to expose the response to the frontend JavaScript code
  *  see [link](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials#examples)
  */
-function loginViaSessionCookie(url?:string='/api/login-session-cookie', router:Router)
+function loginViaSessionCookie(url:string='/api/login-session-cookie', router:Router)
 {
     console.log('loginViaSessionCookie called')
     var token = {csrfToken:''}

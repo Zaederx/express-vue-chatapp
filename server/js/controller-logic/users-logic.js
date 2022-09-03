@@ -138,7 +138,7 @@ export async function fetchMessagesFromDb(chatId, userId) {
     //return chat messages
     return chatMessages;
 }
-export function messagesToHTML(messages, userId) {
+export function chatMessagesToHTML(messages, userId) {
     var messagesHTML = '';
     messages.forEach(m => {
         //if sent by user

@@ -18,7 +18,7 @@ import { loginLogic as emailPasswordLogin, loginViaSessionCookie, readSessionIdF
 import { Cookie } from './helpers/cookie.js';
 import { getAppCookie } from './helpers/cookie-defaults.js';
 import { LoginResponse } from './helpers/response/login-response.js';
-import { fetchChats, fetchFriendNames as fetchFriendNamesHTML, fetchMessagesFromDb, fetchUserId, fetchUsersNames, messagesToHTML } from './controller-logic/users-logic.js';
+import { fetchChats, fetchFriendNames as fetchFriendNamesHTML, fetchMessagesFromDb, fetchUserId, fetchUsersNames, chatMessagesToHTML } from './controller-logic/users-logic.js';
 import { logout } from './controller-logic/logout-logic.js';
 
 import  db  from './db/db-setup.js'
@@ -70,6 +70,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on('join-chat', (chatId) => {
+        console.log(`joining chat id:${chatId}. socket.join(${chatId})`)
         socket.join(chatId)
     })
 
@@ -91,6 +92,7 @@ io.on("connection", (socket) => {
         //find their copy of the chat - to access chat subscribers
         var chat = user?.chats.find((chat) => chat.id == chatId)
 
+        var m:any
         //for each subscriber...
         chat?.subscriberIds.forEach(async (subscriberId) => 
         {
@@ -99,13 +101,14 @@ io.on("connection", (socket) => {
             //find their copy of the chat
             var chat = user?.chats.find((chat) => chat.id == chatId)
             //add message to their copy of the chat
-            var m = new Message(userId,user?.username as string, chat?.id as string, messageText)
+            m = new Message(userId,user?.username as string, chat?.id as string, messageText)
             chat?.messages.push(m)
             await db.write()
         })
 
         //emit
-        // socket.to(chatId).emit('message', messageText)
+        io.to(chatId).emit('message', m)
+        console.log(`*emitting message to chatid: ${chatId}*`)
     })
 
     
@@ -272,7 +275,7 @@ expServer.get('/messages/:chatId/:userId', async (req,res) =>
     }
     //fetch messages from db
     var messages = await fetchMessagesFromDb(chatId, userId)
-    var messagesHTML = messagesToHTML(messages, userId)
+    var messagesHTML = chatMessagesToHTML(messages, userId)
 
     res.send(messagesHTML)
 })

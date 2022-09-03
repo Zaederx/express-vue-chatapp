@@ -172,7 +172,7 @@ export async function fetchMessagesFromDb(chatId:string, userId:string):Promise<
     return chatMessages
 }
 
-export function messagesToHTML(messages:Message[], userId:string) 
+export function chatMessagesToHTML(messages:Message[], userId:string) 
 {
     var messagesHTML = ''
     messages.forEach(m => 

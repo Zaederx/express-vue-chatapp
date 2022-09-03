@@ -6,6 +6,7 @@ import type {Friend} from '../classes/Friend.js'
 import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 import $ from 'jquery'
 import type { Chat } from '@/classes/Chat';
+import type { Message } from '@/helpers/Message';
 
 console.log('**** ChatWindow Setup Script called ****');
     //SEARCHBAR 
@@ -52,7 +53,21 @@ console.log('**** ChatWindow Setup Script called ****');
     btnSendMessage = document.querySelector('#btn-send') as HTMLDivElement
     chatsSidebar = document.querySelector('#chat-sidebar') as HTMLDivElement
     messageText = document.querySelector('#message-text') as HTMLSpanElement
-    socket = io({
+    
+
+    
+    //fetch user id
+    const userId = await fetchUserId()
+    //set userId value in socketVars
+    socketVars.userId = userId
+    //fetch chats
+    await loadChats(userId)
+
+    
+    
+  })
+
+  socket = io({
                 //proxy address
                 path:'/socket.io',
                 withCredentials: true,
@@ -63,14 +78,39 @@ console.log('**** ChatWindow Setup Script called ****');
                 transports: ['websocket'],
                 autoConnect: true //default
             });
-    //fetch user id
-    const userId = await fetchUserId()
-    //set userId value in socketVars
-    socketVars.userId = userId
-    //fetch chats
-    await loadChats(userId)
 
-  })
+  socket.on('message', (m:Message) => 
+    {
+        console.log('socket.on - message called')
+        messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
+    })
+  /**
+   * Convert messages to HTML with classes for vue frontend
+   * @param messages messages to be turned to HTML
+   * @param userId userId of person receiving the messages
+   */
+  function chatMessagesToHTML(messages:Message[], userId:string) 
+{
+    var messagesHTML = ''
+    messages.forEach(m => 
+    {
+        //if sent by user
+        if (m.senderId == userId) 
+        {
+            messagesHTML += `<div class="message-sent">${m.message}</div>`
+        }
+        else
+        {
+            messagesHTML += `<div class="message-received">${m.message}</div>`
+        }
+        
+    })
+    if (messagesHTML == '') 
+    {
+        messagesHTML = `<div class="notice">No Messages</div>`
+    }
+    return messagesHTML
+}
 
   /**
    * Sends a message to the server through web socket.
@@ -84,8 +124,6 @@ console.log('**** ChatWindow Setup Script called ****');
     var {userId, chatId} = socketVars
     //send the message to the server via websocket
     socket.emit('chat', userId, chatId, message)
-    //wait half a second and load messages
-    setTimeout(()=> loadMessages(),500)
     //clear text from input span
     messageText.innerHTML = ''
   }
@@ -131,7 +169,8 @@ console.log('**** ChatWindow Setup Script called ****');
                 //send request for fetch messages
                 var messagesHTML = await fetchMessages(chatId, userId)//TODO WRITE FUNCTION
                 messageBoxDiv.innerHTML = messagesHTML
-
+                //join socket onto chat
+                socket.emit('join-chat', chatId)
             })
         }
     })

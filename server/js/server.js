@@ -10,7 +10,7 @@ import csrf from 'csurf';
 import KeyGrip from 'keygrip';
 //project imports
 import { loginLogic as emailPasswordLogin, loginViaSessionCookie, readSessionIdFromReq } from './controller-logic/login-logic.js';
-import { fetchChats, fetchFriendNames as fetchFriendNamesHTML, fetchMessagesFromDb, fetchUserId, fetchUsersNames, messagesToHTML } from './controller-logic/users-logic.js';
+import { fetchChats, fetchFriendNames as fetchFriendNamesHTML, fetchMessagesFromDb, fetchUserId, fetchUsersNames, chatMessagesToHTML } from './controller-logic/users-logic.js';
 import { logout } from './controller-logic/logout-logic.js';
 import db from './db/db-setup.js';
 export const PORT = process.env.PORT || 3000;
@@ -46,6 +46,7 @@ io.on("connection", (socket) => {
         }
     });
     socket.on('join-chat', (chatId) => {
+        console.log(`joining chat id:${chatId}. socket.join(${chatId})`);
         socket.join(chatId);
     });
     socket.on('join-invited-chats', async (userId) => {
@@ -63,6 +64,7 @@ io.on("connection", (socket) => {
         var user = db.data?.users.find((u) => u.id == userId);
         //find their copy of the chat - to access chat subscribers
         var chat = user?.chats.find((chat) => chat.id == chatId);
+        var m;
         //for each subscriber...
         chat?.subscriberIds.forEach(async (subscriberId) => {
             //find user
@@ -70,12 +72,13 @@ io.on("connection", (socket) => {
             //find their copy of the chat
             var chat = user?.chats.find((chat) => chat.id == chatId);
             //add message to their copy of the chat
-            var m = new Message(userId, user?.username, chat?.id, messageText);
+            m = new Message(userId, user?.username, chat?.id, messageText);
             chat?.messages.push(m);
             await db.write();
         });
         //emit
-        // socket.to(chatId).emit('message', messageText)
+        io.to(chatId).emit('message', m);
+        console.log(`*emitting message to chatid: ${chatId}*`);
     });
     socket.on("disconnecting", () => {
         console.log(`socket.rooms:${socket.rooms}`); // the Set contains at least the socket ID
@@ -197,6 +200,6 @@ expServer.get('/messages/:chatId/:userId', async (req, res) => {
     }
     //fetch messages from db
     var messages = await fetchMessagesFromDb(chatId, userId);
-    var messagesHTML = messagesToHTML(messages, userId);
+    var messagesHTML = chatMessagesToHTML(messages, userId);
     res.send(messagesHTML);
 });

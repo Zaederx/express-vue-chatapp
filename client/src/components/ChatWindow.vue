@@ -128,6 +128,9 @@ console.log('**** ChatWindow Setup Script called ****');
     messageText.innerHTML = ''
   }
 
+  /**
+   * Loads messages into messageBox.
+   */
   async function loadMessages()
   {
     var { chatId, userId } = socketVars
@@ -443,6 +446,7 @@ async function createJoinChat()
 .message-received
 {
     background-color: rgb(86, 166, 227);
+    color: white;
     margin-right: 30%;
     border-radius: 2%;
     margin-top:10px;
@@ -451,6 +455,7 @@ async function createJoinChat()
 .message-sent
 {
     background-color: rgb(86, 166, 227);
+    color:white;
     margin-left: 30%;
     border-radius: 2%;
     margin-top:10px;

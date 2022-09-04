@@ -49,13 +49,6 @@ io.on("connection", (socket) => {
         console.log(`joining chat id:${chatId}. socket.join(${chatId})`);
         socket.join(chatId);
     });
-    socket.on('join-invited-chats', async (userId) => {
-        await db.read();
-        //find user in db
-        var user = db.data?.users.find(u => u.id == userId);
-        //subscribe user to chats on their chats list
-        user.chats.forEach(c => socket.join(c.id));
-    });
     //recieve
     socket.on('chat', async (userId, chatId, messageText) => {
         console.log('* chat called *');
@@ -80,11 +73,16 @@ io.on("connection", (socket) => {
         io.to(chatId).emit('message', m);
         console.log(`*emitting message to chatid: ${chatId}*`);
     });
+    //runs when the page disconnects
     socket.on("disconnecting", () => {
-        console.log(`socket.rooms:${socket.rooms}`); // the Set contains at least the socket ID
+        socket.rooms.forEach(room => {
+            console.log(`socket.room (chat): ${room}, was disconnected`);
+        });
+        // the Set contains at least the socket ID
     });
     socket.on("disconnect", () => {
         // socket.rooms.size === 0
+        console.log(`socket.id:${socket.id}, is disconnected`);
     });
 });
 /****************** Express Server **************** */

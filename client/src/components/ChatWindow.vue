@@ -60,6 +60,7 @@ console.log('**** ChatWindow Setup Script called ****');
     const userId = await fetchUserId()
     //set userId value in socketVars
     socketVars.userId = userId
+    console.log(`userId:${userId}`)
     //fetch chats
     await loadChats(userId)
 
@@ -146,6 +147,7 @@ console.log('**** ChatWindow Setup Script called ****');
    */
   async function loadChats(userId:string) 
   {
+    console.log('loadChats called')
     const chats:Chat[] = await fetchChatsJson(userId)
     //fill chat sidebar with fetched chats
     chatsSidebar.innerHTML = chatsToHTML(chats)

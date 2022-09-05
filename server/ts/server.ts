@@ -10,7 +10,6 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf'
 import $ from 'jquery'
 import KeyGrip from 'keygrip'
-
 import { Request, ParamsDictionary, Response } from 'express-serve-static-core'
 import { ParsedQs } from 'qs'
 //project imports
@@ -20,24 +19,21 @@ import { getAppCookie } from './helpers/cookie-defaults.js';
 import { LoginResponse } from './helpers/response/login-response.js';
 import { fetchChats, fetchFriendNames as fetchFriendNamesHTML, fetchMessagesFromDb, fetchUserId, fetchUsersNames, chatMessagesToHTML } from './controller-logic/users-logic.js';
 import { logout } from './controller-logic/logout-logic.js';
-
 import  db  from './db/db-setup.js'
 import { Friend } from './db/classes/Friend.js'
+import { Chat } from './db/classes/Chat.js';
+import { User } from './db/classes/User';
+import { createChat, handleChatMessage } from './controller-logic/socket-logic.js'
+import { Message } from './db/classes/Message.js';
 
+//********** WebSocket *********** */
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 export const PORT = process.env.PORT || 3000
 export const serverDOMAIN = `http://localhost:${PORT}`
 export const clientDOMAIN = 'https://localhost:5173'
 
-
-
-//********** WebSocket *********** */
-import { createServer } from "http";
-import { Server } from "socket.io";
-import { Chat } from './db/classes/Chat.js';
-import { User } from './db/classes/User';
-import { createChat } from './controller-logic/socket-logic.js'
-import { Message } from './db/classes/Message.js';
 const expServer = express();//create a server instance
 const httpServer = createServer(expServer);
 const io = new Server(httpServer, {
@@ -45,6 +41,7 @@ const io = new Server(httpServer, {
         origin: '*',
     }
  });
+
  httpServer.listen(PORT)
 
 
@@ -75,33 +72,7 @@ io.on("connection", (socket) => {
     })
     
     //recieve
-    socket.on('chat', async (userId,chatId,messageText) => {
-        console.log('* chat called *')
-        await db.read()
-        
-        //find the current user
-        var user = db.data?.users.find((u) => u.id  == userId)
-        //find their copy of the chat - to access chat subscribers
-        var chat = user?.chats.find((chat) => chat.id == chatId)
-
-        var m:any
-        //for each subscriber...
-        chat?.subscriberIds.forEach(async (subscriberId) => 
-        {
-            //find user
-            user = db.data?.users.find((u) => u.id  == Number(subscriberId))
-            //find their copy of the chat
-            var chat = user?.chats.find((chat) => chat.id == chatId)
-            //add message to their copy of the chat
-            m = new Message(userId,user?.username as string, chat?.id as string, messageText)
-            chat?.messages.push(m)
-            await db.write()
-        })
-
-        //emit
-        io.to(chatId).emit('message', m)
-        console.log(`*emitting message to chatid: ${chatId}*`)
-    })
+    socket.on('chat', async (userId,chatId,messageText) => handleChatMessage(io,userId,chatId,messageText))
 
     //runs when the page disconnects
     socket.on("disconnecting", () => {

@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import db from "../db/db-setup.js";
 import { Chat } from "../db/classes/Chat.js";
+import { Message } from "../db/classes/Message.js";
 /**
  * Creates chats and adds them to users.
  * @param userId user id of current user
@@ -20,7 +21,7 @@ export async function createChat(userId, selectedFriends, chatId) {
     //check if chat with same id exists
     var chat = user?.chats.find((chat) => chat.id == chatId);
     //check if user already has this chat. If not / it is undefined...
-    if (chat == undefined) {
+    if (user != undefined && chat == undefined) {
         //create a new chat room in data with chatId
         chat = new Chat(chatId);
         //add chat to user
@@ -31,12 +32,22 @@ export async function createChat(userId, selectedFriends, chatId) {
         await db.read();
         if (selectedFriends.length > 0) {
             selectedFriends.forEach(f => {
-                var friend = db.data?.users.find((u) => u.id == Number(f.id));
-                //add friend id to list of subscriber ids
-                chat?.subscriberIds.push(String(friend.id));
-                //add chat to friend list of chats
-                friend.chats.push(chat);
+                try {
+                    //add friend id to list of subscriber ids
+                    chat?.subscriberIds.push(String(f.id));
+                    //add chat to friend list of chats
+                    var friend = db.data?.users.find((u) => u.id == Number(f.id));
+                    if (friend != undefined) {
+                        friend.chats.push(chat);
+                    }
+                }
+                catch (e) {
+                    console.error('friend is undefined', e);
+                }
             });
+        }
+        else if (user == undefined) {
+            console.log('* USER IS UNDEFINED! *');
         }
         await db.write();
         return chat;
@@ -45,7 +56,7 @@ export async function createChat(userId, selectedFriends, chatId) {
 }
 /**
  * Reads sessionId from the Express request object
- * @param req Express request object
+ * @param socket socket.io socket
  */
 export function readSessionIdFromSocket(socket) {
     socket.io.engine.transport.on("pollComplete", () => {
@@ -67,4 +78,35 @@ export function readSessionIdFromSocket(socket) {
         }
     });
     return 'no session cookie/id';
+}
+/**
+ * Takes a message and sends it to users subscribed to
+ * the currently selected chat
+ * @param io the io Server listening on the connection
+ * @param userId user id of the current user
+ * @param chatId chat id of the currently selected chat
+ * @param messageText the message text to be sent
+ */
+export async function handleChatMessage(io, userId, chatId, messageText) {
+    console.log('* chat called *');
+    await db.read();
+    //find the current user
+    var user = db.data?.users.find((u) => u.id == userId);
+    //find their copy of the chat - to access chat subscribers
+    var chat = user?.chats.find((chat) => chat.id == chatId);
+    var m;
+    //for each subscriber...
+    chat?.subscriberIds.forEach(async (subscriberId) => {
+        //find user
+        user = db.data?.users.find((u) => u.id == Number(subscriberId));
+        //find their copy of the chat
+        var chat = user?.chats.find((chat) => chat.id == chatId);
+        //add message to their copy of the chat
+        m = new Message(userId, user?.username, chat?.id, messageText);
+        chat?.messages.push(m);
+        await db.write();
+    });
+    //emit
+    io.to(chatId).emit('message', m);
+    console.log(`*emitting message to chatid: ${chatId}*`);
 }

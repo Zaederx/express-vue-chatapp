@@ -12,15 +12,13 @@ import KeyGrip from 'keygrip';
 import { loginLogic as emailPasswordLogin, loginViaSessionCookie, readSessionIdFromReq } from './controller-logic/login-logic.js';
 import { fetchChats, fetchFriendNames as fetchFriendNamesHTML, fetchMessagesFromDb, fetchUserId, fetchUsersNames, chatMessagesToHTML } from './controller-logic/users-logic.js';
 import { logout } from './controller-logic/logout-logic.js';
-import db from './db/db-setup.js';
-export const PORT = process.env.PORT || 3000;
-export const serverDOMAIN = `http://localhost:${PORT}`;
-export const clientDOMAIN = 'https://localhost:5173';
+import { createChat, handleChatMessage } from './controller-logic/socket-logic.js';
 //********** WebSocket *********** */
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { createChat } from './controller-logic/socket-logic.js';
-import { Message } from './db/classes/Message.js';
+export const PORT = process.env.PORT || 3000;
+export const serverDOMAIN = `http://localhost:${PORT}`;
+export const clientDOMAIN = 'https://localhost:5173';
 const expServer = express(); //create a server instance
 const httpServer = createServer(expServer);
 const io = new Server(httpServer, {
@@ -50,29 +48,7 @@ io.on("connection", (socket) => {
         socket.join(chatId);
     });
     //recieve
-    socket.on('chat', async (userId, chatId, messageText) => {
-        console.log('* chat called *');
-        await db.read();
-        //find the current user
-        var user = db.data?.users.find((u) => u.id == userId);
-        //find their copy of the chat - to access chat subscribers
-        var chat = user?.chats.find((chat) => chat.id == chatId);
-        var m;
-        //for each subscriber...
-        chat?.subscriberIds.forEach(async (subscriberId) => {
-            //find user
-            user = db.data?.users.find((u) => u.id == Number(subscriberId));
-            //find their copy of the chat
-            var chat = user?.chats.find((chat) => chat.id == chatId);
-            //add message to their copy of the chat
-            m = new Message(userId, user?.username, chat?.id, messageText);
-            chat?.messages.push(m);
-            await db.write();
-        });
-        //emit
-        io.to(chatId).emit('message', m);
-        console.log(`*emitting message to chatid: ${chatId}*`);
-    });
+    socket.on('chat', async (userId, chatId, messageText) => handleChatMessage(io, userId, chatId, messageText));
     //runs when the page disconnects
     socket.on("disconnecting", () => {
         socket.rooms.forEach(room => {

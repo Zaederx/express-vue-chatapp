@@ -7,10 +7,13 @@ import { Socket } from "engine.io"
 import { Message } from "../db/classes/Message.js"
 
 /**
- * Creates chats and adds them to users.
+ * Creates chats and adds them to users if no
+ * of the same id already exists.
+ * If a chat already exists of the same id,
+ * is should return the existing chat.
  * @param userId user id of current user
  * @param selectedFriends selectedFriends
- * @param chatId chatId
+ * @param chatId chatId (if searching for and existing)
  */
 export async function createChat(userId:number, selectedFriends:Friend[], chatId?:string):Promise<Chat>
 {
@@ -26,7 +29,8 @@ export async function createChat(userId:number, selectedFriends:Friend[], chatId
     //check if chat with same id exists
     var chat = user?.chats.find((chat) => chat.id == chatId) as Chat;
     //check if user already has this chat. If not / it is undefined...
-    if (user != undefined && chat == undefined) {
+    if (user != undefined && chat == undefined) 
+    {
         //create a new chat room in data with chatId
         chat = new Chat(chatId);
         //add chat to user
@@ -55,7 +59,8 @@ export async function createChat(userId:number, selectedFriends:Friend[], chatId
                 
             });
         }
-        else if (user == undefined) {
+        else if (user == undefined) 
+        {
             console.log('* USER IS UNDEFINED! *')
         }
         await db.write();
@@ -130,3 +135,4 @@ export async function createChat(userId:number, selectedFriends:Friend[], chatId
         io.to(chatId).emit('message', m)
         console.log(`*emitting message to chatid: ${chatId}*`)
  }
+

@@ -1,10 +1,14 @@
+import { Low, JSONFile } from 'lowdb'
+import path from "path";
 import { RESERVED_EVENTS } from 'socket.io/dist/socket'
 import { Chat } from '../db/classes/Chat'
+import { Data } from '../db/classes/Data'
 import { Message } from '../db/classes/Message'
 import { User } from '../db/classes/User.js'
-import db from '../db/db-setup.js'
+// import db from '../db/db-setup.js'
 import { compareTwoStrings } from '../helpers/simplystring.js'
 import { readSessionIdFromReq } from './login-logic.js'
+
 
 
 
@@ -17,12 +21,14 @@ import { readSessionIdFromReq } from './login-logic.js'
  * 
  * @param userId id of the user you want to find chats for
  */
-export function fetchChats(userId:any)
+export async function fetchChats(userId:any, dbPath:string='db.json')
 {
+    var db = produceDb(dbPath)
+    await db.read()
     //search for user with that id
     const user = db.data?.users.find((u) => u.id == userId) as User
     //if one exists return their chats list
-    if (user != null || user != undefined)
+    if (user != null && user != undefined)
     {
         return user.chats
     }
@@ -35,20 +41,22 @@ export function fetchChats(userId:any)
  * the requests session cookie.
  * @param req 
  */
-export function fetchUserId(req:any)
+export async function fetchUserId(sessionId:string, dbPath:string)
 {
+    var db = produceDb(dbPath)
     console.log('*** fetchUserId called ***')
-    var sessionId = readSessionIdFromReq(req)
     console.log(`fetchUserId function -  sessionId:${sessionId}`)
     var user:User
     if(sessionId) 
     {
+        await db.read()
        user = db.data?.users.find((u) => u.sessionId == sessionId) as User
        if (user != undefined) 
        {
         console.log('session id\'s match')
         return user.id
        }
+       return false
     }
     else 
     {
@@ -61,9 +69,9 @@ export function fetchUserId(req:any)
  * @param userId id of the current user
  * @param friendName name of the friend they want to find
  */
-export async function fetchFriendNames(userId: string, friendName: string)
+export async function fetchFriendNames(userId: string, friendName:string, dbPath: string)
 {
-    var friends:User[] = await getFriendsWithSimilarName(userId, friendName)
+    var friends:User[] = await getFriendsWithSimilarName(userId, friendName, dbPath)
     var friendsHTML:string = friendsToHTML(friends)
     return friendsHTML
 }
@@ -73,8 +81,9 @@ export async function fetchFriendNames(userId: string, friendName: string)
  * @param userId user id of current user who's freinds you want to search through
  * @param friendName name of friend they want to find
  */
-export async function getFriendsWithSimilarName(userId:any, friendName:string)
+export async function getFriendsWithSimilarName(userId:any, friendName:string, dbPath:string)
 {
+    var db = produceDb(dbPath)
     await db.read()
     //get user
     var user:User = db.data?.users.filter((u) => u.id == userId)[0] as User
@@ -114,10 +123,10 @@ function friendsToHTML(friends:User[]):string
  * @param req 
  * @param res 
  */
-export async function fetchUsersNames(req:any,res:any) {
+export async function fetchUsersNames(req:any,res:any, dbPath:string) {
     //get name from request params
     var name = req.params.name
-    var namesArr:User[] = await getUsersNamesListFromDB(name)
+    var namesArr:User[] = await getUsersNamesListFromDB(name,dbPath)
     var namesHTML = ''
     namesArr.forEach((u)=> {
         namesHTML += (`<a data-id="${u.id}"><div>${u.name}</div></a>\n`) as string
@@ -132,7 +141,9 @@ export async function fetchUsersNames(req:any,res:any) {
  * @param req 
  * @param res 
  */
-export async function getUsersNamesListFromDB(name:string) {
+export async function getUsersNamesListFromDB(name:string, dbPath:string) {
+
+    var db = produceDb(dbPath)
     //read from db
     await db.read()
     //find user from users database where the name is similar over 50%
@@ -156,8 +167,10 @@ export async function getUsersNamesListFromDB(name:string) {
  * @param chatId chat id of the user's chat
  * @param userId id of the user
  */
-export async function fetchMessagesFromDb(chatId:string, userId:string):Promise<Message[]>
+export async function fetchMessagesFromDb(chatId:string, userId:string, dbPath:string):Promise<Message[]>
 {
+
+    var db = produceDb(dbPath)
     await db.read()
     //find user in db
     var user = db.data?.users.find(u => u.id == Number(userId)) as User
@@ -170,6 +183,15 @@ export async function fetchMessagesFromDb(chatId:string, userId:string):Promise<
     }
     //return chat messages
     return chatMessages
+}
+
+function produceDb(dbPath:string)
+{
+    //use json file for storage
+    const file = path.join(dbPath);
+    const adapter = new JSONFile<Data>(file);
+    var db = new Low(adapter)
+    return db
 }
 
 export function chatMessagesToHTML(messages:Message[], userId:string) 

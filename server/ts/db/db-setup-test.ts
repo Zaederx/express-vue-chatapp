@@ -12,7 +12,7 @@ var db = new Low(adapter)
 
 
 
-
+await db.read()
 // setup()
 async function setup() {
 //Read data from Json file, this will set the db.content

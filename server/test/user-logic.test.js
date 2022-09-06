@@ -59,43 +59,52 @@ describe('Testing Fetch Chats', ()=>
     })
 })
 
-
+const dbPath = 'db-test.json'
 describe('Testing Fetch Chats', () => 
 {
-    describe('fetchUserId(sessionId:validId)', () => 
+    describe('fetchUserId(sessionId=validId)', () => 
     {
 
         it('should return a userId', async () => 
         {
             var validId = '98b44a86-28b9-4cc1-a9a2-622399e18e70'
-            var sessionId = await fetchUserId(validId,db)
-
-            if (sessionId != false) 
+            var userId = await fetchUserId(validId,dbPath)
+            console.log(`userId:${userId}`)
+            //if userId contains what looks like an id - return true
+            if (typeof userId == Number && userId != false && userId != undefined)
             {
                 return true
             }
-            else if (sessionId == false) 
+            //if it looks like there's no id - throw an error
+            else if (userId == false || userId == undefined || userId == '') 
             {
                 throw new Error('No user id returned when one should be.')
             }
         })
     })
 
-    describe('fetchUserId(sessionId:invalidId)', () => 
+    describe('fetchUserId(sessionId=invalidId)', () => 
     {
         it('should return false', async () => 
         {
-            var validId = '98b44a86-28b9-4cc1-a9a2-622399e18e70'
-            var sessionId = ''
-            sessionId = await fetchUserId(validId,db)
-
-            if (sessionId != false) 
+            var pass = true
+            var validId = 'InValidId'
+            var userId = ''
+            userId = await fetchUserId(validId,dbPath)
+            console.log(`userId:${userId}`)
+            if (userId == undefined)
             {
-                return true
+                throw new Error('User Id is undefined when it should be false')
             }
-            else if (sessionId == false) 
+            //if it returns what looks like a user id - throw an error
+            else if (typeof userId == Number || userId != false) 
             {
-                throw new Error('No user id returned when one should be.')
+                throw new Error('User Id returned when there should not be one')
+            }
+            //if it returns a false value - return pass
+            else if (userId != false) 
+            {
+               return pass
             }
         })
     })

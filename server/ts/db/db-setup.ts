@@ -11,11 +11,12 @@ var db = new Low(adapter)
 
 
 
-//Read data from Json file, this will set the db.content
-await db.read();
+
 
 // setup()
 async function setup() {
+//Read data from Json file, this will set the db.content
+await db.read();
 //if file.json does not exist db.data will be null
 //Set data to default
 db.data ||= {users: []}

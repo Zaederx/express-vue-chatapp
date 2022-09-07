@@ -5,7 +5,7 @@ import { User } from "../db/classes/User.js"
 import { Chat } from "../db/classes/Chat.js"
 import { Socket } from "engine.io"
 import { Message } from "../db/classes/Message.js"
-
+import { produceDb } from "./users-logic.js"
 /**
  * Creates chats and adds them to users if no
  * of the same id already exists.
@@ -15,13 +15,14 @@ import { Message } from "../db/classes/Message.js"
  * @param selectedFriends selectedFriends
  * @param chatId chatId (if searching for and existing)
  */
-export async function createChat(userId:number, selectedFriends:Friend[], chatId?:string):Promise<Chat>
+export async function createChat(dbPath:string,userId:number, selectedFriends:Friend[], chatId?:string ):Promise<Chat>
 {
     console.log('* create-join-chat called *');
     //generate chat id
     if (chatId == '' || chatId == undefined) {
         chatId = uuidv4();
     }
+    var db = produceDb(dbPath)
     //read from db
     await db.read();
     //find user
@@ -107,9 +108,10 @@ export async function createChat(userId:number, selectedFriends:Friend[], chatId
   * @param chatId chat id of the currently selected chat
   * @param messageText the message text to be sent
   */
- export async function handleChatMessage(io:any,userId:any,chatId:any,messageText:string) 
+ export async function handleChatMessage(dbPath:string, io:any,userId:any,chatId:any,messageText:string) 
  {
     console.log('* chat called *')
+        produceDb(dbPath)
         await db.read()
         
         //find the current user

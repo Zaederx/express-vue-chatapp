@@ -21,12 +21,13 @@ import { readSessionIdFromReq } from './login-logic.js'
  * 
  * @param userId id of the user you want to find chats for
  */
-export async function fetchChats(userId:any, dbPath:string='db.json')
+export async function fetchChats(userId:any, dbPath:string)
 {
     var db = produceDb(dbPath)
     await db.read()
     //search for user with that id
     const user = db.data?.users.find((u) => u.id == userId) as User
+    console.log(`*** user:${user} ***`)
     //if one exists return their chats list
     if (user != null && user != undefined)
     {
@@ -44,6 +45,7 @@ export async function fetchChats(userId:any, dbPath:string='db.json')
 export async function fetchUserId(sessionId:string, dbPath:string)
 {
     var db = produceDb(dbPath)
+    await db.read()
     console.log('*** fetchUserId called ***')
     console.log(`fetchUserId function -  sessionId:${sessionId}`)
     var user:User
@@ -170,7 +172,7 @@ export async function getUsersNamesListFromDB(name:string, dbPath:string) {
 export async function fetchMessagesFromDb(chatId:string, userId:string, dbPath:string):Promise<Message[]>
 {
 
-    var db = produceDb(dbPath)
+    var db =  produceDb(dbPath)
     await db.read()
     //find user in db
     var user = db.data?.users.find(u => u.id == Number(userId)) as User
@@ -185,7 +187,7 @@ export async function fetchMessagesFromDb(chatId:string, userId:string, dbPath:s
     return chatMessages
 }
 
-function produceDb(dbPath:string)
+export function produceDb(dbPath:string)
 {
     //use json file for storage
     const file = path.join(dbPath);

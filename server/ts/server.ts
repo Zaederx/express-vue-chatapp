@@ -45,6 +45,17 @@ const io = new Server(httpServer, {
  httpServer.listen(PORT)
 
 
+import path from 'path';
+import {fileURLToPath} from 'url';
+
+//path to current file
+const __filename = fileURLToPath(import.meta.url);
+//path to current directory
+const __dirname = path.dirname(__filename);
+console.log('directory-name 👉️', __dirname);
+const dbPath = path.join(__dirname, '..', 'db.json');
+console.log(`dbPath = ${dbPath}`)
+
 // var userId
 io.on("connection", (socket) => {
     console.log('\n\n\n\n******** SOCKET CONNECTED ********')
@@ -56,7 +67,7 @@ io.on("connection", (socket) => {
     socket.on('create-join-chat', async (userId, selectedFriends, chatId) => 
     {
         //create chat and save them to user and friends in db
-        var chat:Chat = await createChat(userId, selectedFriends, chatId)
+        var chat:Chat = await createChat(dbPath, userId, selectedFriends, chatId)
         //if chat is present
         if (chat != undefined) 
         {
@@ -72,7 +83,7 @@ io.on("connection", (socket) => {
     })
     
     //recieve
-    socket.on('chat', async (userId,chatId,messageText) => handleChatMessage(io,userId,chatId,messageText))
+    socket.on('chat', async (userId,chatId,messageText) => handleChatMessage(dbPath,io,userId,chatId,messageText))
 
     //runs when the page disconnects
     socket.on("disconnecting", () => {
@@ -100,7 +111,7 @@ const keys = new KeyGrip(keylist)
 const upload = multer({dest: 'uploads/'});//see- //TODO //IMPORTANT https://expressjs.com/en/resources/middleware/multer.html
 const csrfProtection = csrf({
                             cookie:true,
-                            value: readTokenFromReq
+                            // value: readTokenFromReq
                         })
 
 /**
@@ -195,31 +206,35 @@ expServer.post('/logout', (req:Request<ParamsDictionary, any, any, ParsedQs, Rec
 
 //TODO - Setup chat aspects of chat app - see [link](https://www.cometchat.com/tutorials/how-to-build-a-chat-app-with-websockets-and-node-js?utm_term=&utm_campaign=UK-+React+Chat+SDK&utm_source=adwords&utm_medium=ppc&hsa_acc=7711039152&hsa_cam=17296071286&hsa_grp=146623375104&hsa_ad=615146609899&hsa_src=g&hsa_tgt=dsa-1720747545788&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gclid=EAIaIQobChMIn6zR-e7S-QIVk813Ch0CRgEIEAAYASAAEgLeJfD_BwE)
 
+
 //return first 10 users with names similar to set name
 expServer.get('/get-users/with-name/:name', (req,res) => {
-    fetchUsersNames(req,res)
+    fetchUsersNames(req,res,dbPath)
 })
 
 expServer.get('/get-friends/with-name/:name', async (req,res) => {
     console.log('******* get friends with name called *******')
-    var userId = String(fetchUserId(req))
+    var sessionId = readSessionIdFromReq(req)
+    var userId = String(await fetchUserId(sessionId,dbPath))
     console.log(`userId:${userId}`)
     var name = req.params.name
     console.log(`name:${name}`)
-    var friendsHTML = await fetchFriendNamesHTML(userId,name)
+    var friendsHTML = await fetchFriendNamesHTML(userId,name,dbPath)
     console.log(`friendsHTML:${friendsHTML}`)
     res.send(friendsHTML)
 })
 
-expServer.get('/userId', (req,res) => {
-    var userId = fetchUserId(req)
+expServer.get('/userId', async (req,res) => {
+    console.log(`** GET /userId called **`)
+    var sessionId = readSessionIdFromReq(req)
+    var userId = await fetchUserId(sessionId,dbPath)
     res.send({userId:userId})
 })
 
-expServer.get('/chats/:userId', (req,res) => {
+expServer.get('/chats/:userId', async (req,res) => {
     console.log('\n *** get /chats/:userId called ***')
     var userId = req.params.userId
-    var chats:Chat[] = fetchChats(userId)
+    var chats:Chat[] = await fetchChats(userId,dbPath)
     if (chats.length > 0)
     {
         console.log('chats are present')
@@ -243,7 +258,8 @@ expServer.get('/messages/:chatId/:userId', async (req,res) =>
         userId = readSessionIdFromReq(req)
     }
     //fetch messages from db
-    var messages = await fetchMessagesFromDb(chatId, userId)
+    db.read()
+    var messages = await fetchMessagesFromDb(chatId, userId, dbPath)
     var messagesHTML = chatMessagesToHTML(messages, userId)
 
     res.send(messagesHTML)

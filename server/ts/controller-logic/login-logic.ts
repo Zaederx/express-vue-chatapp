@@ -1,6 +1,7 @@
 //bcryptjs
 import bcryptjs from 'bcryptjs'
 //express
+//@ts-ignore
 import { Request, ParamsDictionary, Response } from 'express-serve-static-core'
 import { ParsedQs } from 'qs'
 //uuidv4
@@ -13,7 +14,15 @@ import { LoginResponse } from "../helpers/response/login-response.js"
 import { serverDOMAIN, clientDOMAIN } from '../server.js'
 import { Cookie } from '../helpers/cookie.js'
 
-
+/**
+ * Logs the user in via their session cookie.
+ * First retreives session id from session cookie found in
+ * the request object. It then passes this to the
+ * sessionCookieLogin function.
+ * 
+ * @param req Express request object
+ * @param res Express response object
+ */
 export function loginViaSessionCookie(req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,res: Response<any, Record<string, any>, number>) {
     var sessionId = readSessionIdFromReq(req)
     console.log(`sessionId:${sessionId}`)
@@ -28,7 +37,11 @@ export function loginViaSessionCookie(req:Request<ParamsDictionary, any, any, Pa
 }
 
 
-
+/**
+ * Reads the session id from the Express request object.
+ * 
+ * @param req 
+ */
 export function readSessionIdFromReq(req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>):string
 {
     console.log('*** readSessionIdFromReq called ***')
@@ -53,6 +66,13 @@ export function readSessionIdFromReq(req:Request<ParamsDictionary, any, any, Par
     return 'no session cookie/id';
 }
 
+
+/**
+ * Logins user in via session Id
+ * @param req Express request object
+ * @param res Express response object
+ * @param sessionId sessionId
+ */
 export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,res: Response<any, Record<string, any>, number>, sessionId:string)
 {
     console.log(`\n\n **** calling sessionCookieLogin function ***`)
@@ -98,7 +118,9 @@ export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any,
 
 /**
  * Logic for the login controller method
- * in the server response class
+ * in the server response class.
+ * Logs user in via email and password found in
+ * the request json body.
  * @param req express request object
  * @param res express response object
  */
@@ -184,7 +206,8 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
 }
 
 /**
- * Stores the session id on a user
+ * Stores the session id on a user, and stores this 
+ * change in the database.
  * Assumes db.read() is already called on Low db object
  * @param user user to have the sessions stored on
  * @param sessionId sessionId to be stored with user

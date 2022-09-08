@@ -23,7 +23,7 @@ import  db  from './db/db-setup.js'
 import { Friend } from './db/classes/Friend.js'
 import { Chat } from './db/classes/Chat.js';
 import { User } from './db/classes/User';
-import { createChat, handleChatMessage } from './controller-logic/socket-logic.js'
+import { createChat, handleChatMessage, leaveChat } from './controller-logic/socket-logic.js'
 import { Message } from './db/classes/Message.js';
 
 //********** WebSocket *********** */
@@ -44,8 +44,9 @@ const io = new Server(httpServer, {
 
  httpServer.listen(PORT)
 
-
+//@ts-ignore
 import path from 'path';
+//@ts-ignore
 import {fileURLToPath} from 'url';
 
 //path to current file
@@ -56,14 +57,14 @@ console.log('directory-name 👉️', __dirname);
 const dbPath = path.join(__dirname, '..', 'db.json');
 console.log(`dbPath = ${dbPath}`)
 
-// var userId
+
+ //on - recieves messages
+//emit - sends messages
+// io.to("some room").emit("some event", () => {console.log(message)});
+// or socket.to("some room").emit("some event");
 io.on("connection", (socket) => {
     console.log('\n\n\n\n******** SOCKET CONNECTED ********')
 
-    //on - recieves messages
-    //emit - sends messages
-    // io.to("some room").emit("some event", () => {console.log(message)});
-    // or socket.to("some room").emit("some event");
     socket.on('create-join-chat', async (userId, selectedFriends, chatId) => 
     {
         //create chat and save them to user and friends in db
@@ -76,18 +77,24 @@ io.on("connection", (socket) => {
         }
         
     })
+    
+    //recieve
+    socket.on('chat', async (userId,chatId,messageText) => handleChatMessage(dbPath,io,userId,chatId,messageText))
 
     socket.on('join-chat', (chatId) => {
         console.log(`joining chat id:${chatId}. socket.join(${chatId})`)
         socket.join(chatId)
     })
-    
-    //recieve
-    socket.on('chat', async (userId,chatId,messageText) => handleChatMessage(dbPath,io,userId,chatId,messageText))
+
+    socket.on('leave-chat', async (userId, chatId) => 
+    {
+        console.log('leaving chat')
+        leaveChat(dbPath,io,userId,chatId)
+    })
 
     //runs when the page disconnects
-    socket.on("disconnecting", () => {
-
+    socket.on("disconnecting", () => 
+    {
         socket.rooms.forEach(room => 
         {
             console.log(`socket.room (chat): ${room}, was disconnected`);
@@ -176,7 +183,7 @@ expServer.get('/csrf-token', (req:Request<ParamsDictionary, any, any, ParsedQs, 
 })
 
 
-expServer.get('/', (req, res) => 
+expServer.get('/', (req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string,any>>) => 
 {
     res.send('Hello World')
 })

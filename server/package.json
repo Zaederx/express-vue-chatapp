@@ -5,7 +5,7 @@
   "main": "js/server.js",
   "type": "module",
   "scripts": {
-    "start": "tsc; node js/server.js",
+    "start": "tsc; mocha; node js/server.js",
     "test-ts": "ts-node ./test.ts",
     "server-reload": "tsc; nodemon js/server.js",
     "server": "node server.js",

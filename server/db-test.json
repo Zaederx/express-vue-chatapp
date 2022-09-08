@@ -16,77 +16,28 @@
       ],
       "chats": [
         {
-          "id": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
+          "id": "9d4b8a70-5ddc-4a90-aaac-3acd10596187",
           "name": "Chat1",
           "messages": [
             {
               "senderId": 0,
               "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "send message"
+              "receiverId": "9d4b8a70-5ddc-4a90-aaac-3acd10596187",
+              "message": "hello"
             },
             {
               "senderId": 1,
               "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "send"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "message"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "message"
-            },
-            {
-              "senderId": 1,
-              "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "sned something"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "gjgjhgghjgj"
-            },
-            {
-              "senderId": 1,
-              "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "kljhhkjhkjhkj"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "wow this is kinda cool"
-            },
-            {
-              "senderId": 1,
-              "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "yeah I know right"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username0",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "cool"
+              "receiverId": "9d4b8a70-5ddc-4a90-aaac-3acd10596187",
+              "message": "howdy"
             }
           ],
           "subscriberIds": [
-            "0",
-            "1"
+            "0"
           ]
         },
         {
-          "id": "657fb855-8d96-42f6-8adc-b7801c118197",
+          "id": "570f6849-b48e-4eeb-bb2a-89c7d376ff09",
           "name": "Chat1",
           "messages": [],
           "subscriberIds": [
@@ -94,23 +45,7 @@
           ]
         },
         {
-          "id": "f44294c2-383c-410b-89db-a205b189542c",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "005a5fa6-9a03-4683-aed0-ee3d83ec1c53",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "5fbb4778-7a41-4466-9924-d1060ddccb79",
+          "id": "45732847-c4a2-49cf-a82e-3b1cc0f9d14c",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
@@ -118,7 +53,7 @@
           ]
         },
         {
-          "id": "941c5f06-2f6c-4730-a26d-47e921b5bf81",
+          "id": "4be64f1e-fffc-4785-b23f-1242abe2193e",
           "name": "Chat1",
           "messages": [],
           "subscriberIds": [
@@ -126,7 +61,7 @@
           ]
         },
         {
-          "id": "ec4a0758-7f9c-4498-bd95-3d75547aafd4",
+          "id": "cb85b385-c623-4b7a-8834-f2e9339fdad1",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
@@ -134,487 +69,25 @@
           ]
         },
         {
-          "id": "f69c4398-568f-4edc-b768-a39faaeb78bb",
+          "id": "d93e129a-130a-4ff4-b81b-640e161cdbb0",
           "name": "Chat1",
           "messages": [],
           "subscriberIds": [
+            "1",
             "0"
           ]
         },
         {
-          "id": "4e3c0f13-1ef3-46fd-b8c1-6e5eb764dc7f",
+          "id": "7d7a4b52-5c80-4db6-abb8-1dd93a79eecc",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "dc3c7ca6-98c7-4388-a96a-1a3ddd4e0774",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "76464625-26a3-4a26-9d75-b3e9351b49a4",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "7fd34abd-5c89-4b43-aa7e-ce114c452e4e",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "4ce8269e-f9fc-4a23-ae3b-76cb6528fff9",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "d436a448-7e17-4397-b2eb-8e6b726f8b50",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "c0636afb-2896-47b0-a6b1-6513ae0801db",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "e38530a1-709a-44ac-b6f4-fffb7b40ef56",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "bc9091cb-0a2a-4663-ae48-2856dcce8884",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "070b0621-0b80-4c0c-a7e8-0a069d811042",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "00c98bc6-ec74-47a6-9b64-1bf0e62a12fb",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "6c9e63a3-836e-4290-a55a-f6a3c6ca1e5d",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "3040a143-4a4d-4a7f-a7ac-b951c3f2cb2c",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "49a0f132-3eef-438a-b47a-1e3621cbc319",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "add03c90-2f48-48df-bab1-67a5f3c0ae0b",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "af013eb3-5b93-4cb8-9e65-0c2bd1322812",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "e8a66469-1291-4ea9-95cb-70bce551862b",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "aa944cb8-20fc-4c58-82f8-69411e18c325",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "625498fe-62a0-4d25-bee5-2d7224860dba",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "edb9d172-a8c8-41b0-8454-728ab2415885",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "e7fe7ed8-927f-4009-96e8-4e342799ed5e",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "c1a0bee3-6297-4515-aba3-0b72fa490501",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "c9c47153-4597-4ee6-bd41-372dd8aa4ca8",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "a7755193-8a4f-406b-99bb-c412d7c296e2",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "c1fdaf65-0a11-45b9-b462-a3902e1da4bc",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "e56322ea-322f-4cb5-b418-bd8b7ceef79b",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "cd9e8fce-07ad-46fa-98a6-b955234e9c43",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "96429677-6eb9-4dc7-a486-a73469882124",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "6ba5bf42-5e18-40c2-9449-0528cb59a58b",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "59a8f3b6-37d4-4692-956a-f8a505d33d2d",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "d188e813-313b-4fe9-96d6-bb0ad6492d13",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "01e52552-348b-4a62-95d6-3259bef6d761",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "34b65593-498c-4191-8a1a-51cdcbd5fcd2",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "8778e674-f95f-4ba3-b8ba-4de967d9dc0b",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "a21bec80-02dd-4a14-831d-25d3d1d3d356",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "4c85eb9d-924e-4225-8ab9-e800856dfc05",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "9638848f-1dbe-4cb0-b1c4-2e264138d972",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "a6b119bb-cc57-4b19-9fb4-f9357e743821",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "267040e3-092e-4e54-99d1-fabcd4b794e1",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "e3612c8f-9465-4648-9732-3c8ac182b2ab",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "b155cb1b-c987-4822-9d46-b2b7ac6e6101",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "969f21f2-0847-4b64-9bde-6958f4446211",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "4ab14d20-f366-4d87-b47d-9fc89edc62c0",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "89b05e20-10e3-473a-af3b-c0fb3deb9164",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "19b1f7ff-09c5-43a8-84c0-dd74b903c87f",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "7080370f-4718-44ae-bdb9-236075c7b04b",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "214d4162-0c33-4785-8784-74b4621c80be",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "8d0d2613-2327-4635-98f6-40532bab9991",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "4802f115-1658-43e9-a5e8-81778e4b1021",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "9a08e1fa-2862-4282-843d-75f69246c5b7",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "4c7bf05e-f8f7-4ed8-b40b-d05f74b53fae",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "6eb367b2-b80f-4935-91c2-e2a3425f0160",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "2da136d6-fc01-452d-bf13-48b0b582c281",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "5fe49619-9b1d-4e14-91bb-b37f05796b2e",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "bac3fa66-7c3f-4c7d-aa6d-ea5c1ade760a",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "239be977-8207-452d-9a3c-78901ed38959",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "b717f03f-8f4a-429b-92e4-7c784aa48866",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "248e9684-54a7-4862-8046-b3871e90e734",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0"
-          ]
-        },
-        {
-          "id": "5598bfa8-ff98-4976-8b0a-c926c42edb72",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
+            "1",
             "0"
           ]
         }
       ],
-      "sessionId": "cf65de3e-22c7-434b-a2da-e9adccbf2c7e"
+      "sessionId": "555b975a-39e2-4b9f-b62a-7da7d5b8360a"
     },
     {
       "id": 1,
@@ -627,68 +100,20 @@
       ],
       "chats": [
         {
-          "id": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
+          "id": "9d4b8a70-5ddc-4a90-aaac-3acd10596187",
           "name": "Chat1",
           "messages": [
             {
               "senderId": 0,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "send message"
+              "senderUsername": "username0",
+              "receiverId": "9d4b8a70-5ddc-4a90-aaac-3acd10596187",
+              "message": "hello"
             },
             {
               "senderId": 1,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "send"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "message"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "message"
-            },
-            {
-              "senderId": 1,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "sned something"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "gjgjhgghjgj"
-            },
-            {
-              "senderId": 1,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "kljhhkjhkjhkj"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "wow this is kinda cool"
-            },
-            {
-              "senderId": 1,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "yeah I know right"
-            },
-            {
-              "senderId": 0,
-              "senderUsername": "username1",
-              "receiverId": "9ecca7f0-683f-4ae4-8981-cb2d8692fdd7",
-              "message": "cool"
+              "senderUsername": "username0",
+              "receiverId": "9d4b8a70-5ddc-4a90-aaac-3acd10596187",
+              "message": "howdy"
             }
           ],
           "subscriberIds": [
@@ -697,7 +122,7 @@
           ]
         },
         {
-          "id": "657fb855-8d96-42f6-8adc-b7801c118197",
+          "id": "570f6849-b48e-4eeb-bb2a-89c7d376ff09",
           "name": "Chat1",
           "messages": [],
           "subscriberIds": [
@@ -706,25 +131,7 @@
           ]
         },
         {
-          "id": "f44294c2-383c-410b-89db-a205b189542c",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "005a5fa6-9a03-4683-aed0-ee3d83ec1c53",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "5fbb4778-7a41-4466-9924-d1060ddccb79",
+          "id": "45732847-c4a2-49cf-a82e-3b1cc0f9d14c",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
@@ -733,7 +140,7 @@
           ]
         },
         {
-          "id": "941c5f06-2f6c-4730-a26d-47e921b5bf81",
+          "id": "4be64f1e-fffc-4785-b23f-1242abe2193e",
           "name": "Chat1",
           "messages": [],
           "subscriberIds": [
@@ -742,7 +149,7 @@
           ]
         },
         {
-          "id": "ec4a0758-7f9c-4498-bd95-3d75547aafd4",
+          "id": "cb85b385-c623-4b7a-8834-f2e9339fdad1",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
@@ -751,547 +158,79 @@
           ]
         },
         {
-          "id": "f69c4398-568f-4edc-b768-a39faaeb78bb",
+          "id": "93a1abe6-b7a0-4f09-a344-8ac7be19510a",
           "name": "Chat1",
           "messages": [],
           "subscriberIds": [
-            "0",
-            "1"
+            "1",
+            "0"
           ]
         },
         {
-          "id": "4e3c0f13-1ef3-46fd-b8c1-6e5eb764dc7f",
+          "id": "5b73325a-dab9-4532-95d5-5c0465e31e41",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
-            "0",
-            "1"
+            "1",
+            "0"
           ]
         },
         {
-          "id": "dc3c7ca6-98c7-4388-a96a-1a3ddd4e0774",
+          "id": "8ed6dad3-6ce5-4013-81f5-7bff9a8c2d4d",
           "name": "Chat1",
           "messages": [],
           "subscriberIds": [
-            "0",
-            "1"
+            "1",
+            "0"
           ]
         },
         {
-          "id": "76464625-26a3-4a26-9d75-b3e9351b49a4",
+          "id": "f0f8c6d3-5ea9-4cc2-bd59-b2dc999a7883",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
-            "0",
-            "1"
+            "1",
+            "0"
           ]
         },
         {
-          "id": "7fd34abd-5c89-4b43-aa7e-ce114c452e4e",
+          "id": "e0072e0b-03aa-4f7c-9745-26d585ab5326",
           "name": "Chat1",
           "messages": [],
           "subscriberIds": [
-            "0",
-            "1"
+            "1",
+            "0"
           ]
         },
         {
-          "id": "4ce8269e-f9fc-4a23-ae3b-76cb6528fff9",
+          "id": "227b8c55-677a-4174-8f3b-2de6422bf2e0",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
-            "0",
-            "1"
+            "1",
+            "0"
           ]
         },
         {
-          "id": "d436a448-7e17-4397-b2eb-8e6b726f8b50",
+          "id": "d93e129a-130a-4ff4-b81b-640e161cdbb0",
           "name": "Chat1",
           "messages": [],
           "subscriberIds": [
-            "0",
-            "1"
+            "1",
+            "0"
           ]
         },
         {
-          "id": "c0636afb-2896-47b0-a6b1-6513ae0801db",
+          "id": "7d7a4b52-5c80-4db6-abb8-1dd93a79eecc",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "e38530a1-709a-44ac-b6f4-fffb7b40ef56",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "bc9091cb-0a2a-4663-ae48-2856dcce8884",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "070b0621-0b80-4c0c-a7e8-0a069d811042",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "00c98bc6-ec74-47a6-9b64-1bf0e62a12fb",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "6c9e63a3-836e-4290-a55a-f6a3c6ca1e5d",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "3040a143-4a4d-4a7f-a7ac-b951c3f2cb2c",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "49a0f132-3eef-438a-b47a-1e3621cbc319",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "add03c90-2f48-48df-bab1-67a5f3c0ae0b",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "af013eb3-5b93-4cb8-9e65-0c2bd1322812",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "e8a66469-1291-4ea9-95cb-70bce551862b",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "aa944cb8-20fc-4c58-82f8-69411e18c325",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "625498fe-62a0-4d25-bee5-2d7224860dba",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "edb9d172-a8c8-41b0-8454-728ab2415885",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "e7fe7ed8-927f-4009-96e8-4e342799ed5e",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "c1a0bee3-6297-4515-aba3-0b72fa490501",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "c9c47153-4597-4ee6-bd41-372dd8aa4ca8",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "a7755193-8a4f-406b-99bb-c412d7c296e2",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "c1fdaf65-0a11-45b9-b462-a3902e1da4bc",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "e56322ea-322f-4cb5-b418-bd8b7ceef79b",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "cd9e8fce-07ad-46fa-98a6-b955234e9c43",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "96429677-6eb9-4dc7-a486-a73469882124",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "6ba5bf42-5e18-40c2-9449-0528cb59a58b",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "59a8f3b6-37d4-4692-956a-f8a505d33d2d",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "d188e813-313b-4fe9-96d6-bb0ad6492d13",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "01e52552-348b-4a62-95d6-3259bef6d761",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "34b65593-498c-4191-8a1a-51cdcbd5fcd2",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "8778e674-f95f-4ba3-b8ba-4de967d9dc0b",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "a21bec80-02dd-4a14-831d-25d3d1d3d356",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "4c85eb9d-924e-4225-8ab9-e800856dfc05",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "9638848f-1dbe-4cb0-b1c4-2e264138d972",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "a6b119bb-cc57-4b19-9fb4-f9357e743821",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "267040e3-092e-4e54-99d1-fabcd4b794e1",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "e3612c8f-9465-4648-9732-3c8ac182b2ab",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "b155cb1b-c987-4822-9d46-b2b7ac6e6101",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "969f21f2-0847-4b64-9bde-6958f4446211",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "4ab14d20-f366-4d87-b47d-9fc89edc62c0",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "89b05e20-10e3-473a-af3b-c0fb3deb9164",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "19b1f7ff-09c5-43a8-84c0-dd74b903c87f",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "7080370f-4718-44ae-bdb9-236075c7b04b",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "214d4162-0c33-4785-8784-74b4621c80be",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "8d0d2613-2327-4635-98f6-40532bab9991",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "4802f115-1658-43e9-a5e8-81778e4b1021",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "9a08e1fa-2862-4282-843d-75f69246c5b7",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "4c7bf05e-f8f7-4ed8-b40b-d05f74b53fae",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "6eb367b2-b80f-4935-91c2-e2a3425f0160",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "2da136d6-fc01-452d-bf13-48b0b582c281",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "5fe49619-9b1d-4e14-91bb-b37f05796b2e",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "bac3fa66-7c3f-4c7d-aa6d-ea5c1ade760a",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "239be977-8207-452d-9a3c-78901ed38959",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "b717f03f-8f4a-429b-92e4-7c784aa48866",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "248e9684-54a7-4862-8046-b3871e90e734",
-          "name": "Chat1",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
-          ]
-        },
-        {
-          "id": "5598bfa8-ff98-4976-8b0a-c926c42edb72",
-          "name": "Chat2",
-          "messages": [],
-          "subscriberIds": [
-            "0",
-            "1"
+            "1",
+            "0"
           ]
         }
       ],
-      "sessionId": "98b44a86-28b9-4cc1-a9a2-622399e18e70"
+      "sessionId": "6c8af825-fa4c-4772-aedd-4f9f96e7ba3c"
     },
     {
       "id": 2,

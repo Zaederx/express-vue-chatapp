@@ -78,6 +78,6 @@ export class Cookie {
     }
 
     toString() {
-        return print()
+        return this.getCookieStr()
     }
 }

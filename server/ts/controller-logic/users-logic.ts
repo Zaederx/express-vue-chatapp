@@ -1,6 +1,3 @@
-import { Low, JSONFile } from 'lowdb'
-import path from "path";
-import { RESERVED_EVENTS } from 'socket.io/dist/socket'
 import { Chat } from '../db/classes/Chat'
 import { Data } from '../db/classes/Data'
 import { Message } from '../db/classes/Message'
@@ -8,9 +5,9 @@ import { User } from '../db/classes/User.js'
 // import db from '../db/db-setup.js'
 import { compareTwoStrings } from '../helpers/simplystring.js'
 import { readSessionIdFromReq } from './login-logic.js'
-
-
-
+//@ts-ignore
+import path from 'path'
+import { Low, JSONFile } from 'lowdb'
 
 
 
@@ -21,20 +18,28 @@ import { readSessionIdFromReq } from './login-logic.js'
  * 
  * @param userId id of the user you want to find chats for
  */
-export async function fetchChats(userId:any, dbPath:string)
+export async function fetchChats(userId:any, dbPath:string):Promise<Chat[]>
 {
     var db = produceDb(dbPath)
     await db.read()
-    //search for user with that id
-    const user = db.data?.users.find((u) => u.id == userId) as User
-    console.log(`*** user:${user} ***`)
-    //if one exists return their chats list
-    if (user != null && user != undefined)
+    try 
     {
-        return user.chats
+        //search for user with that id
+        const user = db.data?.users.find((u) => u.id == userId) as User
+        console.log(`*** user:${user} ***`)
+        //if one exists return their chats list
+        if (user != null && user != undefined)
+        {
+            return user.chats
+        }
+        //otherwise..
+        return []//empty list
     }
-    //otherwise..
-    return []//empty list
+    catch(e)
+    {
+        throw new Error('Problem fetching Chats')
+    }
+    
 }
 
 /**
@@ -88,14 +93,14 @@ export async function getFriendsWithSimilarName(userId:any, friendName:string, d
     var db = produceDb(dbPath)
     await db.read()
     //get user
-    var user:User = db.data?.users.filter((u) => u.id == userId)[0] as User
+    var user:User = db.data?.users.filter((u:User) => u.id == userId)[0] as User
     var friends:User[] = []
     var friendsWithSimilarNames:User[] = []
     if (user != undefined)
     {
         //get users friends
         user.friendIds.forEach((friendId) => {
-            var u = db.data?.users.find(u => u.id == friendId) as User
+            var u = db.data?.users.find((u:User) => u.id == friendId) as User
             friends.push(u)
         })
         //filter list to get up to 10 friends with similar names to var 'friendName'
@@ -123,7 +128,8 @@ function friendsToHTML(friends:User[]):string
  * Returns a json list of users who's names
  * match the request paramerter 'name'
  * @param req 
- * @param res 
+ * @param res
+ * @param dbPath path to the dbString
  */
 export async function fetchUsersNames(req:any,res:any, dbPath:string) {
     //get name from request params
@@ -175,7 +181,7 @@ export async function fetchMessagesFromDb(chatId:string, userId:string, dbPath:s
     var db =  produceDb(dbPath)
     await db.read()
     //find user in db
-    var user = db.data?.users.find(u => u.id == Number(userId)) as User
+    var user = db.data?.users.find((u:User) => u.id == Number(userId)) as User
     //find chat in list of user chats
     var chatMessages:Message[] = []
     if (user != undefined && user.chats.length > 0)

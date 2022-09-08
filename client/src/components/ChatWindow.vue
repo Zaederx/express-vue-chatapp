@@ -79,8 +79,11 @@ console.log('**** ChatWindow Setup Script called ****');
                 transports: ['websocket'],
                 autoConnect: true //default
             });
+    socket.on('refresh-chats', () => {
+        loadChats(socketVars.userId)
+    })
 
-  socket.on('message', (m:Message) => 
+    socket.on('message', (m:Message) => 
     {
         console.log('socket.on - message called')
         messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
@@ -113,6 +116,13 @@ console.log('**** ChatWindow Setup Script called ****');
     return messagesHTML
 }
 
+
+async function leaveChat()
+{
+    console.log('button leave chat clicked')
+    var {userId, chatId} = socketVars
+    socket.emit('leave-chat', userId, chatId)
+}
   /**
    * Sends a message to the server through web socket.
    * Also reloads messages can clears message text input span.
@@ -529,6 +539,7 @@ async function createJoinChat()
     width: 109px;
     display:block;
     text-align:center;
+    cursor: pointer;
 }
 .btn-leave-chat:hover
 {

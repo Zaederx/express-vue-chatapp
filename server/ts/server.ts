@@ -1,48 +1,40 @@
 //******** SECTION Imports ******* */
 
-//node imports
-import express from 'express';
-import bodyParser from 'body-parser';
-//@ts-ignore
-import multer from 'multer';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
-import csrf from 'csurf'
-import $ from 'jquery'
-import KeyGrip from 'keygrip'
-import { Request, ParamsDictionary, Response } from 'express-serve-static-core'
-import { ParsedQs } from 'qs'
 //project imports
 import { loginLogic as emailPasswordLogin, loginViaSessionCookie, readSessionIdFromReq, sessionCookieLogin } from './controller-logic/login-logic.js';
-import { Cookie } from './helpers/cookie.js';
-import { getAppCookie } from './helpers/cookie-defaults.js';
-import { LoginResponse } from './helpers/response/login-response.js';
 import { fetchChats, fetchFriendNames as fetchFriendNamesHTML, fetchMessagesFromDb, fetchUserId, fetchUsersNames, chatMessagesToHTML } from './controller-logic/users-logic.js';
 import { logout } from './controller-logic/logout-logic.js';
 import  db  from './db/db-setup.js'
-import { Friend } from './db/classes/Friend.js'
 import { Chat } from './db/classes/Chat.js';
-import { User } from './db/classes/User';
 import { createChat, handleChatMessage, leaveChat } from './controller-logic/socket-logic.js'
-import { Message } from './db/classes/Message.js';
 
 //********** WebSocket *********** */
+//@ts-ignore - http is found and works fine
 import { createServer } from "http";
 import { Server } from "socket.io";
+//********** Express *********** */
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import csrf from 'csurf'
 
+//@ts-ignore - 'process' is fine
 export const PORT = process.env.PORT || 3000
 export const serverDOMAIN = `http://localhost:${PORT}`
 export const clientDOMAIN = 'https://localhost:5173'
 
 const expServer = express();//create a server instance
-const httpServer = createServer(expServer);
+const httpServer = createServer(expServer);///create http server instance
+//create socket io websocket
 const io = new Server(httpServer, {
     cors: {
         origin: '*',
     }
- });
+});
 
- httpServer.listen(PORT)
+//start http server
+httpServer.listen(PORT)
 
 //@ts-ignore
 import path from 'path';
@@ -111,11 +103,6 @@ io.on("connection", (socket) => {
 });
 
 /****************** Express Server **************** */
-
-const keylist = ['ETwA@S!72', '83HWUW', 'ygT6tT9jNbCr']
-const keys = new KeyGrip(keylist)
-
-const upload = multer({dest: 'uploads/'});//see- //TODO //IMPORTANT https://expressjs.com/en/resources/middleware/multer.html
 const csrfProtection = csrf({
                             cookie:true,
                             // value: readTokenFromReq
@@ -129,17 +116,19 @@ const csrfProtection = csrf({
  * This function specifies the one chosen location
  * @param req 
  */
-function readTokenFromReq(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) 
+function readTokenFromReq(req:any) 
 {
     return req.headers['csrf-token'] as string
 }
 // server.set('trust proxy',1)
+//@ts-ignore - works
 expServer.use(cors(
     {
         credentials:true,
         origin: clientDOMAIN
     }
 ))
+
 expServer.use(bodyParser.json());//for parsing application json
 expServer.use(bodyParser.urlencoded({ extended:true }))//for parsing application/x-www-form-urlencoded
 // server.use(multer.array());//for parsing multipart form data
@@ -147,16 +136,15 @@ expServer.use(cookieParser())//for parsing cookies
 expServer.use(csrfProtection)
 
 expServer.disable('x-powered-by')//remove defualt express header ad
-//run server
 
 
 
 
 
 
-//Provide CSRF token for session
-//should be available without authentication
 /**
+ * Provides CSRF token for the session.
+ * 
  * NOTE FROM MDN WEBDOCS: The Access-Control-Allow-Origin response header 
  * indicates whether the response can be shared with 
  * requesting code from the given origin. (whether response can be viewed)
@@ -165,7 +153,7 @@ expServer.disable('x-powered-by')//remove defualt express header ad
  *  to expose the response to the frontend JavaScript code (whether response can be interacted with)
  *  see [link](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials#examples)
  */
-expServer.get('/csrf-token', (req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => {
+expServer.get('/csrf-token', (req:any, res:any) => {
     //set access control origin
     const name = 'Access-Control-Allow-Origin'//
     const value:string = clientDOMAIN//clientDOMAIN
@@ -183,30 +171,31 @@ expServer.get('/csrf-token', (req:Request<ParamsDictionary, any, any, ParsedQs, 
 })
 
 
-expServer.get('/', (req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string,any>>) => 
+expServer.get('/', (req:any, res:any) => 
 {
     res.send('Hello World')
 })
 
-
-
-
-//TODO - ADD CONTROLLER FOR CSURF
-
-
-//TODO - add login controller
-expServer.post('/login-session-cookie', (req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string,any>>) =>
+/**
+ * Login in via session cookie
+ */
+expServer.post('/login-session-cookie', (req:any, res:any) =>
 {
     loginViaSessionCookie(req,res)
 })
 
-expServer.post('/login', (req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string,any>>) => 
+/**
+ * Login via email and password
+ */
+expServer.post('/login', (req:any, res:any) => 
 {
     emailPasswordLogin(req,res)
 })
 
-
-expServer.post('/logout', (req:Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string,any>>)=> {
+/**
+ * Logout - removes the session cookie from the browser
+ */
+expServer.post('/logout', (req:any, res:any)=> {
     logout(req,res)
 })
 
@@ -215,11 +204,14 @@ expServer.post('/logout', (req:Request<ParamsDictionary, any, any, ParsedQs, Rec
 
 
 //return first 10 users with names similar to set name
-expServer.get('/get-users/with-name/:name', (req,res) => {
+expServer.get('/get-users/with-name/:name', (req:any,res:any) => {
     fetchUsersNames(req,res,dbPath)
 })
 
-expServer.get('/get-friends/with-name/:name', async (req,res) => {
+/**
+ * Gets friends with a similiar name, from users list of friends, to the name the user gives. 
+ */
+expServer.get('/get-friends/with-name/:name', async (req:any,res:any) => {
     console.log('******* get friends with name called *******')
     var sessionId = readSessionIdFromReq(req)
     var userId = String(await fetchUserId(sessionId,dbPath))
@@ -231,14 +223,20 @@ expServer.get('/get-friends/with-name/:name', async (req,res) => {
     res.send(friendsHTML)
 })
 
-expServer.get('/userId', async (req,res) => {
+/**
+ * Gets the current user's id
+ */
+expServer.get('/userId', async (req:any,res:any) => {
     console.log(`** GET /userId called **`)
     var sessionId = readSessionIdFromReq(req)
     var userId = await fetchUserId(sessionId,dbPath)
     res.send({userId:userId})
 })
 
-expServer.get('/chats/:userId', async (req,res) => {
+/**
+ * chats get userId
+ */
+expServer.get('/chats/:userId', async (req:any,res:any) => {
     console.log('\n *** get /chats/:userId called ***')
     var userId = req.params.userId
     var chats:Chat[] = await fetchChats(userId,dbPath)
@@ -255,7 +253,10 @@ expServer.get('/chats/:userId', async (req,res) => {
     
 })
 
-expServer.get('/messages/:chatId/:userId', async (req,res) => 
+/**
+ * Fetches messages from selected user chat
+ */
+expServer.get('/messages/:chatId/:userId', async (req:any,res:any) => 
 {
     //get chatId and userId
     var chatId = req.params.chatId

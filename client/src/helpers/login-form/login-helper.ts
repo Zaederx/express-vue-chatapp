@@ -2,7 +2,7 @@ import $ from 'jquery'
 import bcryptjs from 'bcryptjs';
 import { messageToHTML } from '@/helpers/message-to-html.js';
 import type { LoginResponse } from '@/helpers/response/login-response.js';
-import { useRouter, type Router } from 'vue-router'
+import type { Router } from 'vue-router'
 import { useAuthenticationStore } from '../../stores/isAuthenticated.js';
 import type { Store } from 'pinia';
 //pinia stores
@@ -15,12 +15,11 @@ const clientDOMAIN = 'http://localhost:5173'
 /**
  * Attempts to log the user in via email and password.
  * Client recieves session cookie upon successful authentication
- * @param e user event of cliking the login button
  * @param url the url of the request to be made 
+ * @param router the vue router to be used
  */
-export function loginViaEmailPassword(e:Event, url:string='/api/login')
+export function loginViaEmailPassword(url:string='/api/login', router:Router)
 {
-    var router = useRouter()
     const authStore = useAuthenticationStore()
     
     var token = {csrfToken:''}
@@ -62,9 +61,9 @@ export function loginViaEmailPassword(e:Event, url:string='/api/login')
             {
                 //set authentication store variable as true
                 //set pinia store isAuthenticated = false
-                authStore.authenticate()
-                console.log(`authStore.setAuthenticated:${authStore.auth.isAuthenticated}`)
+
                 //send user back to home page on successful authentication
+                authStore.authenticate()
                 router.push('/user-home')
 
                 //print success message
@@ -101,6 +100,7 @@ export function loginViaEmailPassword(e:Event, url:string='/api/login')
  */
 export function loginViaSessionCookie(url:string='/api/login-session-cookie', router:Router)
 {
+    const authStore = useAuthenticationStore()
     console.log('loginViaSessionCookie called')
     var token = {csrfToken:''}
     var responseObj = {isAuthenticated:false}
@@ -116,7 +116,7 @@ export function loginViaSessionCookie(url:string='/api/login-session-cookie', ro
     var password = $("#password").val() as string
     var data = {email:email, password:password}
     // var cookie = getAppCookie(cookieName,cookieValue)
-    $.ajax({
+    return $.ajax({
         type:'POST',
         url: url,
         //accidentally sets Access-Control-Allow-Origins twice - setting it to *
@@ -137,15 +137,11 @@ export function loginViaSessionCookie(url:string='/api/login-session-cookie', ro
 		data: JSON.stringify(data),
 		success: (res:LoginResponse) => {
             const authenticated = true
+            sessionStorage.setItem('auth', JSON.stringify({isAuthenticated:res.res}))
             if(res.res == authenticated)
             {
-                // window.location.replace(res.link) - messes with Vue - use router instead
-                //set authentication store variable as true
-                //set pinia store isAuthenticated = true
-                // authStore.authenticate()
-                // console.log(`authStore.setAuthenticated:${authStore.auth.isAuthenticated}`)
-                //set authentication true
-                responseObj.isAuthenticated = true
+
+                authStore.authenticate()
                 router.push('/user-home')
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
@@ -153,10 +149,7 @@ export function loginViaSessionCookie(url:string='/api/login-session-cookie', ro
                 console.log(message)
             }
             else {
-                //set pinia store isAuthenticated = false
-                // authStore.unauthenticate()
-                //set authentication false
-                responseObj.isAuthenticated = false
+                authStore.unauthenticate()
                 console.log('Log in unsuccessful')
             }
         },
@@ -165,8 +158,7 @@ export function loginViaSessionCookie(url:string='/api/login-session-cookie', ro
             const html = messageToHTML(message)
             $('#errors').html(html)
             //set authentication false
-            responseObj.isAuthenticated = false
+            sessionStorage.setItem('auth', JSON.stringify({isAuthenticated:false}))
         }
 	})
-    return responseObj
 }

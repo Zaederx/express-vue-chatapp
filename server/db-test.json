@@ -85,6 +85,24 @@
             "1",
             "0"
           ]
+        },
+        {
+          "id": "f85d6cb0-a150-476a-b73c-5ba9d6406732",
+          "name": "Chat1",
+          "messages": [],
+          "subscriberIds": [
+            "1",
+            "0"
+          ]
+        },
+        {
+          "id": "ce73c934-5ff1-45fa-93e6-fcd293953381",
+          "name": "Chat2",
+          "messages": [],
+          "subscriberIds": [
+            "1",
+            "0"
+          ]
         }
       ],
       "sessionId": "555b975a-39e2-4b9f-b62a-7da7d5b8360a"
@@ -222,6 +240,24 @@
         },
         {
           "id": "7d7a4b52-5c80-4db6-abb8-1dd93a79eecc",
+          "name": "Chat2",
+          "messages": [],
+          "subscriberIds": [
+            "1",
+            "0"
+          ]
+        },
+        {
+          "id": "f85d6cb0-a150-476a-b73c-5ba9d6406732",
+          "name": "Chat1",
+          "messages": [],
+          "subscriberIds": [
+            "1",
+            "0"
+          ]
+        },
+        {
+          "id": "ce73c934-5ff1-45fa-93e6-fcd293953381",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [

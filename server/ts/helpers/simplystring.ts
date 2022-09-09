@@ -24,7 +24,7 @@
     
     if(print)
     {
-    console.log('editDistanceScore:',editDistanceScore)
+        console.log('editDistanceScore:',editDistanceScore)
     }
     
     return editDistanceScore

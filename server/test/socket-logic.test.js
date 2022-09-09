@@ -14,7 +14,7 @@ console.log('directory-name 👉️', __dirname);
 const dbPath = path.join(__dirname, '..','db-test.json');
 console.log(`dbPath = ${dbPath}`)
 
-describe('Socket Logic Tests', () => {
+describe('Socket Logic - Unit Tests', () => {
   // TEST createChat function
   describe('Testing createChat function', () => 
   {
@@ -75,7 +75,42 @@ describe('Socket Logic Tests', () => {
   })
 })
 
+// with { "type": "module" } in your package.json
+// import { createServer } from "http";
+// import { io as Client } from "socket.io-client";
+// import { Server } from "socket.io";
+// import { assert } from "chai";
+// describe("Socket - Direct Connection Tests", () => 
+// {
+//   let io, serverSocket, clientSocket;
 
+//   before((done) => 
+//   {
+//     const httpServer = createServer();
+//     io = new Server(httpServer);
+//     httpServer.listen(() => {
+//       const port = httpServer.address().port;
+//       clientSocket = new Client(`http://localhost:${port}`);
+//       io.on("connection", (socket) => {
+//         serverSocket = socket;
+//       });
+//       clientSocket.on("connect", done);
+//     }); 
+//   })
+
+//   after(() => {
+//     io.close();
+//     clientSocket.close();
+//   });
+
+//   dsecribe("Testing create-join-chat", async () => 
+//   {
+//     it("should return a message", () => 
+//     {
+//       clientSocket.on('test-')
+//     })
+//   })
+// })
 
 
 // // 9ecca7f0-683f-4ae4-8981-cb2d8692fdd7

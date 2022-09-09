@@ -48,6 +48,7 @@ export function readSessionIdFromReq(req:Request<ParamsDictionary, any, any, Par
     //remove empty spaces
     const matchAllSpaces:RegExp = /\s+/g//all empty spaces
     const emptyStr = ''
+    //@ts-ignore
     var cookieStr:string = req.headers.cookie?.replace(matchAllSpaces,emptyStr).trim() as string
     console.log(`cookieStr:${cookieStr}`)
     //split the string where there are separators
@@ -100,9 +101,11 @@ export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any,
         {
             //set session cookie
             var sessionCookie:Cookie = setSessionCookie(sessionId)
-            //set cookie in header
+            //set cookie in header 
+            //@ts-ignore
             res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()])
             //set authentication header
+            //@ts-ignore
             res.setHeader('Authenticated','true')
         }
         //send response
@@ -184,14 +187,17 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
                 //set/create session cookie
                 var sessionCookie:Cookie = setSessionCookie(sessionId)
                 //set session cookie in header
+                //@ts-ignore
                 res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()])
                 //set authentication header
+                //@ts-ignore
                 res.setHeader('Authenticated','true')
             }
             
             //set request access control to client domain
             const name = 'Access-Control-Allow-Origin'
             const value = clientDOMAIN
+            //@ts-ignore
             res.setHeader(name, value)
             
             //send response

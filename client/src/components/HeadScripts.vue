@@ -1,11 +1,10 @@
 <script setup lang="ts">
 
+import { loginViaSessionCookie } from '@/helpers/login-form/login-helper';
 import { onMounted } from 'vue'
 import { useRouter, type Router } from 'vue-router'
 import { useAuthenticationStore } from '../stores/isAuthenticated.js'
-
-const authStore = useAuthenticationStore()
-console.log(`authStore.isAuthenticated:${authStore.auth.isAuthenticated}`)
+import { fetchCSRFToken, setHeadTags } from '../helpers/headscript/headscript-helper.js'
 
 
 onMounted( async ()=> {
@@ -14,76 +13,40 @@ onMounted( async ()=> {
 
 //making a request for a CSRF token
 console.warn('************* HeadScript.vue script **************')
-var proxyUrl = '/api/csrf-token'
-try {
-    var response:Response = await fetch(proxyUrl,{
-                            method: 'GET',//IMPORTANT CONSIDER CHANGING IT TO POST
-                            credentials: 'include' //whether user agent should send and recieve cookies - see [link](https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials) and [link](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
-                        })
-    var data = await response.json()
-    // document.cookie = response.headers.get('Set-Cookie') as string
-    console.log(`document.cookie:${document.cookie}`)
-    console.warn('************* End of script HeadSciprt.vue **************')
-    //create meta tag with csrf token
-    const csrfToken = document.createElement('meta') as HTMLMetaElement
-    csrfToken.name = 'csrf-token'
-    csrfToken.content= data.csrfToken
-    document.head.append(csrfToken)
-} catch (error) {
-    console.warn('csrf token could not be obtained')
-}
+
+//fetches token and appends in meta tag in the header
+fetchCSRFToken()
+// set the rest of the head tags with dependencies
+setHeadTags()
 
 
-//socket.io
-        // const socket_io = document.createElement('script') as HTMLScriptElement
-        // socket_io.type = 'text/javascript'
-        // socket_io.src =  'https://cdn.socket.io/4.5.0/socket.io.min.js'
-        // socket_io.integrity = 'sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k'
-        // socket_io.crossOrigin = 'anonymous'
+//how to reference router outside of setup script
+// var router = this.$router
+//get the router and auth store
+var router = useRouter()
+console.log('window on load called')
+const proxyLoginUrl = '/api/login-session-cookie'
+await loginViaSessionCookie(proxyLoginUrl, router)
+//set value in session storage
+//set value in session storage
 
+var fiveMinutes = 60000 * 5
+const authStore = useAuthenticationStore()
+setInterval(async () => 
+{
+    console.log('double check session authentication')
+    await loginViaSessionCookie(proxyLoginUrl, router)
+    var authorised = authStore.checkAuth()
+    if (!authorised && router.currentRoute.value.meta.requiresAuth) 
+    {
+        router.push('/login')
+    }
 
-        //view router
-        const viewRouter = document.createElement('script') as HTMLScriptElement
-        viewRouter.type = 'text/javascript'
-        viewRouter.src = 'https://unpkg.com/vue-router@4'
+}, fiveMinutes)
 
-        //create popperjs script element
-        const popperjs = document.createElement('script') as HTMLScriptElement;
-        popperjs.type = 'text/javascript';
-        popperjs.src = 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js'
-        popperjs.integrity = 'sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk'
-        popperjs.crossOrigin = 'anonymous'
-
-        //create bootstrap script element
-        const bootstrapJS = document.createElement('script') as HTMLScriptElement
-        bootstrapJS.type = 'text/javascript'
-        bootstrapJS.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js'
-        bootstrapJS.integrity = 'sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK'
-        bootstrapJS.crossOrigin = 'anonymous'
-
-        //create bootstrap css link element
-        const bootstrapCSS = document.createElement('link') as HTMLLinkElement
-        bootstrapCSS.type = 'text/css'
-        bootstrapCSS.rel = 'stylesheet'
-        bootstrapCSS.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css'
-        bootstrapCSS.integrity = 'sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx'
-        bootstrapCSS.crossOrigin = 'anonymous'
-        
-        //font awesome icons
-        const fa = document.createElement('link') as HTMLLinkElement
-        fa.type = 'text/css'
-        fa.rel = 'stylesheet'
-        fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
-
-        // // <meta th:name="_csrf" th:content="${_csrf.token}"/>
-        // const csrfToken = document.createElement('meta') as HTMLMetaElement
-        // csrfToken.name = 'csrf-token'
-        // csrfToken.content="${csrf-token.token}"
-
-        //add popperjs, bootstrapJS and bootstrapCSS to head tag
-        document.head.append( popperjs, bootstrapJS, bootstrapCSS, fa)
 
 })
+
 </script>
 
 

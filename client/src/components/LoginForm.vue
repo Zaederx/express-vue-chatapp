@@ -4,12 +4,20 @@ import { useAuthenticationStore } from '@/stores/isAuthenticated';
 import { useRouter, type Router } from 'vue-router'
     var url = '/api/login'
     var router = useRouter()
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
+    const logoutSuccessful = urlParams.get('logout')
+    if (logoutSuccessful)
+    {
+        alert("Logout was successful")
+    }
 </script>
 
 
 
 
 <template>
+
     <div id="form-container" class="container form-control center">
         <form id="sign-up-form" class="form" action="#">
             <label for="email">Email</label>
@@ -26,5 +34,7 @@ import { useRouter, type Router } from 'vue-router'
 </template>
 
 <style scoped>
-@import url("../assets/form.css")
+@import url("../assets/form.css");
+
+
 </style>

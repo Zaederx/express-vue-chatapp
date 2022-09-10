@@ -1,9 +1,13 @@
 
 <script setup lang="ts">
-    const props = defineProps({
-        heading1:String,
-        heading2:String
-    })
+import { logout } from '../helpers/logout/logout.js'
+import { useRouter, type Router } from 'vue-router';
+var router = useRouter()
+const props = defineProps({
+    heading1:String,
+    heading2:String
+})
+
 </script>
 
 <template>
@@ -32,7 +36,7 @@
             <li><a to="/sign-up" class="dropdown-item" href="/user-chat">Chat</a></li>
             <li><a  class="dropdown-item" href="/user-settings">Settings</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" @click="logout(router)">Logout</a></li>
           </ul>
         </li>
         <li class="nav-item">

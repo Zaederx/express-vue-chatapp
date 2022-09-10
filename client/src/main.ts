@@ -6,6 +6,7 @@
 import App from './pages/App.vue'
 import Home from './pages/Home.vue'
 import HeadScripts from './components/HeadScripts.vue'
+import AjaxAuth from './components/AjaxAuth.vue'
 import Banner from './components/Banner.vue'
 import HomeMain from './components/HomeMain.vue'
 import SiteFooter from './components/SiteFooter.vue'
@@ -41,6 +42,7 @@ const app = createApp(App)
 //add main components globally
 app.component('Home', Home)
 .component('HeadScripts', HeadScripts)
+.component('AjaxAuth', AjaxAuth)
 .component('Banner', Banner)
 .component('HomeMain', HomeMain)
 .component('SiteFooter', SiteFooter)
@@ -65,11 +67,12 @@ app.mount('#app')
 router.beforeEach( async (to) => {
     const authStore = useAuthenticationStore()
     console.log(`router: authStore.isAuthenticated - ${authStore.auth.isAuthenticated}`)
-    if(to.meta.requiresAuth && !authStore.auth.isAuthenticated)
+    if(to.meta.requiresAuth && !(authStore.auth.isAuthenticated))
     {
         router.push('/login')
     }
-    else {
+    else 
+    {
         return true
     }
 })

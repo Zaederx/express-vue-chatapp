@@ -12,4 +12,5 @@ export function logout(req:any, res:any)
     var sessionCookie:Cookie = setSessionCookie(null)
     //set cookie in header
     res.setHeader('Set-Cookie', [sessionCookie.getCookieStr()])
+    res.send({res:true})
 }

@@ -1,5 +1,4 @@
 <template>
-    <HeadScripts></HeadScripts>
     <Banner heading1="Chat" heading2="ChatApp"></Banner>
     <HomeMain>
         <Suspense>

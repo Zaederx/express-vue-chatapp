@@ -98,7 +98,7 @@ export function loginViaEmailPassword(url:string='/api/login', router:Router)
  *  to expose the response to the frontend JavaScript code
  *  see [link](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials#examples)
  */
-export function loginViaSessionCookie(url:string='/api/login-session-cookie', router:Router)
+export async function loginViaSessionCookie(url:string='/api/login-session-cookie', router:Router)
 {
     const authStore = useAuthenticationStore()
     console.log('loginViaSessionCookie called')
@@ -142,7 +142,11 @@ export function loginViaSessionCookie(url:string='/api/login-session-cookie', ro
             {
 
                 authStore.authenticate()
-                router.push('/user-home')
+                if (router.currentRoute.value.name == 'login')
+                {
+                    router.push('/user-home')
+                }
+                
                 //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
                 const message = `Welcome user:${res.userId}. You have succesfully logged in`

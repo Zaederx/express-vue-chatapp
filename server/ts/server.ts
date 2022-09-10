@@ -195,7 +195,7 @@ expServer.post('/login', (req:any, res:any) =>
 /**
  * Logout - removes the session cookie from the browser
  */
-expServer.post('/logout', (req:any, res:any)=> {
+expServer.get('/logout', (req:any, res:any)=> {
     logout(req,res)
 })
 
@@ -272,4 +272,3 @@ expServer.get('/messages/:chatId/:userId', async (req:any,res:any) =>
 
     res.send(messagesHTML)
 })
-

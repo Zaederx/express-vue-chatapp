@@ -42,8 +42,9 @@ cd server
 npm start
 ```
 
-then cd out of the server folder and into the client folder and run
+then cd out of the sever folder and then
 ```
+cd client
 npm start
 ```
 

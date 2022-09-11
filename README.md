@@ -53,7 +53,6 @@ Once the boot process is complete, you can then view the website from https://lo
 
 | Email   | Password |
 |:-------:|:-------:|
-
 |email0@email.com|password|
 |email1@email.com|password|
 |email2@email.com|password|

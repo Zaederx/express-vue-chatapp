@@ -1,5 +1,5 @@
 <script setup lang="ts" defer>
-import { displayDiv, hideDiv, setNameInNameBadgeBox, setQueryAllNamesWithClickEvent } from '@/helpers/chat-window/chat-window-helper.js';
+import { displayDiv, hideDiv, setNameInNameBadgeBox, setQueryAllNamesWithClickEvent, chatMessagesToHTML, fetchMessages, loadChats, fetchUserId} from '@/helpers/chat-window/chat-window-helper.js';
 import { onMounted, onUpdated } from 'vue';
 import type {Friend} from '../classes/Friend.js'
 //@ts-ignore
@@ -16,8 +16,6 @@ console.log('**** ChatWindow Setup Script called ****');
     var queryDiv: HTMLDivElement
     var nameBadgeBox: HTMLDivElement
     var messageBox:HTMLDivElement
-    var btnJoinChat:HTMLDivElement
-    var btnSendMessage:HTMLDivElement
     var chatsSidebar:HTMLDivElement
     var messageText:HTMLSpanElement
     var token = {csrfToken:''}
@@ -40,7 +38,7 @@ console.log('**** ChatWindow Setup Script called ****');
     var socket:any;
 
 
-  onMounted(async () => {
+onMounted(async () => {
     console.log('  ***** onMounted was called ***** ')
     //initialise variables
     token.csrfToken = $("meta[name='csrf-token']").attr("content") as string;
@@ -49,8 +47,6 @@ console.log('**** ChatWindow Setup Script called ****');
     queryDiv = document.querySelector('#queryDiv') as HTMLDivElement
     nameBadgeBox = document.querySelector('#name-badge-box') as HTMLDivElement
     messageBox = document.querySelector('#message-box') as HTMLDivElement
-    btnJoinChat = document.querySelector('#btn-join-chat') as HTMLDivElement
-    btnSendMessage = document.querySelector('#btn-send') as HTMLDivElement
     chatsSidebar = document.querySelector('#chat-sidebar') as HTMLDivElement
     messageText = document.querySelector('#message-text') as HTMLSpanElement
     
@@ -62,10 +58,7 @@ console.log('**** ChatWindow Setup Script called ****');
     socketVars.userId = userId
     console.log(`userId:${userId}`)
     //fetch chats
-    await loadChats(userId)
-
-    
-    
+    await loadChats(socketVars, chatsSidebar, messageBox, socket)
   })
 
   socket = io({
@@ -80,7 +73,10 @@ console.log('**** ChatWindow Setup Script called ****');
                 autoConnect: true //default
             });
     socket.on('refresh-chats', () => {
-        loadChats(socketVars.userId)
+        console.log('socket.on - refresh chats called')
+        loadChats(socketVars, chatsSidebar, messageBox, socket)
+        //clear messages from message Box
+        messageBox.innerHTML = ''
     })
 
     socket.on('message', (m:Message) => 
@@ -88,164 +84,42 @@ console.log('**** ChatWindow Setup Script called ****');
         console.log('socket.on - message called')
         messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
     })
-  /**
-   * Convert messages to HTML with classes for vue frontend
-   * @param messages messages to be turned to HTML
-   * @param userId userId of person receiving the messages
-   */
-  function chatMessagesToHTML(messages:Message[], userId:string) 
-{
-    var messagesHTML = ''
-    messages.forEach(m => 
-    {
-        //if sent by user
-        if (m.senderId == userId) 
-        {
-            messagesHTML += `<div class="message-sent">${m.message}</div>`
-        }
-        else
-        {
-            messagesHTML += `<div class="message-received">${m.message}</div>`
-        }
-        
-    })
-    if (messagesHTML == '') 
-    {
-        messagesHTML = `<div class="notice">No Messages</div>`
-    }
-    return messagesHTML
-}
 
 
+ /**
+  * Remove a chat from your list of chats. 
+  */
 async function leaveChat()
 {
     console.log('button leave chat clicked')
     var {userId, chatId} = socketVars
     socket.emit('leave-chat', userId, chatId)
 }
-  /**
-   * Sends a message to the server through web socket.
-   * Also reloads messages can clears message text input span.
-   */
-  async function sendMessage()
-  {
-    //get message text input
-    var message = messageText.innerHTML
-    //get userId and chatId
-    var {userId, chatId} = socketVars
-    //send the message to the server via websocket
-    socket.emit('chat', userId, chatId, message)
-    //clear text from input span
-    messageText.innerHTML = ''
-  }
-
-  /**
-   * Loads messages into messageBox.
-   */
-  async function loadMessages()
-  {
-    var { chatId, userId } = socketVars
-    //send request for fetch messages
-    var messagesHTML = await fetchMessages(chatId, userId)//TODO WRITE FUNCTION
-    messageBox.innerHTML = messagesHTML
-  }
-
-  /**
-   * Loads chats of the current user into
-   * chat sidebar.
-   * @param userId user id of the current user
-   */
-  async function loadChats(userId:string) 
-  {
-    console.log('loadChats called')
-    const chats:Chat[] = await fetchChatsJson(userId)
-    //fill chat sidebar with fetched chats
-    chatsSidebar.innerHTML = chatsToHTML(chats)
-    //set each chat with onclick event - set chat id
-    setChatDivsWithEvent(messageBox)
-  }
-  /**
-   * set each chat div with onclick event
-   * to set chat id to the data-id attribute
-   */
-  function setChatDivsWithEvent(messageBoxDiv:HTMLSpanElement)
-  {
-    chatsSidebar.childNodes.forEach((node) => {
-        //if node is not a text node
-        if (node != undefined && node.nodeName != '#text')
-        {
-            //node is a div node
-            var div = node as HTMLDivElement
-            //div add event listener click
-            div.addEventListener('click', async ()=> {
-                //set chat id from div data-id attribute - store for later
-                socketVars.chatId = div.getAttribute('data-id')as string;
-                var { chatId, userId } = socketVars
-                //send request for fetch messages
-                var messagesHTML = await fetchMessages(chatId, userId)//TODO WRITE FUNCTION
-                messageBoxDiv.innerHTML = messagesHTML
-                //join socket onto chat
-                socket.emit('join-chat', chatId)
-            })
-        }
-    })
-  }
 
 /**
- * Fetches the messages of the user's chat
- * @param chatId id of the chat you want messages from
- * @param userId optional (because user can be found through session cookie)
- */
-async function fetchMessages(chatId:string, userId:string='') 
+ * Sends a message via websocket requesting a chat to be created
+*/
+async function createJoinChat()
 {
-    return (await (await fetch(`/api/messages/${chatId}/${userId}`)).text())
-}
-  
-/**
- * Takes an array of chats and converts them to HTML divs
- * @param chats chats to be turned to HTML
- */
-function chatsToHTML(chats:Chat[]):string
-{
-var chatsHTML = ''
-chats.forEach((c) => {
-    //get div from html - fill with chat div
-    chatsHTML += `<div data-id="${c.id}" class="chat">${c.name}</div>`
-})
-return chatsHTML
+    console.log('create-join-chat clicked')
+    
+
+    console.log('btn-join-chat clicked')
+    socket.emit('create-join-chat', socketVars.userId, varContainer.selectedFriends, socketVars.chatId)
+
+    await loadChats(socketVars, chatsSidebar, messageBox, socket)
 }
 
-
-/**
- * Fetches the current users chats.
- * @param userId user id of the current user
- */
-async function fetchChatsJson(userId:string):Promise<Chat[]>
-{
-    //fetch response and then turn to json
-    return (await (await fetch('/api/chats/'+userId)).json()).chats
-}
-
-
-/**
- * Fetches the current users id
- */
-async function fetchUserId():Promise<string>
-{
-    return (await (await fetch('/api/userId')).json()).userId
-}
-
-
-/**
+    /**
  * Takes searchbar input and fetches user names
  * that are similar. These can be clicked in order to
  * add them to chats
  */
-async function searchbarInput() 
+async function searchbarInput()
     { 
         console.log('typing into searchbar...')
         //get name from the searchbar
-        name = searchbar.innerHTML as string;
+        var name = searchbar.innerHTML as string;
         
         const emptyStr = ''
         if (name != emptyStr) 
@@ -271,30 +145,22 @@ async function searchbarInput()
         } 
         
 }
-/**
- * Sends a message via websocket requesting a chat to be created
-*/
-async function createJoinChat()
-{
-    console.log('create-join-chat clicked')
-    
-
-    console.log('btn-join-chat clicked')
-    socket.emit('create-join-chat', socketVars.userId, varContainer.selectedFriends, socketVars.chatId)
-
-    await loadChats(socketVars.userId)
-}
-
-/*** 
- * The idea of this seciton is to create a Filter Dropdown Table 
- * Examples of what is meant by such a table can be found at [w3schools](https://www.w3schools.com/howto/howto_js_filter_dropdown.asp)
- * 
- *
+        /**
+ * Sends a message to the server through web socket.
+ * Also reloads messages can clears message text input span.
  */
-
-
-
- 
+async function sendMessage()
+{
+    console.log('*** function sendMessage was called ***')
+    //get message text input
+    var message = messageText.innerHTML
+    //get userId and chatId
+    var {userId, chatId} = socketVars
+    //send the message to the server via websocket
+    socket.emit('chat', userId, chatId, message)
+    //clear text from input span
+    messageText.innerHTML = ''
+}
 </script>
 
 
@@ -334,7 +200,7 @@ async function createJoinChat()
         </div>
         <div class="btn-column">
             <span id="btn-join-chat" class="btn-join-chat" @click="createJoinChat">Join Chat</span>
-            <span id="btn-leave-chat" class="btn-leave-chat" @click="leaveChat">Leave Chat</span>
+            <span id="btn-leave-chat" class="btn-leave-chat" @click="leaveChat(socket, socketVars)">Leave Chat</span>
         </div>
         
     </div>

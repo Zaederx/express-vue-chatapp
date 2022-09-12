@@ -1,8 +1,3 @@
-// import express from 'express'
-// import App from './components/examples/App.vue'
-
-// import './assets/main.css'
-//home view
 import App from './pages/App.vue'
 import Home from './pages/Home.vue'
 import HeadScripts from './components/HeadScripts.vue'
@@ -76,13 +71,3 @@ router.beforeEach( async (to) => {
         return true
     }
 })
-
-// const app = createApp(Home)
-// .component('HeadScripts', HeadScripts)
-// .component('Banner', Banner)
-// .component('HomeMain', HomeMain)
-// .component('SiteFooter', SiteFooter)
-// .mount('#app')
-
-
-// *********** Adding WebSockets ***********

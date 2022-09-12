@@ -6,27 +6,26 @@ import { onMounted } from 'vue';
 
 
 onMounted( async () => {
-
-    //IMPORTANT check if there is a csrfToken present, if no - make a request
-
     //making a request for a CSRF token
     console.warn('************* AjaxAuth.vue script **************')
-
     //fetches token and appends in meta tag in the header
     await fetchCSRFToken()
-
     console.log('window on load called')
+
+    //login via the session cookie
     const proxyLoginUrl = '/api/login-session-cookie'
     await loginViaSessionCookie(proxyLoginUrl, router)
     
-    
-    //set value in session storage
-    //set value in session storage
-
+    //double check authentication every 5 mins
     const fiveMinutes = 60000 * 5
+    checkAuth(fiveMinutes, proxyLoginUrl)
+
+})
+
+function checkAuth(mins:number, proxyLoginUrl:string) {
+    
     setInterval(async () => 
     {
-        
         const authStore = useAuthenticationStore()
         console.log('double check session authentication')
         await loginViaSessionCookie(proxyLoginUrl, router)
@@ -36,10 +35,10 @@ onMounted( async () => {
             router.push('/login')
         }
 
-    }, fiveMinutes)
+    }, mins)
+}
 
 
-})
 </script>
 
 <template>

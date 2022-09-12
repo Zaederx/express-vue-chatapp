@@ -1,6 +1,9 @@
 
 //@ts-ignore
-import { Friend } from "@/classes/Friend.js"
+import type { Chat } from "@/classes/Chat.js"
+import type { Friend } from "@/classes/Friend.js"
+
+import type { Message } from "../Message.js"
 
 class VarContainer 
 {
@@ -150,11 +153,11 @@ export function setNameInNameBadgeBox(nameBadgeBox:HTMLDivElement,friendId:strin
   /**
      * Clears the searchbar
      */
-   function clearSearchbar()
+function clearSearchbar()
    {
        var searchbar = (document.querySelector('#searchbar') as HTMLDivElement)
        searchbar.innerHTML = ''
-   }
+}
 
    
    
@@ -164,46 +167,186 @@ export function setNameInNameBadgeBox(nameBadgeBox:HTMLDivElement,friendId:strin
     * Removes Friend of given id from varContainer.selectedFriends
     * @param id 
     */
-   function removeFriendFromVarsContainer(varContainer:VarContainer, id:string, name?:string, ):void
-   {
-       if(id)
-       {
-           //find index of friend in array / list - using obj.id
-           var i = varContainer.selectedFriends.findIndex((f:Friend) => f.id == id)
-           //remove that index that spot in the array / list
-           varContainer.selectedFriends.splice(i, 1)
-       }
-       else
-       {
-           //find index of friend in array / list - using obj.name
-           var i = varContainer.selectedFriends.findIndex((f:Friend) => f.name == name)
-           //remove that index that spot in the array / list
-           varContainer.selectedFriends.splice(i, 1)
-       }
-   }
-   function removeSelectedFriend(nameBadgeBox:HTMLDivElement,varContainer:VarContainer,obj:{id?:string, name?:string}) 
-   {   
-       console.log('******* removeSelectedFriend called *******')
-       console.log(`varContainer.selectedFriends:${varContainer.selectedFriends.toLocaleString()}`)
-       removeFriendFromVarsContainer(varContainer,obj.id as string, obj.name)
-       clearSearchbar()
-       console.log(`varContainer.selectedFriends:${varContainer.selectedFriends}`)
-       fillNameBadgeBoxFromVarsContainer(nameBadgeBox, varContainer)
-
-   }
-
-   /**
-     * Fills name badge box with name badges from names found
-     * in varContainer.selectedFriends.
-     * Also makes them clickable
-     */
-    function fillNameBadgeBoxFromVarsContainer(nameBadgeBox:HTMLDivElement, varContainer:VarContainer)
+function removeFriendFromVarsContainer(varContainer:VarContainer, id:string, name?:string, ):void
+{
+    if(id)
     {
-        //empty name badge box
-        nameBadgeBox.innerHTML = ''
-        //fill name badge box
-        varContainer.selectedFriends.forEach((f:Friend) => {
-            setNameInNameBadgeBox(nameBadgeBox, f.id,f.name)
-            makeClickableBadgeButtons(nameBadgeBox, varContainer)
+        //find index of friend in array / list - using obj.id
+        var i = varContainer.selectedFriends.findIndex((f:Friend) => f.id == id)
+        //remove that index that spot in the array / list
+        varContainer.selectedFriends.splice(i, 1)
+    }
+    else
+    {
+        //find index of friend in array / list - using obj.name
+        var i = varContainer.selectedFriends.findIndex((f:Friend) => f.name == name)
+        //remove that index that spot in the array / list
+        varContainer.selectedFriends.splice(i, 1)
+    }
+}
+
+function removeSelectedFriend(nameBadgeBox:HTMLDivElement,varContainer:VarContainer,obj:{id?:string, name?:string}) 
+{   
+    console.log('******* removeSelectedFriend called *******')
+    console.log(`varContainer.selectedFriends:${varContainer.selectedFriends.toLocaleString()}`)
+    removeFriendFromVarsContainer(varContainer,obj.id as string, obj.name)
+    clearSearchbar()
+    console.log(`varContainer.selectedFriends:${varContainer.selectedFriends}`)
+    fillNameBadgeBoxFromVarsContainer(nameBadgeBox, varContainer)
+
+}
+
+/**
+ * Fills name badge box with name badges from names found
+ * in varContainer.selectedFriends.
+ * Also makes them clickable
+ */
+function fillNameBadgeBoxFromVarsContainer(nameBadgeBox:HTMLDivElement, varContainer:VarContainer)
+{
+    //empty name badge box
+    nameBadgeBox.innerHTML = ''
+    //fill name badge box
+    varContainer.selectedFriends.forEach((f:Friend) => {
+        setNameInNameBadgeBox(nameBadgeBox, f.id,f.name)
+        makeClickableBadgeButtons(nameBadgeBox, varContainer)
+    })
+}
+
+/**
+ * Convert messages to HTML with classes for vue frontend
+ * @param messages messages to be turned to HTML
+ * @param userId userId of person receiving the messages
+ */
+ export function chatMessagesToHTML(messages:Message[], userId:string) 
+ {
+     var messagesHTML = ''
+     messages.forEach(m => 
+     {
+         //if sent by user
+         if (m.senderId == userId) 
+         {
+             messagesHTML += `<div class="message-sent">${m.message}</div>`
+         }
+         else
+         {
+             messagesHTML += `<div class="message-received">${m.message}</div>`
+         }
+         
+     })
+     if (messagesHTML == '') 
+     {
+         messagesHTML = `<div class="notice">No Messages</div>`
+     }
+     return messagesHTML
+ }
+
+
+
+
+
+
+/**
+ * Fetches the messages of the user's chat
+ * @param chatId id of the chat you want messages from
+ * @param userId optional (because user can be found through session cookie)
+ */
+export async function fetchMessages(chatId:string, userId:string='') 
+{
+    return (await (await fetch(`/api/messages/${chatId}/${userId}`)).text())
+}
+
+ /**
+   * Loads messages into messageBox.
+   */
+export async function loadMessages(socketVars:any,  messageBox:HTMLSpanElement)
+{
+var { chatId, userId } = socketVars
+//send request for fetch messages
+var messagesHTML = await fetchMessages(chatId, userId)//TODO WRITE FUNCTION
+messageBox.innerHTML = messagesHTML
+}
+
+/**
+ * Fetches the current users chats.
+ * @param userId user id of the current user
+ */
+export async function fetchChatsJson(userId:string):Promise<Chat[]>
+{
+    //fetch response and then turn to json
+    return (await (await fetch('/api/chats/'+userId)).json()).chats
+
+}
+
+/**
+ * Loads chats of the current user into
+ * chat sidebar.
+ * @param userId user id of the current user
+ */
+
+export async function loadChats(socketVars:any, chatsSidebar:HTMLDivElement, messageBox:HTMLDivElement, socket:any) 
+{
+    console.log('loadChats called')
+    var { userId } = socketVars
+    const chats:Chat[] = await fetchChatsJson(userId)
+    //fill chat sidebar with fetched chats
+    chatsSidebar.innerHTML = chatsToHTML(chats)
+    //set each chat with onclick event - set chat id
+    setChatDivsWithEvent(messageBox, chatsSidebar, socketVars, socket)
+}
+
+/**
+ * set each chat div with onclick event
+ * to set chat id to the data-id attribute
+ */
+function setChatDivsWithEvent(messageBoxDiv:HTMLSpanElement, chatsSidebar:HTMLDivElement, socketVars:any, socket:any)
+{
+chatsSidebar.childNodes.forEach((node) => {
+    //if node is not a text node
+    if (node != undefined && node.nodeName != '#text')
+    {
+        //node is a div node
+        var div = node as HTMLDivElement
+        //div add event listener click
+        div.addEventListener('click', async ()=> {
+            //set chat id from div data-id attribute - store for later
+            socketVars.chatId = div.getAttribute('data-id')as string;
+            var { chatId, userId } = socketVars
+            //send request for fetch messages
+            var messagesHTML = await fetchMessages(chatId, userId)//TODO WRITE FUNCTION
+            messageBoxDiv.innerHTML = messagesHTML
+            //join socket onto chat
+            socket.emit('join-chat', chatId)
         })
     }
+})
+}
+
+  
+/**
+ * Takes an array of chats and converts them to HTML divs
+ * @param chats chats to be turned to HTML
+ */
+function chatsToHTML(chats:Chat[]):string
+{
+var chatsHTML = ''
+chats.forEach((c) => {
+    //get div from html - fill with chat div
+    chatsHTML += `<div data-id="${c.id}" class="chat">${c.name}</div>`
+})
+return chatsHTML
+}
+
+
+
+
+
+/**
+ * Fetches the current users id
+ */
+export async function fetchUserId():Promise<string>
+{
+    return (await (await fetch('/api/userId')).json()).userId
+}
+
+
+

@@ -6,8 +6,6 @@ import { Chat } from "../db/classes/Chat.js"
 import { Socket } from "engine.io"
 import { Message } from "../db/classes/Message.js"
 import { produceDb } from "./users-logic.js"
-import { fileURLToPath } from "url"
-import path from "path"
 
 
 /**
@@ -127,7 +125,7 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
  export async function handleChatMessage(dbPath:string, io:any,userId:any,chatId:any,messageText:string) 
  {
     console.log('* chat called *')
-        produceDb(dbPath)
+        const db = produceDb(dbPath)
         await db.read()
         
         //find the current user
@@ -156,29 +154,46 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
 
 
 /**
- * 
+ * Allows user to leave the chat.
+ * Does this by removing the chat from the users list of chats.
+ * Then sends message back to the client socket to refresh chats.
  */
  export async function leaveChat(dbPath:string, io:any, userId:string, chatId:string)
  {
-    produceDb(dbPath)
-    await db.read()
-
-    //find the current user
-    var user = db.data?.users.find((u) => u.id  == Number(userId))
-    //find their copy of the chat - to access chat subscribers
-    var chat = user?.chats.find((chat) => chat.id == chatId)
-
-    var m:any
-    //for each subscriber...
-    chat?.subscriberIds.forEach(async (subscriberId) => 
+    const db = produceDb(dbPath)
+    
+    try 
     {
-        //find user
-        user = db.data?.users.find((u) => u.id  == Number(subscriberId))
-        //find index of their copy of the chat
-        var i = user?.chats.findIndex((chat) => chat.id == chatId) as number
-        //remove chat from list of chats
-        user?.chats.splice(i,0)
+        await db.read()
+        //find the current user
+        var user = db.data?.users.find((u) => u.id  == Number(userId))
+        console.log('user info', user)
+        //find their copy of the chat - to access chat subscribers
+        var chat = user?.chats.find((chat) => chat.id == chatId)
+
+        //for each subscriber...
+        chat?.subscriberIds.forEach(async (subscriberId) => 
+        {
+            //find user
+            user = db.data?.users.find((u) => u.id  == Number(subscriberId))
+            if (user != undefined)
+            {
+                console.log('subscriber info info', user)
+                //find index of their copy of the chat
+                var i = user?.chats.findIndex((chat) => chat.id == chatId) as number
+                console.log(`i:${i}`)
+                //remove chat from list of chats
+                user.chats = user?.chats.splice(i,0) as Chat[]
+            }
+        })
         await db.write()
-    })
-    io.to(chatId).emit('refresh-chats')
+        io.to(chatId).emit('refresh-chats')
+    }
+    catch (e)
+    {
+        throw new Error('Problem leaving chat: ' + e)
+    }
+    
+
+    
  }

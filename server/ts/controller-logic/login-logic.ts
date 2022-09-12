@@ -13,6 +13,7 @@ import { getAppCookie, setSessionCookie } from '../helpers/cookie-defaults.js'
 import { LoginResponse } from "../helpers/response/login-response.js"
 import { serverDOMAIN, clientDOMAIN } from '../server.js'
 import { Cookie } from '../helpers/cookie.js'
+import { fetchUserId } from './users-logic';
 
 /**
  * Logs the user in via their session cookie.
@@ -126,6 +127,7 @@ export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any,
  * the request json body.
  * @param req express request object
  * @param res express response object
+ * @return userId
  */
 export async function loginLogic(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) 
 {
@@ -207,6 +209,7 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
             var message = 'Login unsuccessful'
             res.send(new LoginResponse(false, message))
         }
+        return u?.id
     }
     
 }

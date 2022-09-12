@@ -1,7 +1,7 @@
 
 //@ts-ignore
 import type { Chat } from "@/classes/Chat.js"
-import type { Friend } from "@/classes/Friend.js"
+import { Friend } from "@/classes/Friend.js"
 
 import type { Message } from "../Message.js"
 

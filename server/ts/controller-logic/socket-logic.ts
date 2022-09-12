@@ -152,13 +152,49 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
         console.log(`*emitting message to chatid: ${chatId}*`)
  }
 
+ /**
+  * Allows user to leave a chat.
+  * This deletes their copy of the chat but
+  * leaves it for other users. 
+  * 
+  * @param dbPath path to the db file
+  * @param io io socket
+  * @param userId the user id of the current user
+  * @param chatId the chat id of the selected chat
+  */
+ export async function leaveChat(dbPath:string, io:any, userId:string, chatId:string)
+ {
+    const db = produceDb(dbPath)
+    
+    try 
+    {
+        await db.read()
+        //find the current user
+        var user = db.data?.users.find((u) => u.id  == Number(userId))
+        console.log('user info', user)
+        if (user != undefined)
+        {
+            //find index of their copy of the chat
+            var i = user?.chats.findIndex((chat) => chat.id == chatId) as number
+            console.log(`i:${i}`)
+            //remove chat from list of chats
+            user.chats = user?.chats.splice(i,0) as Chat[]
+        }
+        await db.write()
+        io.to(chatId).emit('refresh-chats')
+    }
+    catch (e)
+    {
+        throw new Error('Problem leaving chat: ' + e)
+    }
+ }
 
 /**
- * Allows user to leave the chat.
+ * Allows user to delete the chat for all users.
  * Does this by removing the chat from the users list of chats.
  * Then sends message back to the client socket to refresh chats.
  */
- export async function leaveChat(dbPath:string, io:any, userId:string, chatId:string)
+ export async function deleteChat(dbPath:string, io:any, userId:string, chatId:string)
  {
     const db = produceDb(dbPath)
     
@@ -171,6 +207,7 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
         //find their copy of the chat - to access chat subscribers
         var chat = user?.chats.find((chat) => chat.id == chatId)
 
+        
         //for each subscriber...
         chat?.subscriberIds.forEach(async (subscriberId) => 
         {
@@ -191,7 +228,7 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
     }
     catch (e)
     {
-        throw new Error('Problem leaving chat: ' + e)
+        throw new Error('Problem deleting chat: ' + e)
     }
     
 

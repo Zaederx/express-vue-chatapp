@@ -72,18 +72,20 @@ onMounted(async () => {
                 transports: ['websocket'],
                 autoConnect: true //default
             });
-    socket.on('refresh-chats', () => {
-        console.log('socket.on - refresh chats called')
-        loadChats(socketVars, chatsSidebar, messageBox, socket)
-        //clear messages from message Box
-        messageBox.innerHTML = ''
-    })
 
-    socket.on('message', (m:Message) => 
-    {
-        console.log('socket.on - message called')
-        messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
-    })
+
+socket.on('refresh-chats', () => {
+    console.log('socket.on - refresh chats called')
+    loadChats(socketVars, chatsSidebar, messageBox, socket)
+    //clear messages from message Box
+    // messageBox.innerHTML = ''
+})
+
+socket.on('message', (m:Message) => 
+{
+    console.log('socket.on - message called')
+    messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
+})
 
 
  /**

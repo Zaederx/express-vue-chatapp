@@ -40,6 +40,7 @@ httpServer.listen(PORT)
 import path from 'path';
 //@ts-ignore
 import {fileURLToPath} from 'url';
+import { Friend } from './db/classes/Friend';
 
 //path to current file
 const __filename = fileURLToPath(import.meta.url);
@@ -49,13 +50,18 @@ console.log('directory-name 👉️', __dirname);
 const dbPath = path.join(__dirname, '..', 'db.json');
 console.log(`dbPath = ${dbPath}`)
 
-
+const userDetails = 
+{
+    id:-1
+}
  //on - recieves messages
 //emit - sends messages
 // io.to("some room").emit("some event", () => {console.log(message)});
 // or socket.to("some room").emit("some event");
 io.on("connection", (socket) => {
     console.log('\n\n\n\n******** SOCKET CONNECTED ********')
+    socket.join(String(userDetails.id))
+    console.log(`userDetails.id: ${userDetails.id}`)
 
     socket.on('create-join-chat', async (userId, selectedFriends, chatId) => 
     {
@@ -67,21 +73,26 @@ io.on("connection", (socket) => {
             //join current user's socket to chat room
             socket.join(chat.id)
         }
+        //let each friend refresh their browsers
+        selectedFriends.forEach((friend:Friend) => {
+            io.to(friend.id).emit('refresh-chats')
+        })
         
     })
     
-    //recieve
+    //receive
     socket.on('chat', async (userId,chatId,messageText) => handleChatMessage(dbPath,io,userId,chatId,messageText))
 
     socket.on('join-chat', (chatId) => {
         console.log(`joining chat id:${chatId}. socket.join(${chatId})`)
         socket.join(chatId)
+        io.to(chatId).emit('refresh-chats')
     })
 
     socket.on('leave-chat', async (userId, chatId) => 
     {
         console.log('leaving chat')
-        leaveChat(dbPath,io,userId,chatId)
+        await leaveChat(dbPath,io,userId,chatId)
     })
 
     //runs when the page disconnects
@@ -179,17 +190,20 @@ expServer.get('/', (req:any, res:any) =>
 /**
  * Login in via session cookie
  */
-expServer.post('/login-session-cookie', (req:any, res:any) =>
+expServer.post('/login-session-cookie', async (req:any, res:any) =>
 {
+    var sessionId = readSessionIdFromReq(req)
+    userDetails.id =  await fetchUserId(sessionId,dbPath) as number
     loginViaSessionCookie(req,res)
 })
 
 /**
  * Login via email and password
  */
-expServer.post('/login', (req:any, res:any) => 
+expServer.post('/login', async (req:any, res:any) => 
 {
-    emailPasswordLogin(req,res)
+    var userId = await emailPasswordLogin(req,res) as number
+    userDetails.id = Number(userId)
 })
 
 /**

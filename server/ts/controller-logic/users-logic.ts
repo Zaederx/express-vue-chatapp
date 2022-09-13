@@ -8,6 +8,7 @@ import { readSessionIdFromReq } from './login-logic.js'
 //@ts-ignore
 import path from 'path'
 import { Low, JSONFile } from 'lowdb'
+import { produceDb } from '../db/db-logic.js'
 
 
 
@@ -180,27 +181,30 @@ export async function fetchMessagesFromDb(chatId:string, userId:string, dbPath:s
 
     var db =  produceDb(dbPath)
     await db.read()
-    //find user in db
-    var user = db.data?.users.find((u:User) => u.id == Number(userId)) as User
-    //find chat in list of user chats
     var chatMessages:Message[] = []
-    if (user != undefined && user.chats.length > 0)
+    try 
     {
-        var chat = user.chats.find(c => c.id == chatId) as Chat
-        chatMessages = chat.messages
+        //find user in db
+        var user = db.data?.users.find((u:User) => u.id == Number(userId)) as User
+        //find chat in list of user chats
+        var chatMessages:Message[] = []
+        if (user != undefined && user.chats.length > 0)
+        {
+            var chat = user.chats.find(c => c.id == chatId) as Chat
+            chatMessages = chat.messages
+        }
+        
+    }
+    catch (e)
+    {
+        console.log('Problem fetching messages from db:', e)
     }
     //return chat messages
     return chatMessages
+    
+    
 }
 
-export function produceDb(dbPath:string)
-{
-    //use json file for storage
-    const file = path.join(dbPath);
-    const adapter = new JSONFile<Data>(file);
-    var db = new Low(adapter)
-    return db
-}
 
 export function chatMessagesToHTML(messages:Message[], userId:string) 
 {

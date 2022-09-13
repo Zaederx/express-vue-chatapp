@@ -1,7 +1,7 @@
 //******** SECTION Imports ******* */
 
 //project imports
-import { loginLogic as emailPasswordLogin, loginViaSessionCookie, readSessionIdFromReq, sessionCookieLogin } from './controller-logic/login-logic.js';
+import { emailPasswordLogin, loginViaSessionCookie, readSessionIdFromReq, sessionCookieLogin } from './controller-logic/login-logic.js';
 import { fetchChats, fetchFriendNames as fetchFriendNamesHTML, fetchMessagesFromDb, fetchUserId, fetchUsersNames, chatMessagesToHTML } from './controller-logic/users-logic.js';
 import { logout } from './controller-logic/logout-logic.js';
 import  db  from './db/db-setup.js'
@@ -54,7 +54,7 @@ const userDetails =
 {
     id:-1
 }
- //on - recieves messages
+ //on - receives messages
 //emit - sends messages
 // io.to("some room").emit("some event", () => {console.log(message)});
 // or socket.to("some room").emit("some event");
@@ -92,7 +92,10 @@ io.on("connection", (socket) => {
     socket.on('leave-chat', async (userId, chatId) => 
     {
         console.log('leaving chat')
+        //leave chat
         await leaveChat(dbPath,io,userId,chatId)
+        //refresh clients chats
+        io.to(chatId).emit('refresh-chats')
     })
 
     //runs when the page disconnects

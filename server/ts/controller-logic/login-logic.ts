@@ -129,7 +129,7 @@ export async function sessionCookieLogin(req:Request<ParamsDictionary, any, any,
  * @param res express response object
  * @return userId
  */
-export async function loginLogic(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) 
+export async function emailPasswordLogin(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) 
 {
     console.log('\n ***** LOGIN LOGIC FUNCTION *****')
     //get variables from post request body
@@ -149,27 +149,48 @@ export async function loginLogic(req: Request<ParamsDictionary, any, any, Parsed
     //if variables are present / not undefined / empty
     if (email && password) 
     {
-        //check if email exists in db
+        //*** check if email exists in db ***
+        //read db and find the user by email
         await db.read()
         const u:User|undefined = db.data!.users.find((u:User)=> u.email == email)
-        console.log('\n email matches')
-
-
         var userPresent = false
-        if (u)
+        try 
         {
-            userPresent = true
+            if (u)
+            {
+                userPresent = true
+                console.log(u)
+            }
+            else 
+            {
+                throw Error(`No user present that matches email:${email}`)
+            }
         }
-        console.log(u)
-        //fetch password from db
-
-        //check whether password is present
+        catch(e)
+        {
+            console.log(e)
+        }
         var matching:boolean = false
-        if (u?.passwordHash) 
+        try 
         {
-            //check whether passwords match
-            matching = bcryptjs.compareSync(password, u?.passwordHash as string)
+            //check whether password is present
+            
+            if (u?.passwordHash) 
+            {
+                //check whether passwords match
+                matching = bcryptjs.compareSync(password, u?.passwordHash as string)
+            }
+            else
+            {
+                throw Error('User does not have a password')
+            }
+            if (!matching) { throw Error('Passwords do not match') }
+        } 
+        catch (e) 
+        {
+            console.log(e)
         }
+        
         //if password match - send session cookie and successful response
         if (matching && userPresent) 
         {
@@ -225,20 +246,33 @@ function storeSessionId(user:User, sessionId: string)
 {
     //store session id with user
     user.sessionId = sessionId
-
-    //check if it has been stored in db
-    db.read()
-    const userCheck:User|undefined = db.data!.users.find((u:User)=> u.id == user.id)
-    db.write()//sometimes causes duplicates - beware not for industrial projects
-    
+    db.write()
     var stored = false
-    //check if user session was properlys stored
-    if (userCheck?.sessionId)
+    try 
     {
-        stored = true
-        console.log(`sessionId:${userCheck?.sessionId}, was properly stored`)
-        console.log('user',userCheck)
+        //check if it has been stored in db
+        db.read()
+        const userCheck:User|undefined = db.data!.users.find((u:User)=> u.id == user.id)
+        db.write()//sometimes causes duplicates - beware not for industrial projects
+        
+        
+        //check if user session was properlys stored
+        if (userCheck?.sessionId)
+        {
+            stored = true
+            console.log(`sessionId:${userCheck?.sessionId}, was properly stored`)
+            console.log('user',userCheck)
+        }
+        else
+        {
+            throw new Error('Session id was not stored properly')
+        }
     }
+    catch (e)
+    {
+        console.log(`Problem storing session id:`, e)
+    }
+    
 
     //return boolean value
     return stored

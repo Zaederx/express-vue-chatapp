@@ -59,9 +59,9 @@ onMounted(async () => {
     console.log(`userId:${userId}`)
     //fetch chats
     await loadChats(socketVars, chatsSidebar, messageBox, socket)
-  })
 
-  socket = io({
+    //open socket connection
+    socket = await io({
                 //proxy address
                 path:'/socket.io',
                 withCredentials: true,
@@ -74,9 +74,9 @@ onMounted(async () => {
             });
 
 
-socket.on('refresh-chats', () => {
+socket.on('refresh-chats', async () => {
     console.log('socket.on - refresh chats called')
-    loadChats(socketVars, chatsSidebar, messageBox, socket)
+    await loadChats(socketVars, chatsSidebar, messageBox, socket)
     //clear messages from message Box
     // messageBox.innerHTML = ''
 })
@@ -86,6 +86,10 @@ socket.on('message', (m:Message) =>
     console.log('socket.on - message called')
     messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
 })
+  
+})
+
+  
 
 
  /**
@@ -202,7 +206,7 @@ async function sendMessage()
         </div>
         <div class="btn-column">
             <span id="btn-join-chat" class="btn-join-chat" @click="createJoinChat">Join Chat</span>
-            <span id="btn-leave-chat" class="btn-leave-chat" @click="leaveChat(socket, socketVars)">Leave Chat</span>
+            <span id="btn-leave-chat" class="btn-leave-chat" @click="leaveChat">Leave Chat</span>
         </div>
         
     </div>

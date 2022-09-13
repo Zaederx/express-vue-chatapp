@@ -149,16 +149,17 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
             //add message to their copy of the chat
             m = new Message(userId,user?.username as string, chat?.id as string, messageText)
             chat?.messages.push(m)
-            await db.write()
+            await db.write()   
         })
+        //emit
+        io.to(chatId).emit('message', m)
+        console.log(`*emitting message to chatid: ${chatId}*`)
     }
     catch (e)
     {
         console.log(e)
     }
-    //emit
-    io.to(chatId).emit('message', m)
-    console.log(`*emitting message to chatid: ${chatId}*`)
+    
  }
 
  /**

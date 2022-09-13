@@ -7,7 +7,9 @@
 <!-- HTML -->
 <template>
    <Banner heading1="Chat" heading2="Home"></Banner>
-   <HomeMain></HomeMain>
+   <HomeMain>
+      <HomeIntro></HomeIntro>
+   </HomeMain>
    <SiteFooter></SiteFooter>
 </template>
 

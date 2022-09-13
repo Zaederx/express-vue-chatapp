@@ -4,6 +4,7 @@ import HeadScripts from './components/HeadScripts.vue'
 import AjaxAuth from './components/AjaxAuth.vue'
 import Banner from './components/Banner.vue'
 import HomeMain from './components/HomeMain.vue'
+import HomeIntro from './components/HomeIntro.vue'
 import SiteFooter from './components/SiteFooter.vue'
 //login view
 import Login from './pages/Login.vue'
@@ -40,6 +41,7 @@ app.component('Home', Home)
 .component('AjaxAuth', AjaxAuth)
 .component('Banner', Banner)
 .component('HomeMain', HomeMain)
+.component('HomeIntro', HomeIntro)
 .component('SiteFooter', SiteFooter)
 .component('LoginForm', LoginForm)
 .component('SignUpForm', SignUpForm)

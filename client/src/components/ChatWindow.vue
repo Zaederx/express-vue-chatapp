@@ -51,15 +51,6 @@ onMounted(async () => {
     messageText = document.querySelector('#message-text') as HTMLSpanElement
     
 
-    
-    //fetch user id
-    const userId = await fetchUserId()
-    //set userId value in socketVars
-    socketVars.userId = userId
-    console.log(`userId:${userId}`)
-    //fetch chats
-    await loadChats(socketVars, chatsSidebar, messageBox, socket)
-
     //open socket connection
     socket = await io({
                 //proxy address
@@ -74,18 +65,29 @@ onMounted(async () => {
             });
 
 
-socket.on('refresh-chats', async () => {
-    console.log('socket.on - refresh chats called')
-    await loadChats(socketVars, chatsSidebar, messageBox, socket)
-    //clear messages from message Box
-    // messageBox.innerHTML = ''
-})
+            socket.on('refresh-chats', async () => {
+                console.log('socket.on - refresh chats called')
+                await loadChats(socketVars, chatsSidebar, messageBox, socket)
+                //clear messages from message Box
+                // messageBox.innerHTML = ''
+            })
 
-socket.on('message', (m:Message) => 
-{
-    console.log('socket.on - message called')
-    messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
-})
+            socket.on('message', (m:Message) => 
+            {
+                console.log('socket.on - message called')
+                messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
+            })
+
+    
+    //fetch user id
+    const userId = await fetchUserId()
+    //set userId value in socketVars
+    socketVars.userId = userId
+    console.log(`userId:${userId}`)
+    //fetch chats
+    await loadChats(socketVars, chatsSidebar, messageBox, socket)
+
+    
   
 })
 

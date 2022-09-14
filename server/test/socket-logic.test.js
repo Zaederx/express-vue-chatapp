@@ -5,13 +5,15 @@ import { describe, it} from 'mocha'
 import { Chat } from '../js/db/classes/Chat.js'
 import { fileURLToPath } from "url"
 import path from "path"
+import db from '../js/db/db-setup-test.js'
 
+await db.read()
 //path to current file
 const __filename = fileURLToPath(import.meta.url);
 //path to current directory
 const __dirname = path.dirname(__filename);
 console.log('directory-name 👉️', __dirname);
-const dbPath = path.join(__dirname, '..','db-test.json');
+const dbPath = path.join(__dirname,'..','db-test.json');
 console.log(`dbPath = ${dbPath}`)
 
 describe('Socket Logic - Unit Tests', () => {
@@ -24,55 +26,64 @@ describe('Socket Logic - Unit Tests', () => {
         var friend = new Friend('name','1')
         //no chat id provided
         var chat = await socketLogic.createChat(dbPath,userId,[friend])
-        if(chat == typeof Chat)
+        if(chat == undefined)
         {
-          return true
+          throw Error('Chat is undefined')
         }
         else
         {
-          return false
+          return true
         }
         }) 
     })
     
     describe('socketLogic.createChat(userId,[friend],chatId=falseId)', async() => {
-        it('should create create a chat', async () => {
-        var userId = 0
-        var friend = new Friend('name','1')
-        var chatId = 0
-        var chat = await socketLogic.createChat(dbPath,userId,[friend],chatId)
-        if(typeof chat == undefined)
-        {
-          throw new Error('Not Expected Value')
-        }
-        else if (typeof chat == Chat)
-        {
-          return true
-        }
+        it('should create a new chat with unique id', async () => {
+          var userId = 0
+          var friend = new Friend('name','1')
+          var chatId = 0
+          var chat = await socketLogic.createChat(dbPath,userId,[friend],chatId)
+          if(chat == undefined)
+          {
+            throw new Error('Chat undefined')
+          }
+          else if (typeof chat == Chat)
+          {
+            return true
+          }
         }) 
     })
     
     describe('socketLogic.createChat(userId,[friend],chatId=realId)', async() => {
-        it('should fetch chat from db', async () => {
-        var userId = 0
-        var friend = new Friend('name','1')
-        var chatId = '9d4b8a70-5ddc-4a90-aaac-3acd10596187'
-        var chat = await socketLogic.createChat(dbPath,userId,[friend],chatId)
-        if(typeof chat == undefined)
+        it('should fetch chat from db', async () => 
         {
-          throw new Error('Not Expected Value')
-        }
-        else if (chat.id == chatId)
-        {
-          return true
-        }
-        else 
-        {
-          throw Error(`Id's do not match`)
-        }
+          var userId = 0
+          var friend = new Friend('name','1')
+          var chatId = '9d4b8a70-5ddc-4a90-aaac-3acd10596187'
+          var chat = await socketLogic.createChat(dbPath,userId,[friend],chatId)
+          if(chat == undefined)
+          {
+            throw new Error('Chat is undefined')
+          }
+          else if (chat.id == chatId)
+          {
+            return true
+          }
+          else 
+          {
+            throw Error(`Id's do not match`)
+          }
+          
         }) 
     })
   })
+})
+
+after(()=> 
+{
+  // console.log('After called')
+  // db.data = {}
+  // db.write()  
 })
 
 // with { "type": "module" } in your package.json

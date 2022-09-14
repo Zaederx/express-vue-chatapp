@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
     socket.on('create-join-chat', async (userId, selectedFriends, chatId) => 
     {
         //create chat and save them to user and friends in db
-        var chat:Chat = await createChat(dbPath, userId, selectedFriends, chatId)
+        var chat:Chat = await createChat(dbPath, userId, selectedFriends, chatId) as Chat
         //if chat is present
         if (chat != undefined) 
         {

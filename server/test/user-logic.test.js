@@ -8,6 +8,7 @@ import db from '../js/db/db-setup-test.js'
 import { fileURLToPath } from "url"
 import path from "path"
 //path to current file
+await db.read()
 const __filename = fileURLToPath(import.meta.url);
 //path to current directory
 const __dirname = path.dirname(__filename);
@@ -123,6 +124,12 @@ describe('User Logic Tests', () =>
             })
         })
     })
+    after(()=> 
+{
+//   console.log('After called')
+//   db.data = {}
+//   db.write()  
+})
 })
 
 

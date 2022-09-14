@@ -1,3 +1,4 @@
+//@ts-ignore
 import path from "path";
 import { Low, JSONFile } from 'lowdb';
 import { Data } from "./classes/Data.js";

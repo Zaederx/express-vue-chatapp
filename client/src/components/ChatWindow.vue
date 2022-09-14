@@ -70,12 +70,16 @@ onMounted(async () => {
                 await loadChats(socketVars, chatsSidebar, messageBox, socket)
                 //clear messages from message Box
                 // messageBox.innerHTML = ''
+                //scroll to bottom of message box
+                messageBox.scrollTop = messageBox.scrollHeight
             })
 
             socket.on('message', (m:Message) => 
             {
                 console.log('socket.on - message called')
                 messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
+                //scroll to bottom of message box
+                messageBox.scrollTop = messageBox.scrollHeight
             })
 
     

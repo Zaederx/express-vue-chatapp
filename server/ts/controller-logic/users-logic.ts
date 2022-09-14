@@ -27,10 +27,11 @@ export async function fetchChats(userId:any, dbPath:string):Promise<Chat[]>
     {
         //search for user with that id
         const user = db.data?.users.find((u) => u.id == userId) as User
-        console.log(`*** user:${user} ***`)
+        if (typeof user === undefined) { throw Error('User is undefined') }
         //if one exists return their chats list
         if (user != null && user != undefined)
         {
+            console.log(`*** user :`,user,)
             return user.chats
         }
         //otherwise..
@@ -38,7 +39,7 @@ export async function fetchChats(userId:any, dbPath:string):Promise<Chat[]>
     }
     catch(e)
     {
-        throw new Error('Problem fetching Chats')
+        throw new Error('Problem fetching Chats:'+e)
     }
     
 }

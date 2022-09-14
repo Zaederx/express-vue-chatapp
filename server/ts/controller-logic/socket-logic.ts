@@ -17,71 +17,86 @@ import { produceDb } from "../db/db-logic.js"
  * @param selectedFriends selectedFriends
  * @param chatId chatId (if searching for and existing)
  */
-export async function createChat(dbPath:string,userId:number, selectedFriends:Friend[], chatId?:string ):Promise<Chat>
+export async function createChat(dbPath:string,userId:number, selectedFriends:Friend[], chatId?:string ):Promise<Chat|undefined>
 {
-    console.log('* create-join-chat called *');
-    //generate chat id
-    if (chatId == '' || chatId == undefined) {
-        chatId = uuidv4();
-    }
-    var db = produceDb(dbPath)
-    //read from db
-    await db.read();
-    //find user
-    var user = db.data?.users.find((u:User) => u.id == userId) as User;
-    //check if chat with same id exists
-    var chat = user?.chats.find((chat) => chat.id == chatId) as Chat;
-    //check if user already has this chat. If not / it is undefined...
-    if (user != undefined && chat == undefined) 
+    try 
     {
-        //create a new chat room in data with chatId
-        chat = new Chat(chatId);
-        
-        //add chat to selectedFriends
-        // await db.read();
-        //if there are firends added to list
-        if (selectedFriends.length > 0) 
-        {
-            //for each friend
-            selectedFriends.forEach(f => 
-            {
-                try 
-                {
-                    //add friend id to list of subscriber ids
-                    chat?.subscriberIds.push(String(f.id));
-                    
-                } 
-                catch (e)
-                {
-                    console.error('friend is undefined',e)
-                }       
-            });
-            //then again for each firend
-            selectedFriends.forEach(f => 
-            {
-                //add chat (now containing a full list of subscriberIds) to friend list of chats
-                var friend = db.data?.users.find((u:User) => u.id == Number(f.id));
-                if(friend != undefined) 
-                {
-                    friend.chats.push(chat);
-                }
-            })
-            //add current user to chat subscribers
-            chat.subscriberIds.push(String(user.id));
-            var user = db.data?.users.find((u:User) => u.id == userId) as User;
-            //add chat with subscriberIds to user
-            user?.chats.push(chat);
-            // db.write()
+        console.log('* craeteChat called *');
+        //generate chat id
+        if (chatId == '' || chatId == undefined) {
+            chatId = uuidv4();
         }
-        else if (user == undefined) 
+        var db = produceDb(dbPath)
+        //read from db
+        await db.read();
+        //find user
+        var user = db.data?.users.find((u:User) => u.id == userId) as User;
+        console.log('user:',user)
+        //check if chat with same id exists
+        var chat = user?.chats.find((chat) => chat.id == chatId) as Chat;
+
+        //check for errors
+        if (typeof user === undefined) { throw new Error('User not found')}
+        if (typeof chat === undefined) { throw new Error(`Chat of id ${chatId} not found`)}
+
+        //check if user already has this chat. If not / it is undefined...
+        if (user != undefined && chat == undefined) 
         {
-            console.log('* USER IS UNDEFINED! *')
-            throw Error('* USER IS UNDEFINED! *')
+            //create a new chat room in data with chatId
+            chat = new Chat(chatId);
+            
+            //add chat to selectedFriends
+            // await db.read();
+            //if there are firends added to list
+            if (selectedFriends.length > 0) 
+            {
+                //for each friend
+                selectedFriends.forEach(f => 
+                {
+                    try 
+                    {
+                        //add friend id to list of subscriber ids
+                        chat?.subscriberIds.push(String(f.id));
+                        
+                    } 
+                    catch (e)
+                    {
+                        console.error('friend is undefined',e)
+                    }       
+                });
+                //then again for each firend
+                selectedFriends.forEach(f => 
+                {
+                    //add chat (now containing a full list of subscriberIds) to friend list of chats
+                    var friend = db.data?.users.find((u:User) => u.id == Number(f.id));
+                    if(friend != undefined) 
+                    {
+                        friend.chats.push(chat);
+                    }
+                })
+                //add current user to chat subscribers
+                chat.subscriberIds.push(String(user.id));
+                var user = db.data?.users.find((u:User) => u.id == userId) as User;
+                //add chat with subscriberIds to user
+                user?.chats.push(chat);
+                // db.write()
+            }
+            else if (user == undefined) 
+            {
+                console.log('* USER IS UNDEFINED! *')
+                throw Error('* USER IS UNDEFINED! *')
+            }
+            
         }
-        
+        await db.write();
+        return chat;
     }
-    await db.write();
-    return chat;
+    catch(e)
+    {
+        console.log(e)
+    }
+    
+    
 }
 
 /**
@@ -223,10 +238,10 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
         console.log('user info', user)
         
         //find their copy of the chat - to access chat subscribers
-        var chat = user?.chats.find((chat) => chat.id == chatId)
+        var chat:Chat = user?.chats.find((chat) => chat.id == chatId) as Chat
 
-        if (user == undefined) {throw Error('User is undefined')}
-        if (chat == undefined) {throw Error('Chat is undefined')}
+        if (typeof user === undefined) {throw Error('User is undefined')}
+        if (typeof chat === undefined) {throw Error('Chat is undefined')}
         if (chat.subscriberIds.length == 0) throw Error('Chat has no subscribers')
         
         //for each subscriber...
@@ -236,7 +251,7 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
             user = db.data?.users.find((u) => u.id  == Number(subscriberId))
             if (user != undefined)
             {
-                console.log('subscriber info info', user)
+                console.log('subscriber info', user)
                 //find index of their copy of the chat
                 var i = user?.chats.findIndex((chat) => chat.id == chatId) as number
                 console.log(`i:${i}`)
@@ -245,6 +260,7 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
             }
         })
         await db.write()
+        //refresh user client's chats 
         io.to(chatId).emit('refresh-chats')
     }
     catch (e)

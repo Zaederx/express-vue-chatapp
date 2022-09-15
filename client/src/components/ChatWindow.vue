@@ -37,7 +37,18 @@ console.log('**** ChatWindow Setup Script called ****');
     
     var socket:any;
 
-
+//open socket connection
+socket = await io({
+                //proxy address
+                path:'/socket.io',
+                withCredentials: true,
+                extraHeaders: 
+                {
+                    'CSRF-Token': token.csrfToken
+                },
+                transports: ['websocket'],
+                autoConnect: true //default
+            });
 onMounted(async () => {
     console.log('  ***** onMounted was called ***** ')
     //initialise variables
@@ -51,18 +62,7 @@ onMounted(async () => {
     messageText = document.querySelector('#message-text') as HTMLSpanElement
     
 
-    //open socket connection
-    socket = await io({
-                //proxy address
-                path:'/socket.io',
-                withCredentials: true,
-                extraHeaders: 
-                {
-                    'CSRF-Token': token.csrfToken
-                },
-                transports: ['websocket'],
-                autoConnect: true //default
-            });
+    
 
 
             socket.on('refresh-chats', async () => {

@@ -20,14 +20,14 @@
         var {shortStr, longStr} = swap(shortStr, longStr)
     }
     //get the editDistance
-    var editDistanceScore = editDistance(shortStr, longStr)
+    var simScore = similarityScore(shortStr, longStr)
     
     if(print)
     {
-        console.log('editDistanceScore:',editDistanceScore)
+        console.log('Similarity Score:',simScore)
     }
     
-    return editDistanceScore
+    return simScore
  }
  
  function swap(shortStr:string,longStr:string) {
@@ -39,7 +39,7 @@
   * @param shortStr shorter of the two strings
   * @param longStr longer to the two strings
   */
- function editDistance(shortStr:string, longStr:string, print?:boolean):number
+ function similarityScore(shortStr:string, longStr:string, print?:boolean):number
  {
      if(shortStr.length == 0) {
          return shortStr.length
@@ -111,8 +111,8 @@
         console.log('shortArrLength:',shortArrLength)
      }
      
-     var editDistanceScore:number = totalScore / (shortArrLength)
-     return editDistanceScore
+     var simScore:number = totalScore / (shortArrLength)
+     return simScore
  }
  
  /**

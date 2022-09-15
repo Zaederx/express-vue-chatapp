@@ -42,8 +42,6 @@ var u3:User = new User({email:'email2@email.com',
                         password:passwordHash
                         });
 
-
-
 var u4:User = new User({email:'email1@email.com',
                         name:'asd  asd' ,
                         username:'username4',

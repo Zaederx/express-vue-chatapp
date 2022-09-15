@@ -31,7 +31,6 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
         await db.read();
         //find user
         var user = db.data?.users.find((u:User) => u.id == userId) as User;
-        console.log('user:',user)
         //check if chat with same id exists
         var chat = user?.chats.find((chat) => chat.id == chatId) as Chat;
 
@@ -137,7 +136,7 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
   * @param chatId chat id of the currently selected chat
   * @param messageText the message text to be sent
   */
- export async function handleChatMessage(dbPath:string, io:any,userId:any,chatId:any,messageText:string) 
+ export async function handleChatMessage(dbPath:string, io:any, userId:any,chatId:any,messageText:string) 
  {
     console.log('* chat called *')
     try 
@@ -183,42 +182,46 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
   * leaves it for other users. 
   * 
   * @param dbPath path to the db file
-  * @param io io socket
   * @param userId the user id of the current user
   * @param chatId the chat id of the selected chat
   */
- export async function leaveChat(dbPath:string, io:any, userId:string, chatId:string)
+ export async function leaveChat(dbPath:string, userId:string, chatId:string)
  {
+    console.log("\n*** leaveChat called ***")
     const db = produceDb(dbPath)
-    
+    var successful = false
     try 
     {
         await db.read()
         //find the current user
         var user = db.data?.users.find((u) => u.id  == Number(userId))
+        var chatsOriginalLength = user?.chats.length
         if (user == undefined) { throw Error('User is undefined') }
         else
         {
-            console.log('user info', user)
+            // console.log('user info', user)
             //remove chat from list of chats - note:splice method doesnt work with lowdb for some reason so using filter instead
-            user.chats = user?.chats.filter(async (chat)=> {
-                //if the chat has only one subscriber (the current user)
-                //delete chat instead of just removeing for current user
-                if (chat.id == chatId && chat.subscriberIds.length == 1) {
-                    await deleteChat(dbPath,io,userId,chatId)
-                }
+            console.log(`removing chat for user id:${userId}`)
+            user.chats = user?.chats.filter((chat)=> {
                 // just remove the selected chat for current user
-                else if (chat.id != chatId) {
-                                return chat
-                            }
-                        })
+                if (chat.id != chatId) {
+                    return chat
+                }
+            })
         }
+        //write changes in
         await db.write()
+
+        //if the chat has only one subscriber (the current user)
+        //delete chat instead of just removeing for current user
+        successful = (chatsOriginalLength! > user.chats.length)
+        return successful
     }
     catch (e)
     {
         console.log(e)
     }
+    return successful
  }
 
 /**
@@ -226,23 +229,24 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
  * Does this by removing the chat from the users list of chats.
  * Then sends message back to the client socket to refresh chats.
  */
- export async function deleteChat(dbPath:string, io:any, userId:string, chatId:string)
+ export async function deleteChat(dbPath:string, userId:string, chatId:string)
  {
+    console.log('*** deleting chat ***')
     const db = produceDb(dbPath)
-    
+    var successful = false
     try 
     {
         await db.read()
         //find the current user
         var user = db.data?.users.find((u) => u.id  == Number(userId))
-        console.log('user info', user)
+        // console.log('user info', user)
         
         //find their copy of the chat - to access chat subscribers
         var chat:Chat = user?.chats.find((chat) => chat.id == chatId) as Chat
 
         if (typeof user === undefined) {throw Error('User is undefined')}
         if (typeof chat === undefined) {throw Error('Chat is undefined')}
-        if (chat.subscriberIds.length == 0) throw Error('Chat has no subscribers')
+        if (chat.subscriberIds.length == 0) {throw Error('Chat has no subscribers')}
         
         //for each subscriber...
         chat?.subscriberIds.forEach(async (subscriberId) => 
@@ -251,17 +255,19 @@ export async function createChat(dbPath:string,userId:number, selectedFriends:Fr
             user = db.data?.users.find((u) => u.id  == Number(subscriberId))
             if (user != undefined)
             {
-                console.log('subscriber info', user)
-                //find index of their copy of the chat
-                var i = user?.chats.findIndex((chat) => chat.id == chatId) as number
-                console.log(`i:${i}`)
+                console.log(`*** deleting chat for user id:${userId} ***`)
                 //remove chat from list of chats
-                user?.chats.splice(i,0) as Chat[]
+                user.chats = user?.chats.filter(async (chat)=> 
+                {
+                    // just remove the selected chat for current user
+                    if (chat.id != chatId) 
+                    {
+                        return chat
+                    }
+                })
             }
         })
         await db.write()
-        //refresh user client's chats 
-        io.to(chatId).emit('refresh-chats')
     }
     catch (e)
     {

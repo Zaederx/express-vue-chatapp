@@ -31,7 +31,6 @@ export async function fetchChats(userId:any, dbPath:string):Promise<Chat[]>
         //if one exists return their chats list
         if (user != null && user != undefined)
         {
-            console.log(`*** user :`,user,)
             return user.chats
         }
         //otherwise..
@@ -136,7 +135,7 @@ function friendsToHTML(friends:User[]):string
 export async function fetchUsersNames(req:any,res:any, dbPath:string) {
     //get name from request params
     var name = req.params.name
-    var namesArr:User[] = await getUsersNamesListFromDB(name,dbPath)
+    var namesArr:User[] = await getUserListOfSimilarNames(name,dbPath)
     var namesHTML = ''
     namesArr.forEach((u)=> {
         namesHTML += (`<a data-id="${u.id}"><div>${u.name}</div></a>\n`) as string
@@ -146,12 +145,12 @@ export async function fetchUsersNames(req:any,res:any, dbPath:string) {
 
 
 /**
- * Returns a json list of users who's names
- * match the request paramerter 'name'
+ * Returns a json list of up to 10 users who's names
+ * are similar to the paramerter 'name'
  * @param req 
  * @param res 
  */
-export async function getUsersNamesListFromDB(name:string, dbPath:string) {
+export async function getUserListOfSimilarNames(name:string, dbPath:string) {
 
     var db = produceDb(dbPath)
     //read from db
@@ -160,15 +159,7 @@ export async function getUsersNamesListFromDB(name:string, dbPath:string) {
     const limit = 10//number of names to return
     var arr:User[] = (db.data?.users.filter((user:User) =>  
         compareTwoStrings(name,user.name) >= 0.5))?.slice(0,limit) as User[]
-        //take list of users and create list of names
-        var arrStr:string[] = [] 
-        // arr.forEach(user => {
-        //             // arrStr.push(user.name)
-        //         })
-        
-    //convert array of names to json string
-    // var usersJSON = JSON.stringify(arrStr)
-    //send json list of namesof users
+    
     return arr
 }
 
@@ -206,7 +197,15 @@ export async function fetchMessagesFromDb(chatId:string, userId:string, dbPath:s
     
 }
 
-
+/**
+ * Converts messages to HTML form ready with css classes
+ * applied in order to display the message on the left of right
+ * of the chat window. Messages sent by the current user are 
+ * classes "message-sent" displayed on the right.
+ * Other messages are classes "message-received" and are displayed on the left.
+ * @param messages list of messages to convert to HTML
+ * @param userId userId of current user
+ */
 export function chatMessagesToHTML(messages:Message[], userId:string) 
 {
     var messagesHTML = ''
@@ -217,16 +216,17 @@ export function chatMessagesToHTML(messages:Message[], userId:string)
         {
             messagesHTML += `<div class="message-sent">${m.message}</div>`
         }
+        //if sent by anyone else
         else
         {
             messagesHTML += `<div class="message-received">${m.message}</div>`
         }
         
     })
-    if (messagesHTML == '') 
-    {
-        messagesHTML = `<div class="notice">No Messages</div>`
-    }
+    // if (messagesHTML == '') 
+    // {
+    //     messagesHTML = `<div class="notice">No Messages</div>`
+    // }
     return messagesHTML
 }
 

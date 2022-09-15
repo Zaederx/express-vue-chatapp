@@ -4,8 +4,6 @@ import { messageToHTML } from '@/helpers/message-to-html.js';
 import type { LoginResponse } from '@/helpers/response/login-response.js';
 import type { Router } from 'vue-router'
 import { useAuthenticationStore } from '../../stores/isAuthenticated.js';
-import type { Store } from 'pinia';
-//pinia stores
 
 const serverDOMAIN = 'http://localhost:3000'
 const clientDOMAIN = 'http://localhost:5173'
@@ -147,10 +145,8 @@ export async function loginViaSessionCookie(url:string='/api/login-session-cooki
                     router.push('/user-home')
                 }
                 
-                //TODO //IMPORTANT - CREATE/GIVE Authentication COOKIE TO CLIENT
                 console.log(`userId: ${res.userId}`)
                 const message = `Welcome user:${res.userId}. You have succesfully logged in`
-                console.log(message)
             }
             else {
                 authStore.unauthenticate()

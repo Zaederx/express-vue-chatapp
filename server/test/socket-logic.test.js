@@ -76,8 +76,33 @@ describe('Socket Logic - Unit Tests', () => {
           
         }) 
     })
+
+    
+  })
+
+
+  describe('Test Socket Logic - Leave Chat', async() => {
+    describe('socketLogic.leaveChat(dbPath,userId,chatId)', async() => {
+      it('should remove a chat', async () => 
+      {
+        var userId = 0
+        var chatId = '9d4b8a70-5ddc-4a90-aaac-3acd10596187'
+        var successful = await socketLogic.leaveChat(dbPath,userId,chatId)
+        if(successful)
+        {
+          return true
+        }
+        else 
+        {
+          throw Error(`Chat has not been left`)
+        }
+        
+      }) 
+  })
   })
 })
+
+
 
 after(()=> 
 {
@@ -86,50 +111,3 @@ after(()=>
   // db.write()  
 })
 
-// with { "type": "module" } in your package.json
-// import { createServer } from "http";
-// import { io as Client } from "socket.io-client";
-// import { Server } from "socket.io";
-// import { assert } from "chai";
-// describe("Socket - Direct Connection Tests", () => 
-// {
-//   let io, serverSocket, clientSocket;
-
-//   before((done) => 
-//   {
-//     const httpServer = createServer();
-//     io = new Server(httpServer);
-//     httpServer.listen(() => {
-//       const port = httpServer.address().port;
-//       clientSocket = new Client(`http://localhost:${port}`);
-//       io.on("connection", (socket) => {
-//         serverSocket = socket;
-//       });
-//       clientSocket.on("connect", done);
-//     }); 
-//   })
-
-//   after(() => {
-//     io.close();
-//     clientSocket.close();
-//   });
-
-//   dsecribe("Testing create-join-chat", async () => 
-//   {
-//     it("should return a message", () => 
-//     {
-//       clientSocket.on('test-')
-//     })
-//   })
-// })
-
-
-// // 9ecca7f0-683f-4ae4-8981-cb2d8692fdd7
-// test('should return chat',
-// async () => {
-//     var userId = 0
-//     var friend = new Friend('name','1')
-//     var chatId = '9ecca7f0-683f-4ae4-8981-cb2d8692fdd7'
-//     var chat = await socketLogic.createChat(userId,[friend], )
-//     expect(chat).toBeUndefined()
-// })

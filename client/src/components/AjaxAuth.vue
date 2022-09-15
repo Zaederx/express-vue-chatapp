@@ -34,7 +34,6 @@ function checkAuth(mins:number, proxyLoginUrl:string) {
         {
             router.push('/login')
         }
-
     }, mins)
 }
 

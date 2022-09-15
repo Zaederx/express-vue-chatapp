@@ -93,7 +93,7 @@ io.on("connection", (socket) => {
     {
         console.log('leaving chat')
         //leave chat
-        await leaveChat(dbPath,io,userId,chatId)
+        await leaveChat(dbPath,userId,chatId)
         //refresh clients chats
         io.to(chatId).emit('refresh-chats')
     })

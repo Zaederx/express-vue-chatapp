@@ -46,7 +46,6 @@ var subscriberIds = ['0','1']
 var c1 = new Chat(chatId,name,[],subscriberIds)
 u1.chats.push(c1)
 u2.chats.push(c1)
-console.log('u1:',u1)
 
 var u3:User = new User({email:'email2@email.com',
                         name:'name ghdfgh' ,

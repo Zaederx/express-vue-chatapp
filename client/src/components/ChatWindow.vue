@@ -62,27 +62,6 @@ onMounted(async () => {
     messageText = document.querySelector('#message-text') as HTMLSpanElement
     
 
-    
-
-
-            socket.on('refresh-chats', async () => {
-                console.log('socket.on - refresh chats called')
-                await loadChats(socketVars, chatsSidebar, messageBox, socket)
-                //clear messages from message Box
-                // messageBox.innerHTML = ''
-                //scroll to bottom of message box
-                messageBox.scrollTop = messageBox.scrollHeight
-            })
-
-            socket.on('message', (m:Message) => 
-            {
-                console.log('socket.on - message called')
-                messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
-                //scroll to bottom of message box
-                messageBox.scrollTop = messageBox.scrollHeight
-            })
-
-    
     //fetch user id
     const userId = await fetchUserId()
     //set userId value in socketVars
@@ -90,6 +69,25 @@ onMounted(async () => {
     console.log(`userId:${userId}`)
     //fetch chats
     await loadChats(socketVars, chatsSidebar, messageBox, socket)
+    
+
+
+    socket.on('refresh-chats', async () => {
+        console.log('socket.on - refresh chats called')
+        await loadChats(socketVars, chatsSidebar, messageBox, socket)
+        //clear messages from message Box
+        // messageBox.innerHTML = ''
+        //scroll to bottom of message box
+        messageBox.scrollTop = messageBox.scrollHeight
+    })
+
+    socket.on('message', (m:Message) => 
+    {
+        console.log('socket.on - message called')
+        messageBox.innerHTML += chatMessagesToHTML([m],socketVars.userId)
+        //scroll to bottom of message box
+        messageBox.scrollTop = messageBox.scrollHeight
+    })
 
     
   
@@ -104,8 +102,11 @@ onMounted(async () => {
 async function leaveChat()
 {
     console.log('button leave chat clicked')
+    //clear message box
+    messageBox.innerHTML = ''
     var {userId, chatId} = socketVars
     socket.emit('leave-chat', userId, chatId)
+    
 }
 
 /**
@@ -113,12 +114,11 @@ async function leaveChat()
 */
 async function createJoinChat()
 {
-    console.log('create-join-chat clicked')
-    
-
     console.log('btn-join-chat clicked')
-    socket.emit('create-join-chat', socketVars.userId, varContainer.selectedFriends, socketVars.chatId)
+    var { userId, chatId } = socketVars
+    var { selectedFriends } = varContainer
 
+    socket.emit('create-join-chat', userId, selectedFriends, chatId)
     await loadChats(socketVars, chatsSidebar, messageBox, socket)
 }
 
@@ -128,7 +128,7 @@ async function createJoinChat()
  * add them to chats
  */
 async function searchbarInput()
-    { 
+{ 
         console.log('typing into searchbar...')
         //get name from the searchbar
         var name = searchbar.innerHTML as string;

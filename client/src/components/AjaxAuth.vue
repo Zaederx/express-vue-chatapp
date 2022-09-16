@@ -1,4 +1,5 @@
-<script setup lang="ts">import { fetchCSRFToken } from '@/helpers/headscript/headscript-helper.js';
+<script setup lang="ts">
+import { fetchCSRFToken } from '@/helpers/headscript/headscript-helper.js';
 import { loginViaSessionCookie } from '@/helpers/login-form/login-helper.js';
 import router from '@/router';
 import { useAuthenticationStore } from '@/stores/isAuthenticated';

@@ -5,7 +5,7 @@
       "email": "email0@email.com",
       "name": "name 0",
       "username": "username0",
-      "passwordHash": "$2a$10$oVbPLiMOd/r.ce21558CAOZNeUk37UaXl9SXlMnW2BLL9kgrCUfPO",
+      "passwordHash": "$2a$10$47RF617ZSDAnr8YQs2CX8ujn..R7FtQiuhADBE9TfVeShlXPSAzrG",
       "friendIds": [
         1,
         2,
@@ -13,7 +13,7 @@
       ],
       "chats": [
         {
-          "id": "a260df1b-fa1e-4481-a0d0-d7b0c1e870f4",
+          "id": "778009ff-fb39-444a-9d8b-e7b80a36d225",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
@@ -22,7 +22,7 @@
           ]
         },
         {
-          "id": "b2bd92ea-05c9-4e2e-ab17-07ca2ca67533",
+          "id": "8246b065-b56f-49bb-b51f-148756695cec",
           "name": "Chat3",
           "messages": [],
           "subscriberIds": [
@@ -38,7 +38,7 @@
       "email": "email1@email.com",
       "name": "name 1",
       "username": "username1",
-      "passwordHash": "$2a$10$oVbPLiMOd/r.ce21558CAOZNeUk37UaXl9SXlMnW2BLL9kgrCUfPO",
+      "passwordHash": "$2a$10$47RF617ZSDAnr8YQs2CX8ujn..R7FtQiuhADBE9TfVeShlXPSAzrG",
       "friendIds": [],
       "chats": [
         {
@@ -51,7 +51,7 @@
           ]
         },
         {
-          "id": "a260df1b-fa1e-4481-a0d0-d7b0c1e870f4",
+          "id": "778009ff-fb39-444a-9d8b-e7b80a36d225",
           "name": "Chat2",
           "messages": [],
           "subscriberIds": [
@@ -60,7 +60,7 @@
           ]
         },
         {
-          "id": "b2bd92ea-05c9-4e2e-ab17-07ca2ca67533",
+          "id": "8246b065-b56f-49bb-b51f-148756695cec",
           "name": "Chat3",
           "messages": [],
           "subscriberIds": [
@@ -76,7 +76,7 @@
       "email": "email2@email.com",
       "name": "name 2",
       "username": "username2",
-      "passwordHash": "$2a$10$oVbPLiMOd/r.ce21558CAOZNeUk37UaXl9SXlMnW2BLL9kgrCUfPO",
+      "passwordHash": "$2a$10$47RF617ZSDAnr8YQs2CX8ujn..R7FtQiuhADBE9TfVeShlXPSAzrG",
       "friendIds": [],
       "chats": [],
       "sessionId": ""
@@ -86,7 +86,7 @@
       "email": "email3@email.com",
       "name": "name 3",
       "username": "username3",
-      "passwordHash": "$2a$10$oVbPLiMOd/r.ce21558CAOZNeUk37UaXl9SXlMnW2BLL9kgrCUfPO",
+      "passwordHash": "$2a$10$47RF617ZSDAnr8YQs2CX8ujn..R7FtQiuhADBE9TfVeShlXPSAzrG",
       "friendIds": [],
       "chats": [],
       "sessionId": ""

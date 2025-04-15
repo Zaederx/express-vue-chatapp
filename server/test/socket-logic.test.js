@@ -5,8 +5,10 @@ import { describe, it} from 'mocha'
 import { Chat } from '../js/db/classes/Chat.js'
 import { fileURLToPath } from "url"
 import path from "path"
-import db from '../js/db/db-setup-test.js'
+import dbTest from '../js/db/db-setup-test.js'//sets up the test db
+import db from '../js/db/db-setup.js'//sets up the db
 
+await dbTest.read()
 await db.read()
 //path to current file
 const __filename = fileURLToPath(import.meta.url);

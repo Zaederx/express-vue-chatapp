@@ -14,7 +14,7 @@ var db = new Low(adapter)
 
 
 
-// setup()
+setup()
 async function setup() {
 //Read data from Json file, this will set the db.content
 await db.read();
@@ -25,74 +25,74 @@ const password = 'password'
 const passwordHash = bcryptjs.hashSync(password, 10)
 
 var u1:User = new User({email:'email0@email.com',
-                        name:'name asdhg' ,
+                        name:'name 1' ,
                         username:'username0',
                         password:passwordHash
                     });
 
 var u2:User = new User({email:'email1@email.com',
-                        name:'name asd asd' ,
+                        name:'name 2' ,
                         username:'username1',
                         password:passwordHash
                         });
 
 var u3:User = new User({email:'email2@email.com',
-                        name:'name ghdfgh' ,
+                        name:'name 3' ,
                         username:'username3',
                         password:passwordHash
                         });
 
 var u4:User = new User({email:'email1@email.com',
-                        name:'asd  asd' ,
+                        name:'name 4' ,
                         username:'username4',
                         password:passwordHash
                         });
 
 var u5:User = new User({email:'email2@email.com',
-                        name:'asd name' ,
+                        name:'name 5' ,
                         username:'username5',
                         password:passwordHash
                         });
 
 
 var u6:User = new User({email:'email1@email.com',
-                        name:'name' ,
+                        name:'name 6' ,
                         username:'username6',
                         password:passwordHash
                         });
 
 var u7:User = new User({email:'email2@email.com',
-                        name:'name' ,
+                        name:'name 7' ,
                         username:'username7',
                         password:passwordHash
                         });
 
 var u8:User = new User({email:'email1@email.com',
-                        name:'name' ,
+                        name:'name 8' ,
                         username:'username8',
                         password:passwordHash
                         });
 
 var u9:User = new User({email:'email2@email.com',
-                        name:'name' ,
+                        name:'name 9' ,
                         username:'username9',
                         password:passwordHash
                         });
 
 var u10:User = new User({email:'email0@email.com',
-                        name:'name' ,
+                        name:'name 10' ,
                         username:'username10',
                         password:passwordHash
                         });
 
 var u11:User = new User({email:'email1@email.com',
-                        name:'name' ,
+                        name:'name 11' ,
                         username:'username11',
                         password:passwordHash
                         });
 
 var u12:User = new User({email:'email2@email.com',
-                        name:'name' ,
+                        name:'name 12' ,
                         username:'username12',
                         password:passwordHash
                         });

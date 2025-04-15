@@ -4,6 +4,13 @@ import { Low, JSONFile } from 'lowdb';
 import { Data } from "./classes/Data.js";
 import { User } from "./classes/User.js";
 import bcryptjs from 'bcryptjs'
+import { unlink } from 'node:fs';
+
+//delete existing json file if any
+unlink('db.json', (err) => {
+  if (err) throw err;
+  console.log('db.json was deleted');
+});
 //use json file for storage
 const file = path.join('db.json')
 
@@ -67,38 +74,16 @@ var u7:User = new User({email:'email2@email.com',
                         password:passwordHash
                         });
 
-var u8:User = new User({email:'email1@email.com',
-                        name:'name 8' ,
-                        username:'username8',
-                        password:passwordHash
-                        });
-
-var u9:User = new User({email:'email2@email.com',
-                        name:'name 9' ,
-                        username:'username9',
-                        password:passwordHash
-                        });
-
-var u10:User = new User({email:'email0@email.com',
-                        name:'name 10' ,
-                        username:'username10',
-                        password:passwordHash
-                        });
-
-var u11:User = new User({email:'email1@email.com',
-                        name:'name 11' ,
-                        username:'username11',
-                        password:passwordHash
-                        });
-
-var u12:User = new User({email:'email2@email.com',
-                        name:'name 12' ,
-                        username:'username12',
-                        password:passwordHash
-                        });
-
 //add friends to u1
 u1.friendIds.push(u2.id,u3.id,u4.id,u5.id,u6.id,u7.id)
+u2.friendIds.push(u1.id,u3.id,u4.id,u5.id,u6.id,u7.id)
+u3.friendIds.push(u1.id,u2.id)
+u4.friendIds.push(u1.id,u2.id)
+u5.friendIds.push(u1.id,u2.id)
+u6.friendIds.push(u1.id,u2.id)
+u7.friendIds.push(u1.id,u2.id)
+
+
 
 //add all users and their information to database
 db.data.users.push(u1)
@@ -108,11 +93,7 @@ db.data.users.push(u4)
 db.data.users.push(u5)
 db.data.users.push(u6)
 db.data.users.push(u7)
-db.data.users.push(u8)
-db.data.users.push(u9)
-db.data.users.push(u10)
-db.data.users.push(u11)
-db.data.users.push(u12)
+
 //write this data to json file
 await db.write()
 

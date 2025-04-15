@@ -5,23 +5,26 @@ import { Data } from './classes/Data.js';
 import { User } from './classes/User.js';
 import bcryptjs from 'bcryptjs'
 import { Chat } from './classes/Chat.js';
-import { unlink } from 'node:fs';
+import { unlink, existsSync } from 'node:fs';
+
+const filepath = path.join('db-test.json')
+console.log('db-test.json filepath:',filepath)
 
 //delete existing json file if any
-unlink('db-test.json', (err) => {
-  if (err) throw err;
-  console.log('db-test.json was deleted');
-});
+if (existsSync(filepath)) {
+  unlink(filepath, (err) => {
+    if (err) throw err;
+    console.log('db-test.json was deleted');
+  });
+}
+
 
 //use json file for storage
-const file = path.join('db-test.json')
-
-const adapter = new JSONFile<Data>(file);
+const adapter = new JSONFile<Data>(filepath);
 var db = new Low(adapter)
 
-
-setup()
-
+//call setup
+await setup()
 async function setup() {
 //Read data from Json file, this will set the db.content
 await db.read();

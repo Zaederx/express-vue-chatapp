@@ -25,16 +25,16 @@ db.data = {users: []}
 const password = 'password'
 const passwordHash = bcryptjs.hashSync(password, 10)
 
-var u1:User = new User({email:'email0@email.com',
-                        name:'name asdhg' ,
-                        username:'username0',
+var u1:User = new User({email:'email1@email.com',
+                        name:'name 1' ,
+                        username:'username1',
                         password:passwordHash
                     });
 u1.sessionId = '555b975a-39e2-4b9f-b62a-7da7d5b8360a'
 
-var u2:User = new User({email:'email1@email.com',
-                        name:'name asd asd' ,
-                        username:'username1',
+var u2:User = new User({email:'email2@email.com',
+                        name:'name 2' ,
+                        username:'username2',
                         password:passwordHash
                         });
 
@@ -47,65 +47,65 @@ var c1 = new Chat(chatId,name,[],subscriberIds)
 u1.chats.push(c1)
 u2.chats.push(c1)
 
-var u3:User = new User({email:'email2@email.com',
-                        name:'name ghdfgh' ,
+var u3:User = new User({email:'email3@email.com',
+                        name:'name 3' ,
                         username:'username3',
                         password:passwordHash
                         });
 
 
 
-var u4:User = new User({email:'email1@email.com',
-                        name:'asd  asd' ,
+var u4:User = new User({email:'email4@email.com',
+                        name:'name 4' ,
                         username:'username4',
                         password:passwordHash
                         });
 
-var u5:User = new User({email:'email2@email.com',
-                        name:'asd name' ,
+var u5:User = new User({email:'email5@email.com',
+                        name:'name 5' ,
                         username:'username5',
                         password:passwordHash
                         });
 
 
-var u6:User = new User({email:'email1@email.com',
-                        name:'name' ,
+var u6:User = new User({email:'email6@email.com',
+                        name:'name 6' ,
                         username:'username6',
                         password:passwordHash
                         });
 
-var u7:User = new User({email:'email2@email.com',
-                        name:'name' ,
+var u7:User = new User({email:'email7@email.com',
+                        name:'name 7' ,
                         username:'username7',
                         password:passwordHash
                         });
 
-var u8:User = new User({email:'email1@email.com',
-                        name:'name' ,
+var u8:User = new User({email:'email8@email.com',
+                        name:'name 8' ,
                         username:'username8',
                         password:passwordHash
                         });
 
-var u9:User = new User({email:'email2@email.com',
-                        name:'name' ,
+var u9:User = new User({email:'email9@email.com',
+                        name:'name 9' ,
                         username:'username9',
                         password:passwordHash
                         });
 
-var u10:User = new User({email:'email0@email.com',
-                        name:'name' ,
+var u10:User = new User({email:'email10@email.com',
+                        name:'name 10' ,
                         username:'username10',
                         password:passwordHash
                         });
 
-var u11:User = new User({email:'email1@email.com',
-                        name:'name' ,
+var u11:User = new User({email:'email11@email.com',
+                        name:'name 11' ,
                         username:'username11',
                         password:passwordHash
                         });
 
-var u12:User = new User({email:'email2@email.com',
-                        name:'name' ,
+var u12:User = new User({email:'email12@email.com',
+                        name:'name 12' ,
                         username:'username12',
                         password:passwordHash
                         });

@@ -53,13 +53,13 @@ Once the boot process is complete, you can then view the website from https://lo
 
 ## Trying out the Application
 
-| Email   | Password |
-|:-------:|:-------:|
-|email0@email.com|password|
-|email1@email.com|password|
-|email2@email.com|password|
-|email3@email.com|password|
-|email4@email.com|password|
+| Email   | Password | Name |
+|:-------:|:-------:|:-------:|
+|email0@email.com|password|name 0|
+|email1@email.com|password|name 1|
+|email2@email.com|password|name 2|
+|email3@email.com|password|name 3|
+|email4@email.com|password|name 4|
 
 
 

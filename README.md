@@ -1,7 +1,7 @@
 # Express Vue Chat
 A chat app made with Vue and Express/node.
 
-# [View YouTube video of app](https://youtu.be/gkg4fsEPfm8)
+# [View YouTube video of app](https://youtu.be/xsVkhs9jpfU)
 
 ## Tables of Contents
 * [Background](#background)

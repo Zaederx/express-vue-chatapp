@@ -59,7 +59,7 @@ npm start
 Once the boot process is complete, you can then view the website from https://localhost:5173/home (if you are using default configurations). 
 
 ## Trying out the Application
-
+Under the "Links" drop down button, you can select "Login". Once you are on the login page, you can enter one of the following emails and passwords to login:
 | Email   | Password | Name |
 |:-------:|:-------:|:-------:|
 |email0@email.com|password|name 0|
@@ -67,6 +67,8 @@ Once the boot process is complete, you can then view the website from https://lo
 |email2@email.com|password|name 2|
 |email3@email.com|password|name 3|
 |email4@email.com|password|name 4|
+
+If you open to browser windows, you can login as two separate users with two of these emails and then chat from user to user in the two windows.
 
 
 

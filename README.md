@@ -32,11 +32,18 @@ Node should be installed on your system.
 ## Setup
 Before running the project cd into the server and then later into the client folder, each time entering in to the terminal:
 ```
+cd server
 npm install
 ```
-This will install the dependecies needed by the project in the server and the client. Be sure to enter this in the terminal under boot those directories, one a t a time.
+And in a serparate terminal window:
+```
+cd client
+npm install
+```
+This will install the dependecies needed by the project in the server and the client. Be sure to enter this in the terminal under both those directories, one at a time.
 
 ## Running the Project
+First see [Setup](#setup) to install the node dependecies in the client and server.
 As a result of it's client server architecture, you are required to start up the two halves separtely, as in the installation. First the server with
 ```
 cd server
